@@ -1,0 +1,1434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mathematics for AI/ML — Practical Priority Roadmap</title>
+  <meta name="description" content="A comprehensive math roadmap for AI/ML ranked by real-world usage frequency in modern AI/ML (2026). Covers 13 areas from Linear Algebra to LLM-era mathematics.">
+
+  <!-- KaTeX @0.16.9 — 4 delimiters -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+          onload="renderMathInElement(document.body, {
+            delimiters: [
+              {left: '$$', right: '$$', display: true},
+              {left: '\\[', right: '\\]', display: true},
+              {left: '\\(', right: '\\)', display: false},
+              {left: '$',  right: '$',  display: false}
+            ],
+            throwOnError: false, trust: true
+          });"></script>
+
+  <!-- Prism.js @1.29.0 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+
+  <!-- Google Fonts via <link> -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    /* ── §2 Theme — True Black Monochrome ── */
+    :root {
+      --bg:         #000000;
+      --surface:    #000000;
+      --surface2:   #000000;
+      --border:     #222222;
+      --text:       #ffffff;
+      --text-dim:   #cccccc;
+      --text-muted: #888888;
+      --accent:     #ffffff;
+      --accent2:    #ffffff;
+      --accent3:    #ffffff;
+      --note-red:   #cf4444;
+      --warn:       #cf4444;
+      --danger:     #cf4444;
+      --radius:     10px;
+      --shadow:     0 4px 24px rgba(0,0,0,.8);
+    }
+
+    /* ── §3 Base Reset ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    p  { margin-bottom: 12px; }
+    p:last-child { margin-bottom: 0; }
+    ul, ol { padding-left: 20px; }
+    li { margin-bottom: 4px; color: var(--text-dim); }
+    li strong { color: var(--text); }
+    h4 { font-size: 15px; font-weight: 500; color: #fff; margin: 16px 0 8px; }
+    strong { color: var(--text); }
+    em { color: var(--text-dim); }
+
+    /* ── §4 Typography ── */
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: 15px;
+      line-height: 1.75;
+      background: var(--bg);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+    }
+    html { scroll-behavior: smooth; }
+
+    h1 { letter-spacing: -0.03em; }
+    h2 { letter-spacing: -0.02em; }
+    h3 { letter-spacing: -0.01em; }
+
+    /* ── Scrollbar ── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #000; }
+    ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #555; }
+
+    /* ── §5 Code Blocks ── */
+    pre {
+      background: #000;
+      border: 1px solid #222;
+      border-radius: 8px;
+      padding: 16px 18px;
+      overflow-x: auto;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      line-height: 1.65;
+      color: #ddd;
+      margin: 14px 0;
+    }
+    code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.88em;
+      background: #111;
+      padding: 1px 6px;
+      border-radius: 4px;
+      color: #ddd;
+      border: 1px solid #222;
+    }
+    pre code {
+      background: none;
+      padding: 0;
+      border: none;
+    }
+
+    /* ── §6.1 Layout ── */
+    .page-wrap { max-width: 100%; margin: 0 auto; padding: 0; }
+    .content { padding: 32px 48px; }
+
+    /* ── §6.2 Cover ── */
+    .cover {
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      justify-content: center; align-items: flex-start;
+      padding: 60px 48px;
+      border-bottom: 2px solid var(--border);
+      position: relative; overflow: hidden;
+    }
+    .cover::before { display: none; }
+    .cover-badge {
+      font-size: 11px; font-weight: 500; letter-spacing: 2px;
+      text-transform: uppercase; color: #fff;
+      border: 1px solid #333; padding: 4px 14px;
+      border-radius: 99px; margin-bottom: 28px;
+    }
+    .cover h1 {
+      font-size: 3.6rem; font-weight: 600;
+      line-height: 1.15; color: #fff;
+      letter-spacing: -0.04em; margin-bottom: 10px;
+    }
+    .cover-sub {
+      font-size: 16px; color: var(--text-dim);
+      line-height: 1.7; max-width: 640px;
+      margin-bottom: 32px;
+    }
+    .cover-meta {
+      display: grid; grid-template-columns: repeat(3, auto);
+      gap: 24px; font-size: 12px; color: var(--text-muted);
+    }
+    .cover-meta span b {
+      color: var(--text-dim); display: block;
+      font-size: 11px; letter-spacing: 1px;
+      text-transform: uppercase; margin-bottom: 2px;
+    }
+    .cover-mission {
+      margin-top: 48px;
+      background: var(--surface); border: 1px solid var(--border);
+      border-left: 4px solid var(--accent);
+      border-radius: var(--radius); padding: 20px 22px; max-width: 680px;
+    }
+    .cover-mission p { font-size: 13px; line-height: 1.8; color: var(--text-dim); }
+
+    /* ── §6.3 TOC ── */
+    .toc-page { padding: 60px 48px; border-bottom: 2px solid var(--border); }
+    .toc-title {
+      font-size: 11px; font-weight: 500; letter-spacing: 2px;
+      text-transform: uppercase; color: #888;
+      margin-bottom: 32px; padding-bottom: 10px;
+      border-bottom: 1px solid #222;
+    }
+    .toc-section { margin-bottom: 4px; }
+    .toc-h1 { font-size: 14px; font-weight: 500; color: #fff; margin-top: 18px; margin-bottom: 6px; }
+    .toc-h1 a { color: inherit; text-decoration: none; }
+    .toc-h1 a:hover { color: #ccc; }
+    .toc-h2 { font-size: 12.5px; font-weight: 400; color: #aaa; padding-left: 18px; margin-bottom: 3px; }
+    .toc-h2 a { color: inherit; text-decoration: none; }
+    .toc-h2 a:hover { color: #fff; }
+    .toc-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #555; margin-right: 8px; vertical-align: middle; }
+    .toc-dot2 { background: #444; width: 5px; height: 5px; }
+
+    /* ── §6.4 Section Header ── */
+    .section-header { padding: 56px 48px 0; }
+    .section-tag {
+      font-size: 10px; font-weight: 500; letter-spacing: 2px;
+      text-transform: uppercase; color: #888; margin-bottom: 8px;
+    }
+    .section-header h2 {
+      font-size: 2.4rem; font-weight: 500;
+      color: #fff; letter-spacing: -0.02em; margin-bottom: 16px;
+    }
+    .section-divider { border: none; border-top: 1px solid var(--border); margin: 0 48px; }
+
+    /* ── §7.1 Callout Boxes ── */
+    .def-box, .insight-box, .warn-box, .takeaway {
+      background: #000;
+      border: 1px solid #222;
+      border-left: 4px solid var(--note-red);
+      border-radius: 8px;
+      padding: 16px 18px;
+      margin: 14px 0;
+      font-size: 12.5px;
+    }
+    .def-box .def-label,
+    .insight-box .ins-label,
+    .warn-box .warn-label,
+    .takeaway .tk-label {
+      font-size: 9px; font-weight: 600; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--note-red);
+      margin-bottom: 8px;
+    }
+
+    /* ── §7.2 Chapter Cards ── */
+    .chapter {
+      background: #000;
+      border: 1px solid #222;
+      border-radius: 10px;
+      margin-bottom: 28px;
+      overflow: hidden;
+    }
+    .chapter-header {
+      padding: 16px 22px;
+      background: #000;
+      border-bottom: 1px solid #222;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .chapter-num {
+      font-size: 10px; font-weight: 500;
+      color: #aaa;
+      background: transparent;
+      border: 1px solid #333;
+      padding: 2px 10px; border-radius: 99px;
+    }
+    .chapter-header h3 { font-size: 17px; font-weight: 500; color: #fff; flex: 1; }
+    .chapter-body { padding: 22px 24px; }
+
+    /* ── §7.3 Math Display ── */
+    .math-block {
+      background: #000;
+      border: 1px solid #222;
+      border-radius: 8px;
+      padding: 16px 20px;
+      text-align: center;
+      margin: 14px 0;
+    }
+    .math-block .math-label {
+      font-size: 10px; color: #888;
+      font-family: 'JetBrains Mono', monospace;
+      text-align: right; display: block; margin-bottom: 6px;
+    }
+
+    /* ── §7.4 Tables ── */
+    table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    th {
+      background: #000; color: #ccc; font-weight: 600;
+      padding: 10px 14px; border: 1px solid #222;
+      text-align: left;
+    }
+    td {
+      padding: 9px 14px; border: 1px solid #222; color: #fff;
+      vertical-align: top;
+    }
+    tr:nth-child(even) td { background: rgba(255,255,255,.02); }
+
+    /* Priority badges */
+    .badge {
+      display: inline-block;
+      font-size: 10px; font-weight: 500;
+      padding: 2px 8px; border-radius: 99px;
+      letter-spacing: 0.5px;
+    }
+    .badge-must { border: 1px solid var(--note-red); color: var(--note-red); }
+    .badge-soon { border: 1px solid #888; color: #ccc; }
+    .badge-need { border: 1px solid #555; color: #888; }
+    .badge-opt  { border: 1px solid #333; color: #666; }
+
+    /* ── §7.7 Derivation Steps ── */
+    .derivation {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 8px; padding: 18px 20px; margin: 14px 0;
+    }
+    .derivation .step {
+      display: flex; gap: 16px; margin-bottom: 12px; align-items: flex-start;
+    }
+    .derivation .step:last-child { margin-bottom: 0; }
+    .step-num {
+      min-width: 26px; height: 26px;
+      background: transparent; border: 1px solid #333;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 500; color: #fff; margin-top: 2px;
+    }
+    .step-body { flex: 1; font-size: 12.5px; }
+
+    /* ── §7.8 Checklist ── */
+    .checklist { list-style: none; padding: 0; }
+    .checklist li {
+      display: flex; align-items: flex-start; gap: 10px;
+      padding: 8px 0; border-bottom: 1px solid #1a1a1a;
+      font-size: 13px; color: var(--text-dim);
+    }
+    .checklist li:last-child { border-bottom: none; }
+    .check-icon {
+      width: 16px; height: 16px; min-width: 16px;
+      border: 1px solid #444; border-radius: 3px; flex-shrink: 0;
+      margin-top: 3px;
+    }
+
+    /* ── §7.9 Exit Criteria ── */
+    .exit-criteria {
+      background: #000;
+      border: 1px solid #222; border-top: 3px solid #333;
+      border-radius: var(--radius); padding: 22px 24px; margin-bottom: 24px;
+    }
+    .exit-criteria .ec-title {
+      font-size: 11px; font-weight: 500; letter-spacing: 2px;
+      text-transform: uppercase; color: #fff; margin-bottom: 14px;
+    }
+    .exit-item { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 10px; font-size: 12.5px; }
+    .exit-bullet {
+      width: 20px; height: 20px; border-radius: 50%;
+      background: transparent; border: 1px solid #333;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px; color: #fff; flex-shrink: 0; margin-top: 2px;
+    }
+
+    /* ── §7.11 Summary Grid ── */
+    .summary-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin: 14px 0; }
+    .summary-card {
+      background: #000; border: 1px solid #222;
+      border-radius: 8px; padding: 16px 18px;
+    }
+    .sc-icon { font-size: 20px; margin-bottom: 8px; }
+    .sc-title { font-size: 11px; font-weight: 600; color: #fff; margin-bottom: 6px; }
+    .sc-body  { font-size: 12px; color: #aaa; line-height: 1.6; }
+
+    /* ── §7.12 Concept Flow ── */
+    .concept-flow { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin: 14px 0; }
+    .flow-node {
+      background: #000; border: 1px solid #333;
+      border-radius: 6px; padding: 8px 14px;
+      font-size: 12.5px; color: #fff;
+      transition: background 0.15s, border-color 0.15s, transform 0.15s;
+    }
+    .flow-node:hover { background: #111; border-color: #555; transform: translateY(-2px); }
+    .flow-arrow { color: #555; font-size: 14px; }
+
+    /* ── §7.13 Micro ── */
+    .source-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px; color: #888;
+      background: var(--surface2); border: 1px solid #333;
+      border-radius: 4px; padding: 2px 8px;
+    }
+
+    /* ── §8 Behavior ── */
+    a { color: var(--text-dim); transition: color 0.15s ease, opacity 0.15s ease; }
+    a:hover { color: #ccc; }
+
+    /* ── Back to top ── */
+    .back-to-top {
+      position: fixed; bottom: 28px; right: 28px;
+      width: 40px; height: 40px;
+      background: #000; border: 1px solid #333;
+      border-radius: 50%; color: #888;
+      font-size: 18px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.2s, border-color 0.15s, color 0.15s;
+      z-index: 1000;
+    }
+    .back-to-top.visible { opacity: 1; pointer-events: auto; }
+    .back-to-top:hover { border-color: #555; color: #fff; }
+
+    /* ── Path cards ── */
+    .path-card {
+      background: #000; border: 1px solid #222;
+      border-radius: var(--radius); padding: 22px 24px;
+      margin-bottom: 20px;
+    }
+    .path-card h4 { margin-top: 0; }
+
+    /* ── §9 Print ── */
+    @media print {
+      :root {
+        --bg: #fff; --surface: #f8f9fc; --surface2: #f0f2f8;
+        --border: #dee2e6; --text: #212529;
+        --text-dim: #475569; --text-muted: #6c757d;
+      }
+      body { background: #fff; color: #212529; font-size: 11pt; }
+      .page-wrap { padding: 0; }
+      .toc-page { padding: 1.5rem; }
+      .cover { min-height: auto; padding: 1.5rem; page-break-before: avoid; }
+      .section-header { page-break-before: always; }
+      .section-divider { border-top-color: #dee2e6; }
+      .chapter { page-break-inside: avoid; }
+      pre { white-space: pre-wrap; }
+      a { color: inherit; text-decoration: none; }
+      .cover h1, .section-header h2 { color: #1e293b; }
+      .flow-node:hover { transform: none; }
+      .back-to-top { display: none; }
+    }
+
+    /* ── §9.2 Tablet ── */
+    @media (max-width: 768px) {
+      .cover { padding: 40px 28px; }
+      .cover h1 { font-size: 2.4rem; }
+      .cover-meta { grid-template-columns: 1fr; gap: 12px; }
+      .content { padding: 24px 28px; }
+      .toc-page { padding: 40px 28px; }
+      .section-header { padding: 40px 28px 0; }
+      .section-divider { margin: 0 28px; }
+      .summary-grid { grid-template-columns: 1fr 1fr; }
+      .concept-flow { gap: 6px; }
+    }
+
+    /* ── §9.3 Mobile ── */
+    @media (max-width: 480px) {
+      .cover { padding: 32px 18px; min-height: 80vh; }
+      .cover h1 { font-size: 1.8rem; letter-spacing: -0.02em; }
+      .cover-badge { font-size: 10px; padding: 3px 10px; }
+      .cover-mission { padding: 14px 16px; }
+      .content { padding: 18px 16px; }
+      .toc-page { padding: 32px 18px; }
+      .section-header { padding: 32px 18px 0; }
+      .section-divider { margin: 0 18px; }
+      .section-header h2 { font-size: 1.6rem; }
+      .chapter-body { padding: 16px 14px; }
+      .summary-grid { grid-template-columns: 1fr; }
+      pre { padding: 12px 14px; font-size: 11px; }
+    }
+
+    /* ── Focus ── */
+    a:focus-visible, button:focus-visible {
+      outline: 2px solid #cf4444;
+      outline-offset: 2px;
+      border-radius: 2px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════════════════════════
+     COVER
+     ════════════════════════════════════════════════════════════════ -->
+<div class="cover" id="top">
+  <div class="cover-badge">Mathematics for AI/ML · Practical Priority Roadmap</div>
+  <h1>Mathematics for AI/ML</h1>
+  <p class="cover-sub">Ranked by <strong>how often you actually use it</strong> in modern AI/ML (2026) — not by mathematical beauty or difficulty.</p>
+  <div class="cover-meta">
+    <span><b>Scope</b>13 areas</span>
+    <span><b>Target</b>Engineer / Researcher</span>
+    <span><b>Approach</b>Project-driven</span>
+  </div>
+  <div class="cover-mission">
+    <p>This document is a <strong>map, not a mandatory route</strong>. Each person has a different background and different goals. Identify your target (engineer / research / specific subfield), then go deep only in the areas you need. Learn through projects, not textbooks. All math notation uses Unicode (∑ ∫ ∂ ∇ → ≈).</p>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════
+     TABLE OF CONTENTS
+     ════════════════════════════════════════════════════════════════ -->
+<nav class="toc-page" aria-label="Table of Contents">
+  <div class="toc-title">Contents</div>
+
+  <div class="toc-section">
+    <div class="toc-h1"><a href="#how-to-use"><span class="toc-dot" aria-hidden="true"></span>How to Use This Document</a></div>
+    <div class="toc-h1"><a href="#ranking"><span class="toc-dot" aria-hidden="true"></span>Quick Priority Ranking</a></div>
+    <div class="toc-h1"><a href="#grouping"><span class="toc-dot" aria-hidden="true"></span>Priority Grouping</a></div>
+  </div>
+
+  <div class="toc-section">
+    <div class="toc-h1"><a href="#sec-1"><span class="toc-dot" aria-hidden="true"></span>1. Linear Algebra</a></div>
+    <div class="toc-h1"><a href="#sec-2"><span class="toc-dot" aria-hidden="true"></span>2. Multivariable Calculus</a></div>
+    <div class="toc-h1"><a href="#sec-3"><span class="toc-dot" aria-hidden="true"></span>3. Probability &amp; Statistics</a></div>
+    <div class="toc-h1"><a href="#sec-4"><span class="toc-dot" aria-hidden="true"></span>4. Optimization</a></div>
+    <div class="toc-h1"><a href="#sec-5"><span class="toc-dot" aria-hidden="true"></span>5. Information Theory</a></div>
+    <div class="toc-h1"><a href="#sec-6"><span class="toc-dot" aria-hidden="true"></span>6. Numerical Methods</a></div>
+    <div class="toc-h1"><a href="#sec-7"><span class="toc-dot" aria-hidden="true"></span>7. Discrete Math &amp; Graph Theory</a></div>
+    <div class="toc-h1"><a href="#sec-8"><span class="toc-dot" aria-hidden="true"></span>8. Differential Equations</a></div>
+    <div class="toc-h1"><a href="#sec-9"><span class="toc-dot" aria-hidden="true"></span>9. Functional Analysis</a></div>
+    <div class="toc-h1"><a href="#sec-10"><span class="toc-dot" aria-hidden="true"></span>10. Differential Geometry &amp; Topology</a></div>
+    <div class="toc-h1"><a href="#sec-11"><span class="toc-dot" aria-hidden="true"></span>11. Abstract Algebra</a></div>
+    <div class="toc-h1"><a href="#sec-12"><span class="toc-dot" aria-hidden="true"></span>12. Measure Theory</a></div>
+    <div class="toc-h1"><a href="#sec-13"><span class="toc-dot" aria-hidden="true"></span>13. LLM-Era Mathematics (2024–2026)</a></div>
+  </div>
+
+  <div class="toc-section">
+    <div class="toc-h1"><a href="#beyond"><span class="toc-dot" aria-hidden="true"></span>Applied Math "Beyond the Table"</a></div>
+    <div class="toc-h1"><a href="#meta-traps"><span class="toc-dot" aria-hidden="true"></span>Meta-Traps When Studying Math for AI</a></div>
+    <div class="toc-h1"><a href="#roadmap-12"><span class="toc-dot" aria-hidden="true"></span>Suggested 12-Month Roadmap</a></div>
+    <div class="toc-h1"><a href="#glossary"><span class="toc-dot" aria-hidden="true"></span>Glossary</a></div>
+  </div>
+</nav>
+
+<main role="main">
+
+<!-- ════════════════════════════════════════════════════════════════
+     HOW TO USE
+     ════════════════════════════════════════════════════════════════ -->
+<div class="section-header" id="how-to-use">
+  <div class="section-tag">Getting Started</div>
+  <h2>How to Use This Document</h2>
+</div>
+<hr class="section-divider"/>
+<div class="content"><div class="page-wrap">
+  <div class="chapter">
+    <div class="chapter-header">
+      <span class="chapter-num">0.1</span>
+      <h3>Ground Rules</h3>
+    </div>
+    <div class="chapter-body">
+      <ul>
+        <li><strong>Don't read sequentially.</strong> Identify your goal (engineer / research / specific subfield), then go deep only in the areas you need.</li>
+        <li><strong>Learn through projects, not textbooks.</strong> Every area has self-check items — if you can't do them, you haven't learned enough.</li>
+        <li><strong>Use it or lose it.</strong> Studying areas (10)(11)(12) without an applying project = forgotten in 6 months.</li>
+        <li><strong>"Enough" is relative.</strong> Enough for an engineer ≠ enough for a research scientist ≠ enough for a theory researcher.</li>
+      </ul>
+    </div>
+  </div>
+</div></div>
+
+<!-- ════════════════════════════════════════════════════════════════
+     RANKING TABLE
+     ════════════════════════════════════════════════════════════════ -->
+<div class="section-header" id="ranking">
+  <div class="section-tag">Overview</div>
+  <h2>Quick Priority Ranking</h2>
+</div>
+<hr class="section-divider"/>
+<div class="content"><div class="page-wrap">
+  <div class="chapter">
+    <div class="chapter-header">
+      <span class="chapter-num">0.2</span>
+      <h3>All 13 Areas at a Glance</h3>
+    </div>
+    <div class="chapter-body">
+      <table>
+        <thead>
+          <tr><th>#</th><th>Area</th><th>Usage Frequency</th><th>Priority</th><th>Learn Via</th><th>Where You'll Encounter It</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>1</td><td>Linear Algebra</td><td>Daily</td><td><span class="badge badge-must">MUST HAVE</span></td><td>Code + textbook</td><td>Every model</td></tr>
+          <tr><td>2</td><td>Multivariable Calculus</td><td>Daily</td><td><span class="badge badge-must">MUST HAVE</span></td><td>Backprop from scratch</td><td>Training</td></tr>
+          <tr><td>3</td><td>Probability &amp; Statistics</td><td>Weekly</td><td><span class="badge badge-must">MUST HAVE</span></td><td>Implement distributions</td><td>Loss, generative, eval</td></tr>
+          <tr><td>4</td><td>Optimization</td><td>Weekly</td><td><span class="badge badge-must">MUST HAVE</span></td><td>Implement optimizers</td><td>Every training loop</td></tr>
+          <tr><td>5</td><td>Information Theory</td><td>Often</td><td><span class="badge badge-soon">SOON NEEDED</span></td><td>Cross-entropy, KL</td><td>Loss, VAE, contrastive</td></tr>
+          <tr><td>6</td><td>Numerical Methods</td><td>When debugging</td><td><span class="badge badge-soon">SOON NEEDED</span></td><td>Stability tricks</td><td>FP16, softmax, log-space</td></tr>
+          <tr><td>7</td><td>Discrete Math &amp; Graphs</td><td>Per project</td><td><span class="badge badge-soon">SOON NEEDED</span></td><td>Algorithms</td><td>GNN, attention, search</td></tr>
+          <tr><td>8</td><td>Differential Equations</td><td>Per subfield</td><td><span class="badge badge-need">AS NEEDED</span></td><td>Neural ODE/SDE</td><td>Diffusion, flow</td></tr>
+          <tr><td>9</td><td>Functional Analysis</td><td>Per subfield</td><td><span class="badge badge-need">AS NEEDED</span></td><td>Kernel, GP</td><td>SVM, GP, theory</td></tr>
+          <tr><td>10</td><td>Diff. Geometry &amp; Topology</td><td>Per subfield</td><td><span class="badge badge-need">AS NEEDED</span></td><td>Manifold papers</td><td>Geometric DL</td></tr>
+          <tr><td>11</td><td>Abstract Algebra</td><td>Niche</td><td><span class="badge badge-opt">OPTIONAL</span></td><td>Group-equivariant nets</td><td>Sciences ML, physics</td></tr>
+          <tr><td>12</td><td>Measure Theory</td><td>Very rare</td><td><span class="badge badge-opt">OPTIONAL</span></td><td>Rigorous papers</td><td>Pure theory</td></tr>
+          <tr><td>13</td><td>LLM-Era Mathematics</td><td>Weekly (LLM era)</td><td><span class="badge badge-soon">COMBO 1–7</span></td><td>FlashAttention / Mamba</td><td>LLM train, serve, align</td></tr>
+        </tbody>
+      </table>
+
+      <div class="insight-box" style="margin-top:18px;">
+        <div class="ins-label">Note</div>
+        <p>Section #13 is not new math — it's a combo of (1)(2)(3)(4)(6) applied to LLM-era architectures. Separated because engineers/researchers in 2026 use it daily.</p>
+      </div>
+    </div>
+  </div>
+</div></div>
+
+<!-- ════════════════════════════════════════════════════════════════
+     PRIORITY GROUPING
+     ════════════════════════════════════════════════════════════════ -->
+<div class="section-header" id="grouping">
+  <div class="section-tag">Overview</div>
+  <h2>Priority Grouping</h2>
+</div>
+<hr class="section-divider"/>
+<div class="content"><div class="page-wrap">
+  <div class="chapter">
+    <div class="chapter-header">
+      <span class="chapter-num">0.3</span>
+      <h3>Roadmap Tiers</h3>
+    </div>
+    <div class="chapter-body">
+      <div class="summary-grid">
+        <div class="summary-card"><div class="sc-title"><span class="badge badge-must">MUST HAVE</span></div><div class="sc-body">Areas 1–4. Can't read papers or train models without these.</div></div>
+        <div class="summary-card"><div class="sc-title"><span class="badge badge-soon">SOON NEEDED</span></div><div class="sc-body">Areas 5–7. Encountered constantly when debugging + reading modern papers.</div></div>
+        <div class="summary-card"><div class="sc-title"><span class="badge badge-need">AS NEEDED</span></div><div class="sc-body">Areas 8–10. Only study when your subfield demands it.</div></div>
+      </div>
+      <div class="summary-grid" style="grid-template-columns: repeat(2,1fr);">
+        <div class="summary-card"><div class="sc-title"><span class="badge badge-opt">OPTIONAL</span></div><div class="sc-body">Areas 11–12. Pure research / specific niches.</div></div>
+        <div class="summary-card"><div class="sc-title"><span class="badge badge-soon">LLM ERA</span></div><div class="sc-body">Area 13. Combo of MUST HAVE + SOON applied to the LLM stack.</div></div>
+      </div>
+
+      <div class="warn-box" style="margin-top:14px;">
+        <div class="warn-label">Principle</div>
+        <p>Don't study higher areas when lower ones still have gaps. Studying (10) Differential Geometry before mastering (2) Calculus = wasted time.</p>
+      </div>
+    </div>
+  </div>
+</div></div>
+
+<!-- ════════════════════════════════════════════════════════════════
+     SECTION 1 — LINEAR ALGEBRA
+     ════════════════════════════════════════════════════════════════ -->
+<div class="section-header" id="sec-1">
+  <div class="section-tag">Must Have · Area 1</div>
+  <h2>Linear Algebra</h2>
+</div>
+<hr class="section-divider"/>
+<div class="content"><div class="page-wrap">
+
+  <div class="chapter">
+    <div class="chapter-header"><span class="chapter-num">1.1</span><h3>Why #1</h3></div>
+    <div class="chapter-body">
+      <p>All data in AI = tensors (generalized matrices). Every neural network layer = a linear transformation + a nonlinearity. Understanding linear algebra = understanding the backbone of deep learning.</p>
+    </div>
+  </div>
+
+  <div class="chapter">
+    <div class="chapter-header"><span class="chapter-num">1.2</span><h3>Core Topics</h3></div>
+    <div class="chapter-body">
+      <table>
+        <thead><tr><th>Topic</th><th>Why You Need It</th></tr></thead>
+        <tbody>
+          <tr><td>Vectors, vector spaces</td><td>Embeddings, feature spaces</td></tr>
+          <tr><td>Dot product, outer product</td><td>Similarity, attention</td></tr>
+          <tr><td>Matrices, matmul, transpose</td><td>Forward pass = matmul chain</td></tr>
+          <tr><td>Rank, kernel, image, subspaces</td><td>Low-rank, LoRA, bottleneck</td></tr>
+          <tr><td>Determinant, trace</td><td>Jacobian, normalizing flow</td></tr>
+          <tr><td>Eigenvalues, eigenvectors</td><td>PCA, spectral methods, Hessian stability</td></tr>
+          <tr><td>Singular Value Decomposition (SVD)</td><td>PCA, low-rank approx, recommender systems</td></tr>
+          <tr><td>Norms: L1, L2, L∞, Frobenius, nuclear, spectral</td><td>Regularization, weight decay</td></tr>
+          <tr><td>Symmetric, PSD/PD matrices</td><td>Covariance, Hessian, kernels</td></tr>
+          <tr><td>Projection, orthogonality</td><td>Gram-Schmidt, QR, orthogonal init</td></tr>
+          <tr><td>Kronecker product, Hadamard product</td><td>Efficient computation</td></tr>
+          <tr><td>LU, QR, Cholesky decomposition</td><td>Solving linear systems, sampling</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="chapter">
+    <div class="chapter-header"><span class="chapter-num">1.3</span><h3>AI Applications</h3></div>
+    <div class="chapter-body">
+      <ul>
+        <li><strong>Forward pass:</strong> $y = \sigma(Wx + b)$ — just matmul + bias + nonlinearity.</li>
+        <li><strong>Attention:</strong> $\text{softmax}(QK^\top / \sqrt{d})\,V$ — all linear operations.</li>
+        <li><strong>PCA:</strong> diagonalize the covariance matrix = SVD.</li>
+        <li><strong>LoRA:</strong> $\Delta W \approx BA$ with $\text{rank}(BA) \ll \text{rank}(W)$ — low-rank factorization.</li>
+        <li><strong>Batch Normalization:</strong> whitening = projection onto a subspace.</li>
+        <li><strong>Embeddings:</strong> points in $\mathbb{R}^d$.</li>
+        <li><strong>GNN:</strong> Graph Laplacian $L = D - A$ is a linear algebra matrix.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="chapter">
+    <div class="chapter-header"><span class="chapter-num">1.4</span><h3>Recommended Resources</h3></div>
+    <div class="chapter-body">
+      <ul>
+        <li><strong>Foundation:</strong> Gilbert Strang — "Introduction to Linear Algebra" (accessible, MIT 18.06 lectures).</li>
+        <li><strong>Rigorous:</strong> Sheldon Axler — "Linear Algebra Done Right" (determinant-free approach).</li>
+        <li><strong>For ML:</strong> Chapter 2 of "Mathematics for Machine Learning" (Deisenroth et al.) — free PDF.</li>
+        <li><strong>Advanced reference:</strong> Trefethen &amp; Bau — "Numerical Linear Algebra".</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="chapter">
+    <div class="chapter-header"><span class="chapter-num">1.5</span><h3>Self-Check</h3></div>
+    <div class="chapter-body">
+      <ul class="checklist">
+        <li><span class="check-icon"></span>Compute SVD by hand for a 2×2 matrix.</li>
+        <li><span class="check-icon"></span>Explain why attention divides by $\sqrt{d}$ (hint: variance of dot product).</li>
+        <li><span class="check-icon"></span>Prove that the covariance matrix is always PSD.</li>
+        <li><span class="check-icon"></span>Implement PCA in NumPy without <code>np.linalg.svd</code> (use power iteration).</li>
+        <li><span class="check-icon"></span>Why does LoRA work with rank $r \ll d$?</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="chapter">
+    <div class="chapter-header"><span class="chapter-num">1.6</span><h3>Common Pitfalls</h3></div>
+    <div class="chapter-body">
+      <div class="warn-box">
+        <div class="warn-label">Warning</div>
+        <ul>
+          <li>Confusing rank with dimension.</li>
+          <li>Forgetting that $A^\top A \neq A A^\top$.</li>
+          <li>Assuming eigenvalues are always real — only true for symmetric/Hermitian matrices.</li>
+          <li>Confusing "orthogonal" with "orthonormal".</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+</div></div>
+
+<!-- ════════════════════════════════════════════════════════════════
+     SECTION 2 — MULTIVARIABLE CALCULUS
+     ════════════════════════════════════════════════════════════════ -->
+<div class="section-header" id="sec-2">
+  <div class="section-tag">Must Have · Area 2</div>
+  <h2>Multivariable Calculus</h2>
+</div>
+<hr class="section-divider"/>
+<div class="content"><div class="page-wrap">
+
+  <div class="chapter">
+    <div class="chapter-header"><span class="chapter-num">2.1</span><h3>Why #2</h3></div>
+    <div class="chapter-body">
+      <p>All training = optimizing a loss function over millions/billions of parameters. Backpropagation = chain rule applied on a computation graph. Without calculus, you can't understand <em>why</em> models learn.</p>
+    </div>
+  </div>
+
+  <div class="chapter">
+    <div class="chapter-header"><span class="chapter-num">2.2</span><h3>Core Topics</h3></div>
+    <div class="chapter-body">
+      <table>
+        <thead><tr><th>Topic</th><th>Why You Need It</th></tr></thead>
+        <tbody>
+          <tr><td>Partial derivatives</td><td>Every gradient component</td></tr>
+          <tr><td>Gradient $\nabla f$</td><td>Direction of steepest ascent of loss</td></tr>
+          <tr><td>Jacobian $J$</td><td>Vector→vector derivative, backprop through layers</td></tr>
+          <tr><td>Hessian $H$</td><td>Curvature, second-order methods, sharpness</td></tr>
+          <tr><td>Chain rule (single &amp; multi-variable)</td><td>Backpropagation</td></tr>
+          <tr><td>Matrix/vector derivatives</td><td>Computing $\partial L / \partial W$</td></tr>
+          <tr><td>Taylor expansion</td><td>Linearization, second-order approximation</td></tr>
+          <tr><td>Multi-variable integration</td><td>Marginalization in probability</td></tr>
+          <tr><td>Implicit function theorem</td><td>Implicit layers, equilibrium models</td></tr>
+          <tr><td>Leibniz rule</td><td>Differentiating under the integral, reparameterization</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="chapter">
+    <div class="chapter-header"><span class="chapter-num">2.3</span><h3>AI Applications</h3></div>
+    <div class="chapter-body">
+      <ul>
+        <li><strong>Backpropagation:</strong> generalized chain rule for function composition.</li>
+        <li><strong>Reverse-mode autodiff:</strong> why PyTorch/JAX are fast — efficient Jacobian-vector products.</li>
+        <li><strong>Reparameterization trick (VAE):</strong> $z = \mu + \sigma \odot \epsilon$ enables gradient flow through sampling.</li>
+        <li><strong>SAM (Sharpness-Aware Minimization):</strong> uses Hessian/curvature.</li>
+        <li><strong>Natural gradient:</strong> $F^{-1}\nabla L$ where $F$ is the Fisher information matrix.</li>
+        <li><strong>Score matching:</strong> $\nabla_x \log p(x)$ — gradient of log-density.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="chapter">
+    <div class="chapter-header"><span class="chapter-num">2.4</span><h3>Self-Check</h3></div>
+    <div class="chapter-body">
+      <ul class="checklist">
+        <li><span class="check-icon"></span>Compute $\partial(x^\top A x)/\partial x$ by hand.</li>
+        <li><span class="check-icon"></span>Derive the gradient of cross-entropy loss through softmax.</li>
+        <li><span class="check-icon"></span>Implement backprop from scratch for a 2-layer MLP in NumPy.</li>
+        <li><span class="check-icon"></span>Explain the reparameterization trick: why is it necessary for VAE?</li>
+        <li><span class="check-icon"></span>Draw a computation graph and compute reverse-mode autodiff by hand.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="chapter">
+    <div class="chapter-header"><span class="chapter-num">2.5</span><h3>Common Pitfalls</h3></div>
+    <div class="chapter-body">
+      <div class="warn-box"><div class="warn-label">Warning</div><ul>
+        <li>Thinking the gradient is a scalar — it's always a vector.</li>
+        <li>Forgetting the transpose when differentiating with respect to matrices.</li>
+        <li>Assuming the Hessian is always computable — for large models, it can't be stored.</li>
+        <li>Confusing JVP (forward-mode) with VJP (reverse-mode).</li>
+      </ul></div>
+    </div>
+  </div>
+
+</div></div>
+
+<!-- ════════════════════════════════════════════════════════════════
+     SECTION 3 — PROBABILITY & STATISTICS
+     ════════════════════════════════════════════════════════════════ -->
+<div class="section-header" id="sec-3">
+  <div class="section-tag">Must Have · Area 3</div>
+  <h2>Probability &amp; Statistics</h2>
+</div>
+<hr class="section-divider"/>
+<div class="content"><div class="page-wrap">
+
+  <div class="chapter">
+    <div class="chapter-header"><span class="chapter-num">3.1</span><h3>Why #3</h3></div>
+    <div class="chapter-body">
+      <p>ML = learning from data = learning distributions. Every loss has a probabilistic interpretation. Generative models = learning $p(x)$. Bayesian DL, uncertainty estimation, A/B testing — all need this.</p>
+    </div>
+  </div>
+
+  <div class="chapter">
+    <div class="chapter-header"><span class="chapter-num">3.2</span><h3>Core Topics</h3></div>
+    <div class="chapter-body">
+      <table>
+        <thead><tr><th>Topic</th><th>Why You Need It</th></tr></thead>
+        <tbody>
+          <tr><td>Discrete &amp; continuous random variables</td><td>Every stochastic model</td></tr>
+          <tr><td>Distributions: Bernoulli, Categorical, Gaussian, Poisson, Exponential, Beta, Dirichlet</td><td>Likelihood, prior</td></tr>
+          <tr><td>Expectation, variance, covariance</td><td>Loss, regularization</td></tr>
+          <tr><td>Joint, marginal, conditional distributions</td><td>Bayes, graphical models</td></tr>
+          <tr><td>Bayes' theorem</td><td>MAP, Bayesian inference</td></tr>
+          <tr><td>MLE, MAP, EM</td><td>Parameter learning</td></tr>
+          <tr><td>Central Limit Theorem (CLT)</td><td>Why Gaussian is ubiquitous</td></tr>
+          <tr><td>Law of Large Numbers</td><td>SGD convergence</td></tr>
+          <tr><td>Sampling: rejection, importance, MCMC, Gibbs</td><td>Bayesian inference, diffusion</td></tr>
+          <tr><td>Variational inference, ELBO</td><td>VAE, variational methods</td></tr>
+          <tr><td>Hypothesis testing, p-value, confidence intervals</td><td>Model evaluation, A/B</td></tr>
+          <tr><td>Concentration inequalities (Markov, Chebyshev, Hoeffding)</td><td>Generalization bounds</td></tr>
+          <tr><td>Exponential family</td><td>Unified framework</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="chapter">
+    <div class="chapter-header"><span class="chapter-num">3.3</span><h3>AI Applications</h3></div>
+    <div class="chapter-body">
+      <ul>
+        <li><strong>Cross-entropy loss:</strong> $-\mathbb{E}[\log p(y|x)]$ = negative log-likelihood.</li>
+        <li><strong>VAE:</strong> maximize ELBO $= \log p(x) - D_{KL}(q(z|x) \| p(z))$.</li>
+        <li><strong>Diffusion model:</strong> learns the score $\nabla_x \log p_t(x)$ at multiple noise levels.</li>
+        <li><strong>Bayesian Neural Network:</strong> prior on weights, posterior via VI or MCMC.</li>
+        <li><strong>Uncertainty estimation:</strong> epistemic vs. aleatoric uncertainty.</li>
+        <li><strong>Active learning:</strong> select sample with highest entropy.</li>
+        <li><strong>GAN:</strong> ultimately optimizes a form of divergence.</li>
+        <li><strong>RL:</strong> policy = distribution over actions.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="chapter">
+    <div class="chapter-header"><span class="chapter-num">3.4</span><h3>Self-Check</h3></div>
+    <div class="chapter-body">
+      <ul class="checklist">
+        <li><span class="check-icon"></span>Derive cross-entropy = negative log-likelihood of Bernoulli/Categorical.</li>
+        <li><span class="check-icon"></span>Derive the ELBO of VAE in two ways: (a) from $D_{KL}(q\|p_{\text{posterior}}) \geq 0$, (b) from Jensen's inequality.</li>
+        <li><span class="check-icon"></span>Explain why log-likelihood is usually better than likelihood (numerical stability).</li>
+        <li><span class="check-icon"></span>For a Gaussian model, compute MLE of $\mu$ and $\sigma^2$ by hand.</li>
+        <li><span class="check-icon"></span>Implement Gibbs sampling for a simple model.</li>
+        <li><span class="check-icon"></span>Distinguish: epistemic uncertainty vs. aleatoric uncertainty.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="chapter">
+    <div class="chapter-header"><span class="chapter-num">3.5</span><h3>Common Pitfalls</h3></div>
+    <div class="chapter-body">
+      <div class="warn-box"><div class="warn-label">Warning</div><ul>
+        <li>Confusing $p(A|B)$ with $p(B|A)$ — base rate fallacy.</li>
+        <li>Forgetting the Jacobian when changing variables.</li>
+        <li>Confusing posterior with likelihood.</li>
+        <li>Assuming MLE and MAP always give the same result (only when prior is uniform).</li>
+        <li>Forgetting that KL is asymmetric: $D_{KL}(p\|q) \neq D_{KL}(q\|p)$.</li>
+      </ul></div>
+    </div>
+  </div>
+
+</div></div>
+
+<!-- ════════════════════════════════════════════════════════════════
+     SECTION 4 — OPTIMIZATION
+     ════════════════════════════════════════════════════════════════ -->
+<div class="section-header" id="sec-4">
+  <div class="section-tag">Must Have · Area 4</div>
+  <h2>Optimization</h2>
+</div>
+<hr class="section-divider"/>
+<div class="content"><div class="page-wrap">
+
+  <div class="chapter">
+    <div class="chapter-header"><span class="chapter-num">4.1</span><h3>Why #4</h3></div>
+    <div class="chapter-body">
+      <p>Training = optimization problem. Understanding optimizers = understanding why Adam usually outperforms SGD, why learning rate matters, why models get stuck at saddle points.</p>
+    </div>
+  </div>
+
+  <div class="chapter">
+    <div class="chapter-header"><span class="chapter-num">4.2</span><h3>Core Topics</h3></div>
+    <div class="chapter-body">
+      <table>
+        <thead><tr><th>Topic</th><th>Why You Need It</th></tr></thead>
+        <tbody>
+          <tr><td>Convex vs. non-convex</td><td>DL is non-convex; understand the difference</td></tr>
+          <tr><td>Gradient descent, SGD</td><td>Basic optimizer</td></tr>
+          <tr><td>Momentum, Nesterov</td><td>Acceleration, escaping local minima</td></tr>
+          <tr><td>Adaptive methods: AdaGrad, RMSProp, Adam, AdamW</td><td>Modern optimizers</td></tr>
+          <tr><td>Learning rate schedules</td><td>Warmup, cosine decay — vital for LLMs</td></tr>
+          <tr><td>Second-order: Newton, quasi-Newton (L-BFGS)</td><td>When applicable</td></tr>
+          <tr><td>Constrained optimization, Lagrange, KKT</td><td>SVM, RLHF</td></tr>
+          <tr><td>Duality</td><td>Deep understanding of SVM, convex problems</td></tr>
+          <tr><td>Stochastic optimization, variance reduction</td><td>SGD analysis</td></tr>
+          <tr><td>Convergence analysis (rate, bounds)</td><td>Reading optimization papers</td></tr>
+          <tr><td>Sharpness, flatness, generalization</td><td>Generalization theory</td></tr>
+          <tr><td>Trust region, proximal methods</td><td>TRPO, RL</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="chapter">
+    <div class="chapter-header"><span class="chapter-num">4.3</span><h3>AI Applications</h3></div>
+    <div class="chapter-body">
+      <ul>
+        <li><strong>SGD with momentum:</strong> $v \leftarrow \beta v + \nabla L;\; \theta \leftarrow \theta - \eta v$. Still used in all large models.</li>
+        <li><strong>Adam:</strong> combines momentum + per-parameter adaptive lr. Default for NLP/CV.</li>
+        <li><strong>AdamW:</strong> Adam + decoupled weight decay. Default for LLM training.</li>
+        <li><strong>LR warmup:</strong> lr increases linearly for the first N steps then decays. Vital for transformers.</li>
+        <li><strong>Gradient clipping:</strong> clip norm to prevent exploding gradients.</li>
+        <li><strong>TRPO/PPO:</strong> trust region in RL — don't let the policy change too much per step.</li>
+        <li><strong>DPO:</strong> direct preference optimization via implicit reward.</li>
+        <li><strong>GRPO:</strong> RLHF without a value network; estimates advantage via group reward. Used by DeepSeek/R1.</li>
+        <li><strong>Muon, SOAP, Shampoo:</strong> matrix-valued 2nd-moment optimizers. 2024–2026 results show gains over AdamW on some LLM setups.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="chapter">
+    <div class="chapter-header"><span class="chapter-num">4.4</span><h3>Self-Check</h3></div>
+    <div class="chapter-body">
+      <ul class="checklist">
+        <li><span class="check-icon"></span>Implement SGD, momentum, Adam from scratch.</li>
+        <li><span class="check-icon"></span>Derive Adam's update rule from definitions.</li>
+        <li><span class="check-icon"></span>Explain bias correction in Adam: why divide by $(1 - \beta^t)$.</li>
+        <li><span class="check-icon"></span>Why is decoupled weight decay different from L2 regularization in Adam?</li>
+        <li><span class="check-icon"></span>Sketch the loss landscape for a convex vs. non-convex problem.</li>
+        <li><span class="check-icon"></span>Solve an SVM problem using KKT conditions by hand (2D case).</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="chapter">
+    <div class="chapter-header"><span class="chapter-num">4.5</span><h3>Common Pitfalls</h3></div>
+    <div class="chapter-body">
+      <div class="warn-box"><div class="warn-label">Warning</div><ul>
+        <li>Assuming Adam always beats SGD — SGD+momentum is still unbeaten for CV in many cases.</li>
+        <li>Forgetting to zero gradients (<code>optimizer.zero_grad()</code>).</li>
+        <li>Setting learning rate too high → loss spike / NaN.</li>
+        <li>Not using warmup when training transformers → loss divergence.</li>
+        <li>Assuming larger batch size = faster training — you need to scale lr with $\sqrt{\text{batch}}$ or linearly.</li>
+      </ul></div>
+    </div>
+  </div>
+
+</div></div>
+
+<!-- ════════════════════════════════════════════════════════════════
+     SECTIONS 5–7 (SOON NEEDED)
+     ════════════════════════════════════════════════════════════════ -->
+
+<!-- SECTION 5 -->
+<div class="section-header" id="sec-5"><div class="section-tag">Soon Needed · Area 5</div><h2>Information Theory</h2></div>
+<hr class="section-divider"/>
+<div class="content"><div class="page-wrap">
+  <div class="chapter"><div class="chapter-header"><span class="chapter-num">5.1</span><h3>Why It Matters</h3></div><div class="chapter-body">
+    <p>Most classification and generative model losses originate from information theory. Deep understanding of cross-entropy, KL, and MI = fluent reading of modern papers.</p>
+    <table><thead><tr><th>Topic</th><th>Why You Need It</th></tr></thead><tbody>
+      <tr><td>Entropy $H(X)$</td><td>Measures uncertainty</td></tr>
+      <tr><td>Joint, conditional, mutual entropy</td><td>Measuring dependence</td></tr>
+      <tr><td>Cross-entropy $H(p,q)$</td><td>Classification loss</td></tr>
+      <tr><td>KL divergence $D_{KL}(p\|q)$</td><td>VAE, variational inference, distillation</td></tr>
+      <tr><td>Mutual information $I(X;Y)$</td><td>Contrastive learning, InfoMax</td></tr>
+      <tr><td>Jensen-Shannon divergence</td><td>GAN</td></tr>
+      <tr><td>Rate-distortion theory</td><td>VAE bottleneck, compression</td></tr>
+      <tr><td>Channel capacity</td><td>Information bottleneck principle</td></tr>
+      <tr><td>MDL, Kolmogorov complexity</td><td>Occam's razor theory</td></tr>
+      <tr><td>f-divergence (generalization)</td><td>f-GAN, advanced</td></tr>
+    </tbody></table>
+  </div></div>
+  <div class="chapter"><div class="chapter-header"><span class="chapter-num">5.2</span><h3>AI Applications</h3></div><div class="chapter-body"><ul>
+    <li><strong>Cross-entropy loss:</strong> every classification loss = $H(p_{\text{true}}, p_{\text{model}})$.</li>
+    <li><strong>KL in VAE:</strong> ELBO $= \mathbb{E}[\log p(x|z)] - D_{KL}(q(z|x) \| p(z))$.</li>
+    <li><strong>Knowledge distillation:</strong> student learns from teacher via KL on softmax output.</li>
+    <li><strong>InfoNCE (contrastive learning):</strong> lower bound of mutual information → SimCLR, CLIP.</li>
+    <li><strong>Perplexity:</strong> $\exp(\text{cross-entropy})$ — standard language model metric.</li>
+    <li><strong>β-VAE:</strong> scales KL term by β to control disentanglement.</li>
+  </ul></div></div>
+  <div class="chapter"><div class="chapter-header"><span class="chapter-num">5.3</span><h3>Common Pitfalls</h3></div><div class="chapter-body">
+    <div class="warn-box"><div class="warn-label">Warning</div><ul>
+      <li>Forgetting $D_{KL} \geq 0$ and $= 0 \iff p = q$ a.e.</li>
+      <li>Confusing forward KL (mode-covering) with reverse KL (mode-seeking).</li>
+      <li>Assuming MI is easy to estimate — it's extremely hard, requires lower bounds (MINE, InfoNCE).</li>
+      <li>Forgetting log-base: $\log_2$ (bits) vs. $\log_e$ (nats).</li>
+    </ul></div>
+  </div></div>
+</div></div>
+
+<!-- SECTION 6 -->
+<div class="section-header" id="sec-6"><div class="section-tag">Soon Needed · Area 6</div><h2>Numerical Methods</h2></div>
+<hr class="section-divider"/>
+<div class="content"><div class="page-wrap">
+  <div class="chapter"><div class="chapter-header"><span class="chapter-num">6.1</span><h3>Why It Matters</h3></div><div class="chapter-body">
+    <p>All ML computation runs on finite-precision floats. Understanding floating-point = understanding why loss goes NaN, why FP16 training breaks, why softmax overflows.</p>
+    <table><thead><tr><th>Topic</th><th>Why You Need It</th></tr></thead><tbody>
+      <tr><td>Floating-point representation (FP32, TF32, FP16, BF16, FP8)</td><td>Mixed precision training</td></tr>
+      <tr><td>Round-off error</td><td>Numerical stability</td></tr>
+      <tr><td>Numerical stability</td><td>Avoiding NaN/Inf</td></tr>
+      <tr><td>Condition number</td><td>When a matrix is hard to invert</td></tr>
+      <tr><td>Log-space trick: logsumexp</td><td>Numerically stable softmax</td></tr>
+      <tr><td>Catastrophic cancellation</td><td>Error from subtracting near-equal numbers</td></tr>
+      <tr><td>Iterative methods: Jacobi, Gauss-Seidel, CG</td><td>Solving large linear systems</td></tr>
+      <tr><td>Power iteration, Lanczos</td><td>Largest eigenvalue</td></tr>
+    </tbody></table>
+  </div></div>
+  <div class="chapter"><div class="chapter-header"><span class="chapter-num">6.2</span><h3>AI Applications</h3></div><div class="chapter-body"><ul>
+    <li><strong>Stable softmax:</strong> $\text{softmax}(x) = \text{softmax}(x - \max(x))$ to prevent overflow.</li>
+    <li><strong>logsumexp:</strong> $\log(\sum \exp(x_i)) = \max + \log(\sum \exp(x_i - \max))$.</li>
+    <li><strong>Mixed precision (FP16/BF16/FP8):</strong> faster training + less memory. BF16 is default for LLMs.</li>
+    <li><strong>Layer normalization:</strong> divides by $\sqrt{\sigma^2 + \epsilon}$ — ε prevents division by zero.</li>
+    <li><strong>Stable cross-entropy:</strong> use logsoftmax + NLLLoss instead of softmax + log + NLL.</li>
+  </ul></div></div>
+  <div class="chapter"><div class="chapter-header"><span class="chapter-num">6.3</span><h3>Common Pitfalls</h3></div><div class="chapter-body">
+    <div class="warn-box"><div class="warn-label">Warning</div><ul>
+      <li>Assuming $0.1 + 0.2 = 0.3$ (it doesn't, due to binary float).</li>
+      <li>Forgetting ε in LayerNorm, BatchNorm, divisions.</li>
+      <li>Training FP16 without loss scaling → gradient underflow.</li>
+      <li>Subtracting two near-equal numbers (catastrophic cancellation) → precision loss.</li>
+    </ul></div>
+  </div></div>
+</div></div>
+
+<!-- SECTION 7 -->
+<div class="section-header" id="sec-7"><div class="section-tag">Soon Needed · Area 7</div><h2>Discrete Math &amp; Graph Theory</h2></div>
+<hr class="section-divider"/>
+<div class="content"><div class="page-wrap">
+  <div class="chapter"><div class="chapter-header"><span class="chapter-num">7.1</span><h3>Why It Matters</h3></div><div class="chapter-body">
+    <p>The data structure of many modern models is a graph: GNN, attention (full graph), tokenization (BPE), search in RL/planning, retrieval.</p>
+    <table><thead><tr><th>Topic</th><th>Why You Need It</th></tr></thead><tbody>
+      <tr><td>Sets, maps, relations</td><td>Foundations</td></tr>
+      <tr><td>Combinatorics, counting</td><td>Combinatorial search</td></tr>
+      <tr><td>Graphs: undirected, directed, weighted</td><td>GNN, computation graph</td></tr>
+      <tr><td>Paths, cycles, connectivity</td><td>Reachability, search</td></tr>
+      <tr><td>Trees, spanning trees</td><td>Decision trees, parsing</td></tr>
+      <tr><td>Graph Laplacian $L = D - A$</td><td>Spectral GNN, manifold</td></tr>
+      <tr><td>Graph algorithms: BFS, DFS, Dijkstra, A*</td><td>Search, planning</td></tr>
+      <tr><td>Dynamic programming</td><td>RL value iteration, Viterbi</td></tr>
+      <tr><td>Complexity (Big-O)</td><td>Efficient algorithms</td></tr>
+      <tr><td>Hashing, locality-sensitive hashing</td><td>ANN search, retrieval</td></tr>
+    </tbody></table>
+  </div></div>
+  <div class="chapter"><div class="chapter-header"><span class="chapter-num">7.2</span><h3>AI Applications</h3></div><div class="chapter-body"><ul>
+    <li><strong>GNN:</strong> message passing on graphs.</li>
+    <li><strong>Transformer = GNN on fully-connected graph:</strong> every token connects to every other.</li>
+    <li><strong>Beam search, top-k sampling:</strong> NLP decoding.</li>
+    <li><strong>BPE tokenization:</strong> greedy merge of frequent pairs in corpus.</li>
+    <li><strong>Retrieval (ANN, HNSW, FAISS):</strong> kNN on embedding space.</li>
+    <li><strong>MCTS:</strong> AlphaGo, AlphaZero.</li>
+  </ul></div></div>
+</div></div>
+
+<!-- ════════════════════════════════════════════════════════════════
+     SECTIONS 8–12 (AS NEEDED / OPTIONAL)
+     ════════════════════════════════════════════════════════════════ -->
+
+<!-- SECTION 8 -->
+<div class="section-header" id="sec-8"><div class="section-tag">As Needed · Area 8</div><h2>Differential Equations</h2></div>
+<hr class="section-divider"/>
+<div class="content"><div class="page-wrap">
+  <div class="chapter"><div class="chapter-header"><span class="chapter-num">8.1</span><h3>Why It Matters (by subfield)</h3></div><div class="chapter-body">
+    <p>Diffusion models, neural ODE, flow matching — hot in generative AI 2026. If you're targeting generative models, this math is mandatory.</p>
+    <table><thead><tr><th>Topic</th><th>Why You Need It</th></tr></thead><tbody>
+      <tr><td>1st &amp; 2nd order ODE</td><td>Neural ODE</td></tr>
+      <tr><td>Linear ODE systems</td><td>Linear dynamics</td></tr>
+      <tr><td>Euler, Runge-Kutta methods</td><td>Numerical ODE solvers</td></tr>
+      <tr><td>Stochastic differential equations (SDE)</td><td>Diffusion (score-based)</td></tr>
+      <tr><td>Basic Itô calculus</td><td>SDE manipulation</td></tr>
+      <tr><td>Fokker-Planck equation</td><td>Diffusion density evolution</td></tr>
+      <tr><td>Continuous-time flow</td><td>Flow matching, rectified flow</td></tr>
+      <tr><td>Probability flow ODE</td><td>Deterministic diffusion sampling</td></tr>
+    </tbody></table>
+  </div></div>
+  <div class="chapter"><div class="chapter-header"><span class="chapter-num">8.2</span><h3>AI Applications</h3></div><div class="chapter-body"><ul>
+    <li><strong>Neural ODE:</strong> $dy/dt = f(y,t,\theta)$, trained via adjoint method.</li>
+    <li><strong>DDPM:</strong> learns the reverse process of a noise chain.</li>
+    <li><strong>Score-based models:</strong> learns score $\nabla_x \log p_t(x)$.</li>
+    <li><strong>Flow Matching / Rectified Flow:</strong> learns a straight vector field.</li>
+    <li><strong>Consistency models:</strong> diffusion distillation to 1-step.</li>
+  </ul></div></div>
+</div></div>
+
+<!-- SECTION 9 -->
+<div class="section-header" id="sec-9"><div class="section-tag">As Needed · Area 9</div><h2>Functional Analysis</h2></div>
+<hr class="section-divider"/>
+<div class="content"><div class="page-wrap">
+  <div class="chapter"><div class="chapter-header"><span class="chapter-num">9.1</span><h3>Why It Matters</h3></div><div class="chapter-body">
+    <p>The foundation of kernel methods (SVM, GP). Decreasingly important in deep learning, but still foundational for theory. Key topics: Banach/Hilbert spaces, RKHS, spectral theorem, Fourier analysis.</p>
+    <ul>
+      <li><strong>Kernel SVM:</strong> maximize margin in RKHS.</li>
+      <li><strong>Gaussian Process:</strong> distribution over functions, kernel = covariance.</li>
+      <li><strong>Neural Tangent Kernel (NTK):</strong> wide NN ≡ kernel method.</li>
+      <li><strong>Positional encoding:</strong> Fourier basis in transformer.</li>
+    </ul>
+  </div></div>
+</div></div>
+
+<!-- SECTION 10 -->
+<div class="section-header" id="sec-10"><div class="section-tag">As Needed · Area 10</div><h2>Differential Geometry &amp; Topology</h2></div>
+<hr class="section-divider"/>
+<div class="content"><div class="page-wrap">
+  <div class="chapter"><div class="chapter-header"><span class="chapter-num">10.1</span><h3>Why It Matters</h3></div><div class="chapter-body">
+    <p>Manifold learning, hyperbolic embeddings, diffusion theory (score = gradient on manifold), loss landscape analysis. Key topics: manifolds, tangent spaces, Riemannian metrics, geodesics, curvature, persistent homology.</p>
+    <ul>
+      <li><strong>Manifold hypothesis:</strong> real data lies on a low-dimensional manifold in high-dim space.</li>
+      <li><strong>Hyperbolic embedding:</strong> for tree/hierarchy data (Poincaré embeddings).</li>
+      <li><strong>Geometric Deep Learning:</strong> Bronstein et al. — unifies GNN, CNN, transformer via geometry.</li>
+    </ul>
+  </div></div>
+</div></div>
+
+<!-- SECTION 11 -->
+<div class="section-header" id="sec-11"><div class="section-tag">Optional · Area 11</div><h2>Abstract Algebra</h2></div>
+<hr class="section-divider"/>
+<div class="content"><div class="page-wrap">
+  <div class="chapter"><div class="chapter-header"><span class="chapter-num">11.1</span><h3>Why It Matters (Niche)</h3></div><div class="chapter-body">
+    <p>Group-equivariant networks: AlphaFold, physics ML, computer vision with symmetries. Beautiful in theory, niche in application. Key topics: groups, group actions, representation theory, Lie groups, irreducible representations.</p>
+    <ul>
+      <li><strong>Equivariant CNN:</strong> group convolution replacing standard convolution.</li>
+      <li><strong>E(3)-equivariant network:</strong> AlphaFold, 3D molecular modeling.</li>
+      <li><strong>SE(3)-Transformer:</strong> transformer equivariant to rigid transformations.</li>
+    </ul>
+  </div></div>
+</div></div>
+
+<!-- SECTION 12 -->
+<div class="section-header" id="sec-12"><div class="section-tag">Optional · Area 12</div><h2>Measure Theory</h2></div>
+<hr class="section-divider"/>
+<div class="content"><div class="page-wrap">
+  <div class="chapter"><div class="chapter-header"><span class="chapter-num">12.1</span><h3>Why It Matters (Very Rare)</h3></div><div class="chapter-body">
+    <p>Only needed when reading rigorous probability papers (convergence proofs, optimal transport theory). Not needed for practical AI/ML. Key topics: σ-algebra, measures, Lebesgue integral, Radon-Nikodym derivative, dominated convergence, Wasserstein distance.</p>
+    <ul>
+      <li><strong>Wasserstein distance:</strong> used in WGAN, optimal transport.</li>
+      <li><strong>Radon-Nikodym:</strong> the density $p(x)$. Important when changing measures.</li>
+    </ul>
+  </div></div>
+</div></div>
+
+<!-- ════════════════════════════════════════════════════════════════
+     SECTION 13 — LLM-ERA MATHEMATICS
+     ════════════════════════════════════════════════════════════════ -->
+<div class="section-header" id="sec-13">
+  <div class="section-tag">LLM Era · Area 13</div>
+  <h2>LLM-Era Mathematics (2024–2026)</h2>
+</div>
+<hr class="section-divider"/>
+<div class="content"><div class="page-wrap">
+
+  <div class="chapter">
+    <div class="chapter-header"><span class="chapter-num">13.1</span><h3>Why Separated</h3></div>
+    <div class="chapter-body">
+      <p>Not new math — it's a combo of (1)(2)(3)(4)(6) applied to LLM-era architectures. Separated because engineers/researchers in 2026 encounter this daily, and the math needed differs significantly from "classical ML 2018".</p>
+    </div>
+  </div>
+
+  <div class="chapter">
+    <div class="chapter-header"><span class="chapter-num">13.2</span><h3>Topics &amp; Math Foundations</h3></div>
+    <div class="chapter-body">
+      <table>
+        <thead><tr><th>Topic</th><th>Math Foundation</th><th>Why</th></tr></thead>
+        <tbody>
+          <tr><td>FlashAttention (v1/v2/v3)</td><td>(6) IO model, tiling, online softmax</td><td>Re-engineering softmax for HBM-awareness</td></tr>
+          <tr><td>RoPE (Rotary Position Embedding)</td><td>(1) 2D rotation / complex numbers</td><td>Rotation per-head by position</td></tr>
+          <tr><td>ALiBi, YaRN, NTK-aware scaling</td><td>(1)(2) extrapolation theory</td><td>Long-context without retraining</td></tr>
+          <tr><td>Grouped/Multi-Query Attention</td><td>(1) rank vs KV cache tradeoff</td><td>Inference economics</td></tr>
+          <tr><td>Linear / sub-quadratic attention</td><td>(1)(9) kernel approximation</td><td>Performer, Hyena, RWKV</td></tr>
+          <tr><td><strong>State Space Models (S4, Mamba)</strong></td><td>(1)(8) discretize linear ODE: $\dot{h} = Ah + Bx$</td><td>Selective recurrence, parallel-scannable</td></tr>
+          <tr><td>Mixture of Experts (MoE)</td><td>(3)(4) routing softmax + load-balance loss</td><td>Sparse compute scale-up</td></tr>
+          <tr><td>Quantization (GPTQ, AWQ, GGUF)</td><td>(1)(6) min $\|Wx - W_q x\|^2$ calibration</td><td>Inference cost</td></tr>
+          <tr><td>Speculative / parallel decoding</td><td>(3) rejection sampling, distribution matching</td><td>2–4× decode speedup</td></tr>
+          <tr><td>Test-time compute (search, BoN, MCTS)</td><td>(3)(7) DP + Bayesian decision</td><td>Reasoning models (o1, R1)</td></tr>
+          <tr><td>Process Reward Model (PRM)</td><td>(3)(4) credit assignment per step</td><td>RL on reasoning traces</td></tr>
+          <tr><td>Mechanistic interpretability</td><td>(1) SVD/superposition + (3) feature distribution</td><td>Circuits, SAE</td></tr>
+          <tr><td>RLHF / GRPO / DPO</td><td>(3)(4) KL-regularized policy optimization</td><td>Alignment</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="chapter">
+    <div class="chapter-header"><span class="chapter-num">13.3</span><h3>Self-Check</h3></div>
+    <div class="chapter-body">
+      <ul class="checklist">
+        <li><span class="check-icon"></span>Derive online softmax (running max + denominator) used in FlashAttention.</li>
+        <li><span class="check-icon"></span>Implement RoPE by hand on one attention head — verify the rotation is correct.</li>
+        <li><span class="check-icon"></span>Discretize $\dot{h} = Ah + Bx$ via ZOH, derive the recurrence form of Mamba's selective scan.</li>
+        <li><span class="check-icon"></span>Explain rejection sampling in speculative decoding: why the output distribution is preserved.</li>
+        <li><span class="check-icon"></span>Distinguish DPO loss from PPO loss — which one uses an explicit reward model?</li>
+        <li><span class="check-icon"></span>Read 1 SAE paper, explain loss = reconstruction + L1 sparsity.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="chapter">
+    <div class="chapter-header"><span class="chapter-num">13.4</span><h3>Common Pitfalls</h3></div>
+    <div class="chapter-body">
+      <div class="warn-box"><div class="warn-label">Warning</div><ul>
+        <li>Assuming FlashAttention is "exact" bit-equal — correct in value, different in operation order.</li>
+        <li>Implementing RoPE on the wrong axis → attention becomes noise.</li>
+        <li>Wrong SSM discretization (Euler vs ZOH vs bilinear) → unstable.</li>
+        <li>PTQ quantization looks good on benchmarks but breaks on long-tail inputs.</li>
+        <li>Incorrect speculative decoding → output distribution deviates from target model.</li>
+        <li>Training DPO for only 1 epoch isn't enough; too many epochs → overfitting preference.</li>
+      </ul></div>
+    </div>
+  </div>
+
+</div></div>
+
+<!-- ════════════════════════════════════════════════════════════════
+     BEYOND THE TABLE
+     ════════════════════════════════════════════════════════════════ -->
+<div class="section-header" id="beyond">
+  <div class="section-tag">Advanced</div>
+  <h2>Applied Math "Beyond the Table"</h2>
+</div>
+<hr class="section-divider"/>
+<div class="content"><div class="page-wrap">
+  <div class="chapter">
+    <div class="chapter-header"><span class="chapter-num">A</span><h3>High-ROI Areas After Mastering 1–7</h3></div>
+    <div class="chapter-body">
+      <p>After solidifying areas 1–7, these typically have <strong>higher ROI</strong> than studying (10)(11)(12):</p>
+
+      <h4>A. Statistical Learning Theory</h4>
+      <p>PAC learning, VC dimension, Rademacher complexity, generalization bounds. Answers "why do models generalize?". Classical bounds are vacuous for DL; 2020–2026 has PAC-Bayes, NTK-based bounds.</p>
+      <p><em>Resource:</em> Shalev-Shwartz &amp; Ben-David — "Understanding Machine Learning".</p>
+
+      <h4>B. Reinforcement Learning Math</h4>
+      <p>MDP, Bellman equation, policy gradient theorem, TD learning, GAE, importance sampling. Extremely hot in 2026: RLHF, GRPO, reasoning models (o1/R1), agents, robotics.</p>
+      <p><em>Resource:</em> Sutton &amp; Barto — "RL: An Introduction" (free PDF). Spinning Up (OpenAI), CleanRL.</p>
+
+      <h4>C. Advanced Convex Analysis</h4>
+      <p>Subdifferential, proximal operator, ADMM, mirror descent, Bregman divergence. Relevant to optimization research and some LLM optimizers (Muon).</p>
+
+      <h4>D. Causal Inference</h4>
+      <p>do-calculus, counterfactuals, instrumental variables, DAG, front/back-door criterion. Growing niche, important for rigorous evaluation and LLM debiasing.</p>
+      <p><em>Resource:</em> Pearl — "Causality" or "The Book of Why". Cunningham — "Causal Inference: The Mixtape" (free).</p>
+
+      <h4>E. Game Theory</h4>
+      <p>Nash equilibrium, minimax, mechanism design, no-regret learning. Relevant for GAN, multi-agent RL, alignment, self-play.</p>
+
+      <h4>F. Computational Complexity</h4>
+      <p>P, NP, approximation, hardness, randomized algorithms. Understand when problems don't scale and why heuristics are needed.</p>
+    </div>
+  </div>
+</div></div>
+
+<!-- ════════════════════════════════════════════════════════════════
+     META-TRAPS
+     ════════════════════════════════════════════════════════════════ -->
+<div class="section-header" id="meta-traps">
+  <div class="section-tag">Guidance</div>
+  <h2>Meta-Traps When Studying Math for AI</h2>
+</div>
+<hr class="section-divider"/>
+<div class="content"><div class="page-wrap">
+  <div class="chapter">
+    <div class="chapter-header"><span class="chapter-num">M</span><h3>Cross-Cutting Mistakes</h3></div>
+    <div class="chapter-body">
+      <p>Per-area pitfalls are in each section. These are <strong>cross-area</strong> traps — about <em>how</em> you learn, not <em>what</em>.</p>
+      <div class="warn-box"><div class="warn-label">Traps</div>
+      <ol>
+        <li><strong>"Learn all the math, then start coding"</strong> — you'll never be "ready enough". Learn and build in parallel, triggered by need.</li>
+        <li><strong>Learning from purely theoretical textbooks</strong> — you'll forget immediately. Implementation is mandatory; intuition comes from your fingertips.</li>
+        <li><strong>Studying advanced areas before mastering fundamentals.</strong> Topology before calculus = waste of time. Follow the priority order.</li>
+        <li><strong>Believing "you need a PhD in math"</strong> — wrong. Top engineers at frontier labs learn math on-demand, not systematically from scratch.</li>
+        <li><strong>Skipping (6) Numerical Methods</strong> — you'll spend your life debugging NaN without understanding root cause.</li>
+        <li><strong>Learning each area in isolation</strong> — you'll forget. One project using 3–4 areas simultaneously sticks better than 6 months of reading.</li>
+        <li><strong>Putting research on a pedestal</strong> — self-doubt. Good engineers need math no less than researchers, just along different dimensions.</li>
+        <li><strong>Not re-evaluating your path every 3 months</strong> — sticking to an old path due to sunk cost even when your goals have changed.</li>
+        <li><strong>"Read 50 papers then reproduce"</strong> — reading-without-doing trap. Reproducing 1 paper > reading 20.</li>
+      </ol>
+      </div>
+    </div>
+  </div>
+</div></div>
+
+<!-- ════════════════════════════════════════════════════════════════
+     12-MONTH ROADMAP
+     ════════════════════════════════════════════════════════════════ -->
+<div class="section-header" id="roadmap-12">
+  <div class="section-tag">Planning</div>
+  <h2>Suggested 12-Month Roadmap</h2>
+</div>
+<hr class="section-divider"/>
+<div class="content"><div class="page-wrap">
+
+  <div class="chapter">
+    <div class="chapter-header"><span class="chapter-num">R.0</span><h3>Assumptions</h3></div>
+    <div class="chapter-body">
+      <p><strong>Assumed baseline:</strong> areas (1)(2)(3)(4) at "can use" level — can implement an MLP, understand backprop, know Gaussian, know SGD/Adam. Not yet solid on (5) Info Theory, (6) Numerical, (7) Discrete &amp; Graph; haven't touched 8–13.</p>
+      <p>The roadmap splits by <strong>end goal</strong>, not one-size-fits-all. Pick one path; don't jump between them.</p>
+    </div>
+  </div>
+
+  <div class="path-card">
+    <h4>🔧 Path 1 — Engineer (production, infra, applied)</h4>
+    <p style="font-size:12px;color:#888;margin-bottom:14px;"><em>Goal: train/serve LLMs at scale, debug performance, ship features.</em></p>
+    <table><thead><tr><th>Months</th><th>Math</th><th>Skills</th><th>Deliverable</th></tr></thead><tbody>
+      <tr><td>1–3</td><td>Patch (5) Info Theory + (6) Numerical deep</td><td>Mixed precision, gradient clipping, profiling</td><td>Blog: "Numerical pitfalls in LLM training"</td></tr>
+      <tr><td>4–6</td><td>(1) deeper: low-rank, Kronecker; (4) LR schedule</td><td>Distributed (DDP/FSDP/ZeRO), basic CUDA</td><td>Train ≥1B params on multi-GPU</td></tr>
+      <tr><td>7–9</td><td>(13) FlashAttention v3, RoPE, GQA, KV cache</td><td>Inference stack (vLLM/SGLang), quantization</td><td>Serve model in production with SLA</td></tr>
+      <tr><td>10–12</td><td>(13) speculative decoding, MoE</td><td>Eval harness, regression tests</td><td>End-to-end: data → train → eval → serve</td></tr>
+    </tbody></table>
+  </div>
+
+  <div class="path-card">
+    <h4>🔬 Path 2 — Research (papers, novel methods)</h4>
+    <p style="font-size:12px;color:#888;margin-bottom:14px;"><em>Goal: read papers fluently, reproduce + extend, contribute novel ideas.</em></p>
+    <table><thead><tr><th>Months</th><th>Math</th><th>Skills</th><th>Deliverable</th></tr></thead><tbody>
+      <tr><td>1–3</td><td>Patch (5) Info Theory; (4) optim deeper</td><td>Re-implement transformer/VAE from scratch</td><td>Blog + 12 paper summaries</td></tr>
+      <tr><td>4–6</td><td>Subfield math (generative→(8); theory→(A); geometric→(10)(11))</td><td>Reproduce 1 "manageable" paper, no code copying</td><td>Fully reproduced repo + writeup</td></tr>
+      <tr><td>7–9</td><td>Deeper subfield math</td><td>1 paper/week + 1 baseline/month</td><td>Identify 2–3 limitations of reproduced paper</td></tr>
+      <tr><td>10–12</td><td>As needed for your paper</td><td>Design 1 small experiment testing 1 specific hypothesis</td><td>Workshop-quality writeup</td></tr>
+    </tbody></table>
+  </div>
+
+  <div class="path-card">
+    <h4>🏥 Path 3 — Applied / Domain ML (science, finance, health)</h4>
+    <p style="font-size:12px;color:#888;margin-bottom:14px;"><em>Goal: use ML to solve domain-specific problems.</em></p>
+    <table><thead><tr><th>Months</th><th>Math</th><th>Skills</th><th>Deliverable</th></tr></thead><tbody>
+      <tr><td>1–3</td><td>(3) Probability deeper; (5) basic Info Theory</td><td>Fine-tuning workflow (LoRA, QLoRA)</td><td>1 fine-tuned model + evaluation</td></tr>
+      <tr><td>4–6</td><td>(D) Causal Inference; uncertainty quantification</td><td>Eval design, A/B testing, calibration</td><td>Defensible domain report</td></tr>
+      <tr><td>7–9</td><td>Domain-specific math</td><td>Domain integration, MLOps</td><td>End-to-end domain pipeline</td></tr>
+      <tr><td>10–12</td><td>As needed</td><td>Productionization, drift monitoring</td><td>System running in production</td></tr>
+    </tbody></table>
+  </div>
+
+  <div class="chapter">
+    <div class="chapter-header"><span class="chapter-num">R.4</span><h3>Cross-Path Principles</h3></div>
+    <div class="chapter-body">
+      <ul>
+        <li><strong>Don't study areas (9)(10)(11)(12) in the first 12 months</strong> unless your path explicitly requires it.</li>
+        <li><strong>Re-evaluate every 3 months:</strong> is your path still relevant? If goals changed, change path — don't finish the old one from sunk cost.</li>
+        <li><strong>Learn math by trigger:</strong> encounter problem requiring X → learn X. Don't learn X "just in case".</li>
+        <li><strong>Deliverables before reading:</strong> finish a deliverable before reading more papers. Avoid the perpetual learning trap.</li>
+      </ul>
+    </div>
+  </div>
+
+</div></div>
+
+<!-- ════════════════════════════════════════════════════════════════
+     GLOSSARY
+     ════════════════════════════════════════════════════════════════ -->
+<div class="section-header" id="glossary">
+  <div class="section-tag">Reference</div>
+  <h2>Glossary</h2>
+</div>
+<hr class="section-divider"/>
+<div class="content"><div class="page-wrap">
+  <div class="chapter">
+    <div class="chapter-header"><span class="chapter-num">G</span><h3>Key Terms &amp; Abbreviations</h3></div>
+    <div class="chapter-body">
+      <table>
+        <thead><tr><th>Term</th><th>Abbreviation</th></tr></thead>
+        <tbody>
+          <tr><td>Linear Algebra</td><td>LA</td></tr>
+          <tr><td>Gradient</td><td>∇</td></tr>
+          <tr><td>Partial Derivative</td><td>∂</td></tr>
+          <tr><td>Jacobian</td><td>J</td></tr>
+          <tr><td>Hessian</td><td>H</td></tr>
+          <tr><td>Backpropagation</td><td>backprop</td></tr>
+          <tr><td>Eigenvalue / Eigenvector</td><td>λ / v</td></tr>
+          <tr><td>Singular Value Decomposition</td><td>SVD</td></tr>
+          <tr><td>Positive (Semi-)Definite</td><td>PD / PSD</td></tr>
+          <tr><td>Gaussian Distribution</td><td>𝒩</td></tr>
+          <tr><td>Expectation / Variance / Covariance</td><td>E / Var / Cov</td></tr>
+          <tr><td>Maximum Likelihood Estimation</td><td>MLE</td></tr>
+          <tr><td>Maximum A Posteriori</td><td>MAP</td></tr>
+          <tr><td>Central Limit Theorem</td><td>CLT</td></tr>
+          <tr><td>Variational Inference</td><td>VI</td></tr>
+          <tr><td>Evidence Lower Bound</td><td>ELBO</td></tr>
+          <tr><td>Cross-Entropy</td><td>H(p,q)</td></tr>
+          <tr><td>Kullback-Leibler Divergence</td><td>D_KL</td></tr>
+          <tr><td>Mutual Information</td><td>I</td></tr>
+          <tr><td>Learning Rate</td><td>lr</td></tr>
+          <tr><td>Graph Neural Network</td><td>GNN</td></tr>
+          <tr><td>State Space Model</td><td>SSM</td></tr>
+          <tr><td>Mixture of Experts</td><td>MoE</td></tr>
+          <tr><td>Speculative Decoding</td><td>—</td></tr>
+          <tr><td>Test-Time Compute</td><td>TTC</td></tr>
+          <tr><td>Process Reward Model</td><td>PRM</td></tr>
+          <tr><td>Reinforcement Learning from Human Feedback</td><td>RLHF</td></tr>
+          <tr><td>Direct Preference Optimization</td><td>DPO</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div></div>
+
+<!-- ════════════════════════════════════════════════════════════════
+     CONCLUSION
+     ════════════════════════════════════════════════════════════════ -->
+<div class="content"><div class="page-wrap">
+  <div class="exit-criteria">
+    <div class="ec-title">Three Principles to Keep</div>
+    <div class="exit-item"><div class="exit-bullet">1</div><div><strong>Learn by real need.</strong> Have a project → need math X → learn math X.</div></div>
+    <div class="exit-item"><div class="exit-bullet">2</div><div><strong>Implement, don't just read.</strong> Math intuition comes from your fingertips, not your eyes.</div></div>
+    <div class="exit-item"><div class="exit-bullet">3</div><div><strong>Pick one path, re-evaluate every 3 months.</strong> Path 1 (Engineer) / Path 2 (Research) / Path 3 (Applied) — don't jump due to FOMO.</div></div>
+  </div>
+
+  <div class="insight-box">
+    <div class="ins-label">Focus</div>
+    <p>If you already have areas (1)(2)(3)(4) at "can use" level and are preparing to enter the LLM era: your priority for the next 6 months should be <strong>patching (5) Information Theory + (6) Numerical Methods + (13) LLM-era Math</strong> — not racing to learn (10)(11)(12) or measure theory.</p>
+  </div>
+
+  <div class="def-box" style="border-left-color:#555; margin-top:28px;">
+    <div class="def-label" style="color:#888;">Quote</div>
+    <p style="font-style:italic; color:#aaa;">"In theory, theory and practice are the same. In practice, they are not."</p>
+  </div>
+</div></div>
+
+</main>
+
+<!-- FOOTER -->
+<div style="border-top:1px solid var(--border); padding:24px 48px; font-size:11px; color:var(--text-muted); display:flex; justify-content:space-between; align-items:center;">
+  <span>📁 Source: <code>math_for_ai_roadmap.md</code></span>
+  <span>Mathematics for AI/ML · Practical Priority Roadmap · 2026</span>
+</div>
+
+<!-- BACK TO TOP -->
+<button class="back-to-top" aria-label="Back to top">↑</button>
+
+<script>
+// Back to top
+const btt = document.querySelector('.back-to-top');
+if (btt) {
+  window.addEventListener('scroll', () => {
+    btt.classList.toggle('visible', window.scrollY > 600);
+  });
+  btt.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+}
+</script>
+
+</body>
+</html>
