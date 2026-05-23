@@ -31,9 +31,6 @@ Each algorithm folder follows the same 5-notebook pedagogical pattern:
     * `01_q_learning` → `02_dqn` → `03_double_dqn` (value-based)
     * `04_policy_gradient` → `05_a2c` → `06_ddpg` → `07_ppo` → `08_sac` (policy-based / actor-critic)
 * **[`99_capstone/`](99_capstone/)** — End-to-end projects combining multiple modules.
-* **[`applications/`](applications/)** — Project-style code (not concept learning): agent SDKs, integration examples.
-    * `mini_agent_sdk/` — lightweight agent SDK powered by Google Gemini.
-    * `openai_agent/` — OpenAI Agents SDK examples.
 
 > **Cross-reference matrix:** [INDEX.md](INDEX.md) maps every algorithm to which math pillar (linear algebra / calculus / probability / optimization / information theory) it exercises.
 
@@ -42,8 +39,8 @@ Each algorithm folder follows the same 5-notebook pedagogical pattern:
 ## 🗺️ Learning Roadmap & Guidelines
 
 Before diving in, make sure to read:
-*   [00_foundations/01_math_essentials/math_for_ai_roadmap.md](00_foundations/01_math_essentials/math_for_ai_roadmap.md) — practical math curriculum for modern AI/ML (Vietnamese).
-*   [ML.md](ML.md) — the 20+ foundational ML models, organized by paradigm (Vietnamese).
+*   [00_foundations/01_math_essentials/math_for_ai_roadmap.md](00_foundations/01_math_essentials/math_for_ai_roadmap.md) — practical math curriculum for modern AI/ML.
+*   [ML.md](ML.md) — the 20+ foundational ML models, organized by paradigm.
 *   [CLAUDE.md](CLAUDE.md) — strict guidelines on implementation, reproducibility (seeding), simplicity, and code cleanliness.
 
 ---

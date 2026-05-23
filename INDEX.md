@@ -105,4 +105,3 @@ The 5 notebooks per algorithm always follow the same pattern, so the table cells
 | Feature engineering | [00_foundations/03_feature_engineering/](00_foundations/03_feature_engineering/) |
 | Model evaluation | [00_foundations/04_model_evaluation/](00_foundations/04_model_evaluation/) |
 | Capstone projects | [99_capstone/](99_capstone/) |
-| Agent SDKs / applications | [applications/](applications/) |
