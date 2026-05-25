@@ -39,7 +39,7 @@ Supplementary rules that override/extend Antigravity defaults. Does not repeat `
 
 - **Default: English for everything** — prose, code, identifiers, commits, docstrings, logs.
 - **Vietnamese only when explicitly requested** by the user (e.g. "trả lời tiếng Việt", "giải thích bằng VIE").
-- Math: No LaTeX `$...$` / `$$...$$`. Use Unicode math (∑∫→) in prose.
+- Math: LaTeX MUST be used for all mathematical symbols and formulas (both inline $...$ and block $$...$$).
 - Terminology (when VIE requested): Vietnamese explanation + `English term` on first use, then English term only.
 - Never translate: function names, library names, error messages, flags.
 
