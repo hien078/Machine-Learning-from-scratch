@@ -36,6 +36,37 @@ Each algorithm folder follows the same 5-notebook pedagogical pattern:
 
 ---
 
+## 📖 How to Read a Notebook
+
+Each algorithm folder contains five notebooks meant to be read **in order**. They are not five views of the same content — each one answers a different question:
+
+1. **`01_intuition.ipynb`** — Mental picture, plots and analogies. No formulas.
+2. **`02_mathematics.ipynb`** — Derivations from scratch. Every symbol introduced explicitly.
+3. **`03_optimization.ipynb`** — How to actually solve it: gradient descent, closed form, EM, etc.
+4. **`04_statistics.ipynb`** — Estimator properties, assumptions, when the model breaks.
+5. **`05_hands_on_programming.ipynb`** — From-scratch NumPy implementation, then a sklearn / PyTorch comparison.
+
+Use [`_template.ipynb`](_template.ipynb) at the repo root as the starting point for any new notebook — it pre-fills the imports, autoreload, and seed boilerplate required by [CLAUDE.md §7](CLAUDE.md).
+
+---
+
+## ✅ Progress
+
+| Module | Algorithms | Notebooks done |
+|---|---|---:|
+| [00 Foundations](00_foundations/) | 4 roadmaps | 4 / 4 |
+| [01 Supervised Learning](01_supervised_learning/) | 11 | 5 / 55 |
+| [02 Unsupervised Learning](02_unsupervised_learning/) | 9 | 0 / 45 |
+| [03 Deep Learning](03_deep_learning/) | 5 | 0 / 25 |
+| [04 Generative AI](04_generative_ai/) | 4 | 0 / 20 |
+| [05 Reinforcement Learning](05_reinforcement_learning/) | 9 | 0 / 45 |
+| [99 Capstone](99_capstone/) | — | 0 / N |
+| **Total** | **38** | **5 / 190** |
+
+> Update this table when you finish a notebook. A notebook counts as "done" when it executes cleanly top-to-bottom on a fresh kernel and the takeaway section is filled in.
+
+---
+
 ## 🗺️ Learning Roadmap & Guidelines
 
 Before diving in, make sure to read:

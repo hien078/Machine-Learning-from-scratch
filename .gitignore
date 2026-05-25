@@ -154,3 +154,7 @@ data/
 .claude/
 .backups/
 .antigravitycli/
+
+# Personal / private notes (not for commit)
+MY_PROGRESS.md
+*.local.md

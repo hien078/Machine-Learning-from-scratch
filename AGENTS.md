@@ -18,8 +18,22 @@ Supplementary rules that override/extend Antigravity defaults. Does not repeat `
 - **Purpose:** Educational ML workspace — learning, experimentation, implementation from scratch.
 - **Stage:** Learning phase (notebooks/scripts OK, production rules apply when project > 1 file).
 - **Tech:** Python 3.12+, NumPy, PyTorch, Matplotlib, Jupyter.
-- **Subproject layout:** `README.md`, `requirements.txt`, `data/`, `notebooks/`, `src/`, `tests/`, `reports/`.
+- **Subproject layout (capstone or any multi-file project):** `README.md`, `requirements.txt`, `data/`, `notebooks/`, `src/`, `tests/`, `reports/`.
+- **Repo organization:** numbered top-level modules `00_foundations/` → `05_reinforcement_learning/` + `99_capstone/`. Each algorithm folder follows the 5-notebook pattern below.
+- **Map files (read first to navigate):** [README.md](README.md), [ML.md](ML.md) (20+ canonical models), [INDEX.md](INDEX.md) (algorithm × math-pillar matrix), [_template.ipynb](_template.ipynb) (boilerplate for any new notebook).
 - **Web (edge case):** dark mode + HSL accent. WCAG 2.1 AA.
+
+**5-notebook pattern** — every algorithm folder. Stay in your lane; do not pollute one role with another's content.
+
+| Notebook | Role | Allowed |
+|---|---|---|
+| `01_intuition` | Visual intuition | Plots, analogies, failure-mode visuals. No formal math. |
+| `02_mathematics` | Pure math | Theorems, derivations, notation. **Markdown only — no code, no plots.** |
+| `03_optimization` | Algorithms | Pseudocode + minimal demo (GD / closed form / EM). |
+| `04_statistics` | Estimator properties | Math + minimal sim (bias/variance, consistency, assumptions). |
+| `05_hands_on_programming` | Implementation | From-scratch NumPy first, then sklearn / PyTorch comparison. |
+
+**Commands (PowerShell):** `.venv\Scripts\Activate.ps1` to activate · `pip install -r requirements.txt` to install (ask per §1) · `jupyter lab` to launch. No test/lint/CI yet — verification = notebook runs clean top-to-bottom on a fresh kernel (§9).
 
 ## 3. Language
 
