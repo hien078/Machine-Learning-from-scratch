@@ -55,13 +55,13 @@ Use [`_template.ipynb`](_template.ipynb) at the repo root as the starting point 
 | Module | Algorithms | Notebooks done |
 |---|---|---:|
 | [00 Foundations](00_foundations/) | 4 roadmaps | 4 / 4 |
-| [01 Supervised Learning](01_supervised_learning/) | 11 | 5 / 55 |
+| [01 Supervised Learning](01_supervised_learning/) | 11 | 20 / 55 |
 | [02 Unsupervised Learning](02_unsupervised_learning/) | 9 | 0 / 45 |
 | [03 Deep Learning](03_deep_learning/) | 5 | 0 / 25 |
 | [04 Generative AI](04_generative_ai/) | 4 | 0 / 20 |
 | [05 Reinforcement Learning](05_reinforcement_learning/) | 9 | 0 / 45 |
 | [99 Capstone](99_capstone/) | — | 0 / N |
-| **Total** | **38** | **5 / 190** |
+| **Total** | **38** | **20 / 190** |
 
 > Update this table when you finish a notebook. A notebook counts as "done" when it executes cleanly top-to-bottom on a fresh kernel and the takeaway section is filled in.
 
