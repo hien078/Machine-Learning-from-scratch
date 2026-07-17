@@ -1,107 +1,216 @@
-# INDEX — Algorithm × Math Pillar Cross-Reference
+# Active Curriculum Index
 
-Each row is an algorithm; each column is one of the 5 mathematical pillars from [ML.md](ML.md#summary-the-5-mathematical-pillars-of-machine-learning).
-Cells link to the notebook in that algorithm folder where the pillar shows up most concretely.
+This index covers only active First Principles material. Historical notebooks previously lived under
+`_archive/` (removed for simplicity).
 
-**Pillars:**
-- **LA** — Linear Algebra
-- **Calc** — Calculus
-- **Prob** — Probability & Statistics
-- **Opt** — Optimization
-- **Info** — Information Theory
+## Mathematical Foundations
 
-The 5 notebooks per algorithm always follow the same pattern, so the table cells point to the most relevant one:
-`01_intuition.ipynb` · `02_mathematics.ipynb` · `03_optimization.ipynb` · `04_statistics.ipynb` · `05_hands_on_programming.ipynb`
+| Foundation | Main concepts | Used heavily by |
+|---|---|---|
+| [Linear Algebra](foundations/linear_algebra/README.md) | Projections, eigendecomposition, SVD, norms | Linear Regression, KNN, SVM, PCA, neural networks |
+| [Calculus and Optimization](foundations/calculus_optimization/README.md) | Gradients, Hessians, Taylor approximation, convexity | Gradient Descent, Logistic Regression, SVM, neural networks |
+| [Probability and Statistics](foundations/probability_statistics/README.md) | Conditional probability, expectation, MLE/MAP | Linear/Logistic Regression, Naive Bayes, GMM |
+| [Information Theory](foundations/information_theory/README.md) | Entropy, cross-entropy, KL divergence | Trees, classification losses, t-SNE |
+| [Numerical Computing](foundations/numerical_computing/README.md) | Conditioning, stability, vectorization | Every computational topic |
 
----
+## Topic Matrix
 
-## 01 — Supervised Learning
+| # | Topic | Core idea | Main math | Prerequisites | Phase |
+|---:|---|---|---|---|---:|
+| 01 | [Linear Regression](topics/01_linear_regression/README.md) | ŷ = Wx + b for continuous values | Projection, least squares | LA, Calculus, Probability | 1 |
+| 02 | [Gradient Descent](topics/02_gradient_descent/README.md) | θ ← θ − α∇L(θ) | Gradients, smoothness, convexity | Calculus, 01 | 1 |
+| 03 | [Regularization](topics/03_regularization/README.md) | Penalize complexity: L1, L2, MAP | Norms, constrained optimization | 01, 02 | 1 |
+| 04 | [Logistic Regression](topics/04_logistic_regression/README.md) | σ(z) = 1/(1+e⁻ᶻ) → classification | Cross-entropy, MLE, convexity | Probability, 02 | 1 |
+| 05 | [Decision Tree](topics/05_decision_tree/README.md) | Recursive splits on impurity | Entropy, Gini, greedy search | Information Theory | 2 |
+| 06 | [Ensemble Methods](topics/06_ensemble_methods/README.md) | Bagging (RF) and boosting (GB) | Bootstrap, variance reduction | 05 | 2 |
+| 07 | [KNN](topics/07_knn/README.md) | Majority vote of K nearest points | Norms, metric geometry | Linear Algebra | 2 |
+| 08 | [Naive Bayes](topics/08_naive_bayes/README.md) | P(y|x) via Bayes + independence | Bayes theorem, conditional independence | Probability | 2 |
+| 09 | [SVM](topics/09_svm/README.md) | Maximum-margin hyperplane | Convex optimization, KKT | LA, Optimization | 2 |
+| 10 | [PCA](topics/10_pca/README.md) | Max-variance projection | Covariance, eigenvalues, SVD | LA, Statistics | 1 |
+| 11 | [Clustering](topics/11_clustering/README.md) | K-Means, DBSCAN, GMM | Distances, density, EM | LA, Probability | 2 |
+| 12 | [Dimensionality Reduction](topics/12_dimensionality_reduction/README.md) | LDA, t-SNE | Scatter matrices, KL divergence | 10, Information Theory | 2 |
+| 13 | [Neural Networks](topics/13_neural_networks/README.md) | Stacked linear + nonlinear layers | Chain rule, matrix calculus | 02, 04 | 3 |
+| 14 | [CNN](topics/14_cnn/README.md) | Convolution for spatial features | Cross-correlation, pooling | 13 | 3 |
+| 15 | [RNN/LSTM](topics/15_rnn_lstm/README.md) | Recurrence for sequential data | BPTT, gating mechanisms | 13 | 3 |
+| 16 | [Transformer](topics/16_transformer/README.md) | Self-attention: softmax(QKᵀ/√dₖ)V | Attention, positional encoding | 13 | 4 |
+| 17 | [Autoencoder](topics/17_autoencoder/README.md) | Encode → latent → decode | Representation, reconstruction | 13 | 3 |
 
-| Algorithm | LA | Calc | Prob | Opt | Info |
-|---|---|---|---|---|---|
-| Linear Regression | [02](01_supervised_learning/01_linear_regression/02_mathematics.ipynb) | [03](01_supervised_learning/01_linear_regression/03_optimization.ipynb) | [04](01_supervised_learning/01_linear_regression/04_statistics.ipynb) | [03](01_supervised_learning/01_linear_regression/03_optimization.ipynb) | — |
-| Polynomial Regression | [02](01_supervised_learning/02_polynomial_regression/02_mathematics.ipynb) | [03](01_supervised_learning/02_polynomial_regression/03_optimization.ipynb) | [04](01_supervised_learning/02_polynomial_regression/04_statistics.ipynb) | [03](01_supervised_learning/02_polynomial_regression/03_optimization.ipynb) | — |
-| Ridge Regression | [02](01_supervised_learning/03_ridge_regression/02_mathematics.ipynb) | [03](01_supervised_learning/03_ridge_regression/03_optimization.ipynb) | [04](01_supervised_learning/03_ridge_regression/04_statistics.ipynb) | [03](01_supervised_learning/03_ridge_regression/03_optimization.ipynb) | — |
-| Lasso Regression | [02](01_supervised_learning/04_lasso_regression/02_mathematics.ipynb) | [03](01_supervised_learning/04_lasso_regression/03_optimization.ipynb) | [04](01_supervised_learning/04_lasso_regression/04_statistics.ipynb) | [03](01_supervised_learning/04_lasso_regression/03_optimization.ipynb) | — |
-| Logistic Regression | [02](01_supervised_learning/05_logistic_regression/02_mathematics.ipynb) | [03](01_supervised_learning/05_logistic_regression/03_optimization.ipynb) | [04](01_supervised_learning/05_logistic_regression/04_statistics.ipynb) | [03](01_supervised_learning/05_logistic_regression/03_optimization.ipynb) | [02](01_supervised_learning/05_logistic_regression/02_mathematics.ipynb) |
-| Decision Tree | — | — | [04](01_supervised_learning/06_decision_tree/04_statistics.ipynb) | [03](01_supervised_learning/06_decision_tree/03_optimization.ipynb) | [02](01_supervised_learning/06_decision_tree/02_mathematics.ipynb) |
-| Random Forest | — | — | [04](01_supervised_learning/07_random_forest/04_statistics.ipynb) | [03](01_supervised_learning/07_random_forest/03_optimization.ipynb) | [02](01_supervised_learning/07_random_forest/02_mathematics.ipynb) |
-| Gradient Boosting | [02](01_supervised_learning/08_gradient_boosting/02_mathematics.ipynb) | [03](01_supervised_learning/08_gradient_boosting/03_optimization.ipynb) | [04](01_supervised_learning/08_gradient_boosting/04_statistics.ipynb) | [03](01_supervised_learning/08_gradient_boosting/03_optimization.ipynb) | [02](01_supervised_learning/08_gradient_boosting/02_mathematics.ipynb) |
-| KNN | [02](01_supervised_learning/09_k_nearest_neighbors/02_mathematics.ipynb) | — | [04](01_supervised_learning/09_k_nearest_neighbors/04_statistics.ipynb) | — | — |
-| Naive Bayes | — | — | [02](01_supervised_learning/10_naive_bayes/02_mathematics.ipynb) | [03](01_supervised_learning/10_naive_bayes/03_optimization.ipynb) | — |
-| SVM | [02](01_supervised_learning/11_support_vector_machine/02_mathematics.ipynb) | [03](01_supervised_learning/11_support_vector_machine/03_optimization.ipynb) | [04](01_supervised_learning/11_support_vector_machine/04_statistics.ipynb) | [03](01_supervised_learning/11_support_vector_machine/03_optimization.ipynb) | — |
+## Prerequisite Graph
 
----
+```mermaid
+graph TD
+    subgraph Foundations["Foundations"]
+        LA["Linear Algebra"]
+        CO["Calculus & Optimization"]
+        PS["Probability & Statistics"]
+        IT["Information Theory"]
+        NC["Numerical Computing"]
+    end
 
-## 02 — Unsupervised Learning
+    CO --> NC
+    PS --> IT
 
-| Algorithm | LA | Calc | Prob | Opt | Info |
-|---|---|---|---|---|---|
-| PCA | [02](02_unsupervised_learning/01_pca/02_mathematics.ipynb) | — | [04](02_unsupervised_learning/01_pca/04_statistics.ipynb) | [03](02_unsupervised_learning/01_pca/03_optimization.ipynb) | — |
-| LDA | [02](02_unsupervised_learning/02_lda/02_mathematics.ipynb) | — | [04](02_unsupervised_learning/02_lda/04_statistics.ipynb) | [03](02_unsupervised_learning/02_lda/03_optimization.ipynb) | — |
-| t-SNE | [02](02_unsupervised_learning/03_t_sne/02_mathematics.ipynb) | [03](02_unsupervised_learning/03_t_sne/03_optimization.ipynb) | [04](02_unsupervised_learning/03_t_sne/04_statistics.ipynb) | [03](02_unsupervised_learning/03_t_sne/03_optimization.ipynb) | [02](02_unsupervised_learning/03_t_sne/02_mathematics.ipynb) |
-| K-Means | [02](02_unsupervised_learning/04_k_means_clustering/02_mathematics.ipynb) | — | [04](02_unsupervised_learning/04_k_means_clustering/04_statistics.ipynb) | [03](02_unsupervised_learning/04_k_means_clustering/03_optimization.ipynb) | — |
-| Hierarchical | [02](02_unsupervised_learning/05_hierarchical_clustering/02_mathematics.ipynb) | — | — | [03](02_unsupervised_learning/05_hierarchical_clustering/03_optimization.ipynb) | — |
-| DBSCAN | [02](02_unsupervised_learning/06_dbscan/02_mathematics.ipynb) | — | [04](02_unsupervised_learning/06_dbscan/04_statistics.ipynb) | — | — |
-| GMM | [02](02_unsupervised_learning/07_gaussian_mixture_model/02_mathematics.ipynb) | [03](02_unsupervised_learning/07_gaussian_mixture_model/03_optimization.ipynb) | [04](02_unsupervised_learning/07_gaussian_mixture_model/04_statistics.ipynb) | [03](02_unsupervised_learning/07_gaussian_mixture_model/03_optimization.ipynb) | [02](02_unsupervised_learning/07_gaussian_mixture_model/02_mathematics.ipynb) |
-| Apriori | — | — | [04](02_unsupervised_learning/08_apriori/04_statistics.ipynb) | [03](02_unsupervised_learning/08_apriori/03_optimization.ipynb) | — |
-| FP-Growth | — | — | [04](02_unsupervised_learning/09_fp_growth/04_statistics.ipynb) | [03](02_unsupervised_learning/09_fp_growth/03_optimization.ipynb) | — |
+    subgraph Phase1["Phase 1 — Core Regression"]
+        T01["01 Linear Regression"]
+        T02["02 Gradient Descent"]
+        T03["03 Regularization"]
+    end
 
----
+    LA --> T01
+    CO --> T01
+    PS --> T01
+    LA --> T02
+    CO --> T02
+    T01 --> T02
+    T01 --> T03
+    T02 --> T03
 
-## 03 — Deep Learning
+    subgraph Phase2["Phase 2 — Classification & Ensembles"]
+        T04["04 Logistic Regression"]
+        T05["05 Decision Tree"]
+        T06["06 Ensemble Methods"]
+        T07["07 KNN"]
+        T08["08 Naive Bayes"]
+        T09["09 SVM"]
+    end
 
-| Algorithm | LA | Calc | Prob | Opt | Info |
-|---|---|---|---|---|---|
-| MLP | [02](03_deep_learning/01_multi_layer_perceptron/02_mathematics.ipynb) | [02](03_deep_learning/01_multi_layer_perceptron/02_mathematics.ipynb) | [04](03_deep_learning/01_multi_layer_perceptron/04_statistics.ipynb) | [03](03_deep_learning/01_multi_layer_perceptron/03_optimization.ipynb) | [04](03_deep_learning/01_multi_layer_perceptron/04_statistics.ipynb) |
-| CNN | [02](03_deep_learning/02_cnn/02_mathematics.ipynb) | [02](03_deep_learning/02_cnn/02_mathematics.ipynb) | [04](03_deep_learning/02_cnn/04_statistics.ipynb) | [03](03_deep_learning/02_cnn/03_optimization.ipynb) | — |
-| RNN / LSTM / GRU | [02](03_deep_learning/03_rnn_lstm_gru/02_mathematics.ipynb) | [02](03_deep_learning/03_rnn_lstm_gru/02_mathematics.ipynb) | [04](03_deep_learning/03_rnn_lstm_gru/04_statistics.ipynb) | [03](03_deep_learning/03_rnn_lstm_gru/03_optimization.ipynb) | — |
-| Transformer | [02](03_deep_learning/04_transformer/02_mathematics.ipynb) | [02](03_deep_learning/04_transformer/02_mathematics.ipynb) | [04](03_deep_learning/04_transformer/04_statistics.ipynb) | [03](03_deep_learning/04_transformer/03_optimization.ipynb) | [04](03_deep_learning/04_transformer/04_statistics.ipynb) |
-| Autoencoder | [02](03_deep_learning/05_autoencoder/02_mathematics.ipynb) | [02](03_deep_learning/05_autoencoder/02_mathematics.ipynb) | [04](03_deep_learning/05_autoencoder/04_statistics.ipynb) | [03](03_deep_learning/05_autoencoder/03_optimization.ipynb) | [04](03_deep_learning/05_autoencoder/04_statistics.ipynb) |
+    T01 --> T04
+    T02 --> T04
+    PS --> T04
+    IT --> T05
+    PS --> T05
+    T05 --> T06
+    T02 --> T06
+    LA --> T07
+    PS --> T08
+    IT --> T08
+    LA --> T09
+    CO --> T09
+    T02 --> T09
 
----
+    subgraph Phase3["Phase 3 — Unsupervised"]
+        T10["10 PCA"]
+        T11["11 Clustering"]
+        T12["12 Dimensionality Reduction"]
+    end
 
-## 04 — Generative AI
+    LA --> T10
+    PS --> T10
+    LA --> T11
+    PS --> T11
+    T10 --> T12
+    IT --> T12
 
-| Algorithm | LA | Calc | Prob | Opt | Info |
-|---|---|---|---|---|---|
-| VAE | [02](04_generative_ai/01_vae/02_mathematics.ipynb) | [02](04_generative_ai/01_vae/02_mathematics.ipynb) | [04](04_generative_ai/01_vae/04_statistics.ipynb) | [03](04_generative_ai/01_vae/03_optimization.ipynb) | [04](04_generative_ai/01_vae/04_statistics.ipynb) |
-| GAN | [02](04_generative_ai/02_gan/02_mathematics.ipynb) | [02](04_generative_ai/02_gan/02_mathematics.ipynb) | [04](04_generative_ai/02_gan/04_statistics.ipynb) | [03](04_generative_ai/02_gan/03_optimization.ipynb) | [04](04_generative_ai/02_gan/04_statistics.ipynb) |
-| Diffusion | [02](04_generative_ai/03_diffusion_models/02_mathematics.ipynb) | [02](04_generative_ai/03_diffusion_models/02_mathematics.ipynb) | [04](04_generative_ai/03_diffusion_models/04_statistics.ipynb) | [03](04_generative_ai/03_diffusion_models/03_optimization.ipynb) | [04](04_generative_ai/03_diffusion_models/04_statistics.ipynb) |
-| LLM | [02](04_generative_ai/04_large_language_models/02_mathematics.ipynb) | [02](04_generative_ai/04_large_language_models/02_mathematics.ipynb) | [04](04_generative_ai/04_large_language_models/04_statistics.ipynb) | [03](04_generative_ai/04_large_language_models/03_optimization.ipynb) | [04](04_generative_ai/04_large_language_models/04_statistics.ipynb) |
+    subgraph Phase4["Phase 4 — Deep Learning"]
+        T13["13 Neural Networks"]
+        T14["14 CNN"]
+        T15["15 RNN / LSTM"]
+        T16["16 Transformer"]
+        T17["17 Autoencoder"]
+    end
 
----
+    LA --> T13
+    CO --> T13
+    T02 --> T13
+    T04 --> T13
+    NC --> T13
+    T13 --> T14
+    T13 --> T15
+    T13 --> T16
+    T15 --> T16
+    T13 --> T17
+    T10 --> T17
+    IT --> T17
+```
 
-## 05 — Reinforcement Learning
+> Topics 5–9 and 10–12 can be studied in parallel once their prerequisites are met.
 
-| Algorithm | LA | Calc | Prob | Opt | Info |
-|---|---|---|---|---|---|
-| MDP framework | — | — | [02](05_reinforcement_learning/00_markov_decision_process/02_mathematics.ipynb) | [03](05_reinforcement_learning/00_markov_decision_process/03_optimization.ipynb) | — |
-| Q-Learning | — | — | [04](05_reinforcement_learning/01_q_learning/04_statistics.ipynb) | [03](05_reinforcement_learning/01_q_learning/03_optimization.ipynb) | — |
-| DQN | [02](05_reinforcement_learning/02_dqn/02_mathematics.ipynb) | [02](05_reinforcement_learning/02_dqn/02_mathematics.ipynb) | [04](05_reinforcement_learning/02_dqn/04_statistics.ipynb) | [03](05_reinforcement_learning/02_dqn/03_optimization.ipynb) | — |
-| Double DQN | [02](05_reinforcement_learning/03_double_dqn/02_mathematics.ipynb) | [02](05_reinforcement_learning/03_double_dqn/02_mathematics.ipynb) | [04](05_reinforcement_learning/03_double_dqn/04_statistics.ipynb) | [03](05_reinforcement_learning/03_double_dqn/03_optimization.ipynb) | — |
-| Policy Gradient | — | [02](05_reinforcement_learning/04_policy_gradient/02_mathematics.ipynb) | [04](05_reinforcement_learning/04_policy_gradient/04_statistics.ipynb) | [03](05_reinforcement_learning/04_policy_gradient/03_optimization.ipynb) | — |
-| A2C | [02](05_reinforcement_learning/05_a2c/02_mathematics.ipynb) | [02](05_reinforcement_learning/05_a2c/02_mathematics.ipynb) | [04](05_reinforcement_learning/05_a2c/04_statistics.ipynb) | [03](05_reinforcement_learning/05_a2c/03_optimization.ipynb) | — |
-| DDPG | [02](05_reinforcement_learning/06_ddpg/02_mathematics.ipynb) | [02](05_reinforcement_learning/06_ddpg/02_mathematics.ipynb) | [04](05_reinforcement_learning/06_ddpg/04_statistics.ipynb) | [03](05_reinforcement_learning/06_ddpg/03_optimization.ipynb) | — |
-| PPO | — | [02](05_reinforcement_learning/07_ppo/02_mathematics.ipynb) | [04](05_reinforcement_learning/07_ppo/04_statistics.ipynb) | [03](05_reinforcement_learning/07_ppo/03_optimization.ipynb) | [02](05_reinforcement_learning/07_ppo/02_mathematics.ipynb) |
-| SAC | [02](05_reinforcement_learning/08_sac/02_mathematics.ipynb) | [02](05_reinforcement_learning/08_sac/02_mathematics.ipynb) | [04](05_reinforcement_learning/08_sac/04_statistics.ipynb) | [03](05_reinforcement_learning/08_sac/03_optimization.ipynb) | [02](05_reinforcement_learning/08_sac/02_mathematics.ipynb) |
+## Math-to-Algorithm Mapping
 
----
+```mermaid
+graph LR
+    subgraph MathConcepts["Mathematical Concepts"]
+        PROJ(("Projection"))
+        SVD(("SVD"))
+        EIGEN(("Eigenvalues"))
+        ENTROPY(("Entropy"))
+        XENT(("Cross-Entropy"))
+        CHAIN(("Chain Rule"))
+        NORMS(("Norms"))
+        MLE(("MLE"))
+        KLD(("KL Divergence"))
+        CONVEX(("Convexity"))
+        BAYES(("Bayes' Theorem"))
+        MATMUL(("Matrix Multiply"))
+        SOFTMAX(("Softmax"))
+    end
 
-## How to read this index
+    subgraph Algorithms["Algorithms"]
+        LR["Linear Regression"]
+        PCA["PCA"]
+        DT["Decision Tree"]
+        LOGREG["Logistic Regression"]
+        NN["Neural Networks"]
+        KNN["KNN"]
+        SVM["SVM"]
+        CLUST["Clustering"]
+        GD["Gradient Descent"]
+        GMM["GMM"]
+        AE["Autoencoder"]
+        NB["Naive Bayes"]
+        XFORMER["Transformer"]
+    end
 
-- **Find a math pillar fast:** want to see KL divergence in action? Scan the `Info` column — VAE, t-SNE, PPO, SAC, Logistic Regression all hit it.
-- **Find an algorithm fast:** find the row, then read horizontally to know which pillar each notebook focuses on.
-- **`—` means "not the primary lens"** — e.g., KNN has trivial calculus, Decision Tree has trivial linear algebra. That doesn't mean those notebooks don't exist, just that they aren't where you'd open the algorithm to *learn* that pillar.
+    PROJ -->|"least squares"| LR
+    SVD -->|"decomposition"| PCA
+    EIGEN -->|"covariance spectrum"| PCA
+    ENTROPY -->|"split criterion"| DT
+    XENT -->|"loss function"| LOGREG
+    XENT -->|"loss function"| NN
+    CHAIN -->|"backpropagation"| NN
+    NORMS -->|"distance metric"| KNN
+    NORMS -->|"margin"| SVM
+    NORMS -->|"centroid distance"| CLUST
+    MLE -->|"parameter estimation"| LOGREG
+    MLE -->|"EM algorithm"| GMM
+    KLD -->|"reconstruction loss"| AE
+    CONVEX -->|"convergence"| GD
+    CONVEX -->|"dual problem"| SVM
+    BAYES -->|"posterior"| NB
+    MATMUL -->|"forward pass"| NN
+    MATMUL -->|"attention QKᵀ"| XFORMER
+    SOFTMAX -->|"output layer"| LOGREG
+    SOFTMAX -->|"attention weights"| XFORMER
+```
 
----
+## Algorithm Families
 
-## Foundations & cross-cutting
+| Family | Members | Common thread |
+|---|---|---|
+| Linear Models | LinReg, Ridge, Lasso, LogReg | Weighted sum of features + loss |
+| Tree Models | Decision Tree, Random Forest, Gradient Boosting | Recursive partitioning |
+| Distance-Based | KNN, K-Means, DBSCAN, Hierarchical | Proximity in feature space |
+| Probabilistic | Naive Bayes, GMM, Logistic Regression | Explicit probability modeling |
+| Subspace Methods | PCA, LDA, t-SNE, Autoencoder | Dimensionality reduction |
+| Neural Architectures | MLP, CNN, RNN, Transformer, Autoencoder | Composable differentiable layers |
 
-| Topic | Where |
-|---|---|
-| Math roadmap | [00_foundations/01_math_essentials/math_for_ai_roadmap.md](00_foundations/01_math_essentials/math_for_ai_roadmap.md) |
-| Data preprocessing | [00_foundations/02_data_preprocessing/](00_foundations/02_data_preprocessing/) |
-| Feature engineering | [00_foundations/03_feature_engineering/](00_foundations/03_feature_engineering/) |
-| Model evaluation | [00_foundations/04_model_evaluation/](00_foundations/04_model_evaluation/) |
-| Capstone projects | [99_capstone/](99_capstone/) |
+## 5 Mathematical Pillars of ML
+
+| Pillar | Role | Examples |
+|---|---|---|
+| **Linear Algebra** | Data as matrices/vectors; the spine of every neural network | Matrix multiply in MLPs, SVD in PCA, attention QKᵀ |
+| **Calculus** | Derivatives to minimize error — foundation of backprop | Chain rule, Jacobian, gradient descent |
+| **Probability & Statistics** | Reasoning under uncertainty; parameter estimation | Bayes' theorem, MLE/MAP, cross-entropy |
+| **Optimization** | Finding optimal parameters — broader than applied calculus | SGD, Adam, KKT (SVM), EM algorithm |
+| **Information Theory** | Measuring information and distribution divergence | Entropy, KL divergence, mutual information, ELBO |
+
+## Cross-Topic Navigation
+
+- [Optimization methods](synthesis/optimization_methods_compared.md)
+- [Loss functions](synthesis/loss_functions_map.md)
+- [Bias–variance trade-off](synthesis/bias_variance_tradeoff.md)
+- [Geometry of ML](synthesis/geometry_of_ml.md)
+- [Probabilistic view](synthesis/probabilistic_view_of_ml.md)
+- [Model selection](synthesis/model_selection_guide.md)
+- [Supervised vs unsupervised](synthesis/supervised_vs_unsupervised.md)
+- [Regularization across models](synthesis/regularization_across_models.md)
