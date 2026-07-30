@@ -9,6 +9,10 @@
 
 ---
 
+> 🧮 **Sister Repository:** For standalone, deep-dive mathematical prerequisites (Linear Algebra, Calculus & Optimization, Probability & Statistics, Information Theory, Numerical Computing), check out [Mathematics-for-ML-from-scratch](https://github.com/hien078/Mathematics-for-ML-from-scratch).
+
+---
+
 ## 🎯 Core Philosophy
 
 Machine Learning is applied mathematics and numerical computation. This repository strictly follows a **first-principles methodology**:
