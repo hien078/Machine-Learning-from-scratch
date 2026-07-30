@@ -2,7 +2,7 @@
 
 ## Scalar Derivatives
 
-The derivative of $f:\mathbb R\to\mathbb R$ at $x$ is
+The derivative of $f:\mathbb{R}\to\mathbb{R}$ at $x$ is
 
 $$f'(x)=\lim_{h\to0}\frac{f(x+h)-f(x)}{h},$$
 
@@ -11,7 +11,7 @@ $f(x+h)=f(x)+f'(x)h+o(h)$.
 
 ## Gradients and Directional Derivatives
 
-For $f:\mathbb R^d\to\mathbb R$, the gradient is
+For $f:\mathbb{R}^d\to\mathbb{R}$, the gradient is
 
 $$\nabla f(x)=\begin{bmatrix}\partial f/\partial x_1&\cdots&\partial f/\partial x_d\end{bmatrix}^\top.$$
 
@@ -22,9 +22,9 @@ norm.
 
 ## Jacobians and Chain Rule
 
-For $g:\mathbb R^d\to\mathbb R^m$, the Jacobian
-$J_g(x)\in\mathbb R^{m\times d}$ contains first partial derivatives. If
-$f:\mathbb R^m\to\mathbb R$, then
+For $g:\mathbb{R}^d\to\mathbb{R}^m$, the Jacobian
+$J_g(x)\in\mathbb{R}^{m\times d}$ contains first partial derivatives. If
+$f:\mathbb{R}^m\to\mathbb{R}$, then
 
 $$\nabla_x(f\circ g)(x)=J_g(x)^\top\nabla f(g(x)).$$
 
@@ -76,10 +76,10 @@ The **central-difference** approximation verifies analytical gradients:
 $$\frac{\partial f}{\partial x_i}\approx\frac{f(x+\epsilon e_i)-f(x-\epsilon e_i)}{2\epsilon},\qquad\epsilon\sim10^{-5}\text{–}10^{-7}.$$
 
 Central difference has $O(\epsilon^2)$ error, versus $O(\epsilon)$ for the one-sided formula.
-In practice, compare the analytical gradient $g$ against the numerical estimate $\hat g$
+In practice, compare the analytical gradient $g$ against the numerical estimate $\hat{g}$
 using relative error:
 
-$$\frac{\lVert g-\hat g\rVert}{\lVert g\rVert+\lVert\hat g\rVert}<10^{-5}.$$
+$$\frac{\lVert g-\hat{g}\rVert}{\lVert g\rVert+\lVert\hat{g}\rVert}<10^{-5}.$$
 
 This is the primary verification tool when implementing gradients from scratch.
 

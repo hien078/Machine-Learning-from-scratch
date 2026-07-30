@@ -244,3 +244,11 @@ This ensures each feature contributes proportionally to the distance.
 - [Clustering](../11_clustering/README.md)
 - [Dimensionality Reduction](../12_dimensionality_reduction/README.md)
 - [Model Selection](../../synthesis/model_selection_guide.md)
+
+---
+
+## 10. References
+
+- **Cover, T., & Hart, P. (1967).** Nearest neighbor pattern classification. *IEEE Transactions on Information Theory*, 13(1), 21–27. (Cover-Hart theorem: $R^* \le R_{1\text{-NN}} \le 2 R^*$).
+- **Hastie, T., Tibshirani, R., & Friedman, J. (2009).** *The Elements of Statistical Learning: Data Mining, Inference, and Prediction* (2nd ed.). Springer. Chapter 13.3: *$k$-Nearest-Neighbor Classifiers*.
+- **Bishop, C. M. (2006).** *Pattern Recognition and Machine Learning*. Springer. Chapter 2.5: *Non-parametric Methods*.

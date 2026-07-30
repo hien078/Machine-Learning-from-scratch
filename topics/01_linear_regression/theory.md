@@ -431,3 +431,13 @@ $$\hat{\mathbf{w}} = \Phi^+\mathbf{y}$$
 - **Foundations used:** [Linear Algebra](../../foundations/linear_algebra/README.md) (Projection), [Calculus](../../foundations/calculus_optimization/README.md) (Derivatives)
 - **Synthesis:** [Optimization Methods](../../synthesis/optimization_methods_compared.md)
 - **Graph Map:** See [INDEX.md](../../INDEX.md)
+
+---
+
+## 14. References
+
+- **Hastie, T., Tibshirani, R., & Friedman, J. (2009).** *The Elements of Statistical Learning: Data Mining, Inference, and Prediction* (2nd ed.). Springer. Chapter 3: *Linear Methods for Regression*.
+- **Bishop, C. M. (2006).** *Pattern Recognition and Machine Learning*. Springer. Chapter 3: *Linear Models for Regression*.
+- **Boyd, S., & Vandenberghe, L. (2004).** *Convex Optimization*. Cambridge University Press. Chapter 4: *Convex Optimization Problems* (Least-Squares).
+- **Gauss, C. F. (1823).** *Theoria combinationis observationum erroribus minimis obnoxiae* (Theory of the Combination of Observations Least Subject to Errors). Gottingae: Dieterich.
+

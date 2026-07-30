@@ -260,6 +260,17 @@ K-Means can be viewed as a degenerate GMM where:
 - **Distance foundation:** [Norms and Distances](../../foundations/linear_algebra/norms_distances.ipynb) — K-Means and DBSCAN both rely on Euclidean distance.
 - **Probability foundation:** [Probability & Statistics](../../foundations/probability_statistics/README.md) — GMM builds on multivariate Gaussians and Bayes' rule.
 - **Dimensionality reduction:** [10 PCA](../10_pca/README.md) — often used as a pre-processing step before clustering; PCA + K-Means is a common pipeline.
-- **Distance-based supervised:** [08 KNN](../08_knn/README.md) — shares the Euclidean distance primitive; KNN is supervised while K-Means is unsupervised.
+- **Distance-based supervised:** [07 KNN](../07_knn/README.md) — shares the Euclidean distance primitive; KNN is supervised while K-Means is unsupervised.
 - **Synthesis:** [Supervised vs. Unsupervised](../../synthesis/supervised_vs_unsupervised.md) — clustering is the prototypical unsupervised task.
 - **Graph Map:** See [INDEX.md](../../INDEX.md)
+
+---
+
+## 8. References
+
+- **MacQueen, J. (1967).** Some methods for classification and analysis of multivariate observations. *Proceedings of the 5th Berkeley Symposium on Mathematical Statistics and Probability*, 1, 281–297.
+- **Arthur, D., & Vassilvitskii, S. (2007).** k-means++: The advantages of careful seeding. *Proceedings of the 18th Annual ACM-SIAM Symposium on Discrete Algorithms*, 1027–1035.
+- **Ester, M., Kriegel, H. P., Sander, J., & Xu, X. (1996).** A density-based algorithm for discovering clusters in large spatial databases with noise. *KDD-96*, 96(34), 226–231.
+- **Dempster, A. P., Laird, N. M., & Rubin, D. B. (1977).** Maximum likelihood from incomplete data via the EM algorithm. *Journal of the Royal Statistical Society: Series B (Methodological)*, 39(1), 1–22.
+- **Bishop, C. M. (2006).** *Pattern Recognition and Machine Learning*. Springer. Chapter 9: *Mixture Models and EM*.
+

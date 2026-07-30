@@ -298,3 +298,13 @@ geometric transformations unless augmented accordingly.
 - [Gradient Descent](../02_gradient_descent/README.md) — optimizer used for training
 - [Regularization](../03_regularization/README.md) — dropout, weight decay, data
   augmentation are standard CNN regularizers
+
+---
+
+## 10. References
+
+- **LeCun, Y., Bottou, L., Bengio, Y., & Haffner, P. (1998).** Gradient-based learning applied to document recognition. *Proceedings of the IEEE*, 86(11), 2278–2324.
+- **Krizhevsky, A., Sutskever, I., & Hinton, G. E. (2012).** ImageNet classification with deep convolutional neural networks. *Advances in Neural Information Processing Systems (NIPS)*, 25, 1097–1105.
+- **He, K., Zhang, X., Ren, S., & Sun, J. (2016).** Deep residual learning for image recognition. *Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR)*, 770–778.
+- **Goodfellow, I., Bengio, Y., & Courville, A. (2016).** *Deep Learning*. MIT Press. Chapter 9: *Convolutional Networks*.
+

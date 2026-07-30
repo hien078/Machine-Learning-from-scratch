@@ -577,3 +577,13 @@ ranks a random positive higher than a random negative.
 5. **Model mis-specification.** When the true decision function is far from linear,
    probabilities can be over-confident. **Cure:** post-hoc calibration or a more
    flexible model.
+
+---
+
+## 15. References
+
+- **Hastie, T., Tibshirani, R., & Friedman, J. (2009).** *The Elements of Statistical Learning: Data Mining, Inference, and Prediction* (2nd ed.). Springer. Chapter 4.4: *Logistic Regression*.
+- **Bishop, C. M. (2006).** *Pattern Recognition and Machine Learning*. Springer. Chapter 4.3: *Probabilistic Discriminative Models*.
+- **McCullagh, P., & Nelder, J. A. (1989).** *Generalized Linear Models* (2nd ed.). Chapman and Hall/CRC.
+- **Albert, A., & Anderson, J. A. (1984).** On the existence of maximum likelihood estimates in logistic regression models. *Biometrika*, 71(1), 1–10. (Linearly separable weight explosion theorem).
+

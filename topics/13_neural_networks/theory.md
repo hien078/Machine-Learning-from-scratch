@@ -152,8 +152,7 @@ $$
 W_{ij} \sim \mathcal{N}\!\left(0,\; \frac{2}{d_{\text{in}} + d_{\text{out}}}\right)
 $$
 
-Derived by requiring $\operatorname{Var}(\text{output})
-\approx \operatorname{Var}(\text{input})$ under the assumption that activations
+Derived by requiring $\operatorname{Var}(\text{output}) \approx \operatorname{Var}(\text{input})$ under the assumption that activations
 are in the linear regime near zero.
 
 ### 5.2 He initialization — for ReLU
@@ -200,4 +199,15 @@ will find the approximating parameters, nor that the required width will be prac
 - [Logistic Regression](../04_logistic_regression/README.md) — special case: MLP with 0 hidden layers
 - [Regularization](../03_regularization/README.md) — weight decay is L2 regularization
 - [Numerical Computing](../../foundations/numerical_computing/README.md) — log-sum-exp stability
-- [CNN / RNN / Transformer](../15_cnn/README.md) — architectures that generalize the MLP
+- [CNN / RNN / Transformer](../14_cnn/README.md) — architectures that generalize the MLP
+
+---
+
+## 9. References
+
+- **Goodfellow, I., Bengio, Y., & Courville, A. (2016).** *Deep Learning*. MIT Press. Chapter 6: *Deep Feedforward Networks*.
+- **Cybenko, G. (1989).** Approximation by superpositions of a sigmoidal function. *Mathematics of Control, Signals and Systems*, 2(4), 303–314.
+- **Hornik, K., Stinchcombe, M., & White, H. (1991).** Multilayer feedforward networks are universal approximators. *Neural Networks*, 4(2), 251–257.
+- **Glorot, X., & Bengio, Y. (2010).** Understanding the difficulty of training deep feedforward neural networks. *Proceedings of the 13th International Conference on Artificial Intelligence and Statistics (AISTATS)*, 249–256.
+- **He, K., Zhang, X., Ren, S., & Sun, J. (2015).** Delving deep into rectifiers: Surpassing human-level performance on ImageNet classification. *Proceedings of the IEEE International Conference on Computer Vision (ICCV)*, 1026–1034.
+

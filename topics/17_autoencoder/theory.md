@@ -248,3 +248,13 @@ $$\mathcal{L} = \frac{1}{n}\sum_{i=1}^{n}\mathcal{L}_{\text{VAE}}(x_i)$$
 - [Dimensionality Reduction](../12_dimensionality_reduction/README.md) — autoencoder as nonlinear alternative
 - [Probabilistic View](../../synthesis/probabilistic_view_of_ml.md) — VAE as variational inference
 - [Information Theory](../../foundations/information_theory/) — KL divergence, ELBO
+
+---
+
+## 9. References
+
+- **Kingma, D. P., & Welling, M. (2013).** Auto-encoding variational Bayes. *arXiv preprint arXiv:1312.6114*.
+- **Baldi, P., & Hornik, K. (1989).** Neural networks and principal component analysis: Learning from examples without local minima. *Neural Networks*, 2(1), 53–58.
+- **Vincent, P., Larochelle, H., Lajoie, I., Bengio, Y., & Manzagol, P. A. (2010).** Stacked denoising autoencoders: Learning useful representations in a deep network with a local denoising criterion. *Journal of Machine Learning Research*, 11, 3371–3408.
+- **Goodfellow, I., Bengio, Y., & Courville, A. (2016).** *Deep Learning*. MIT Press. Chapter 14: *Autoencoders* & Chapter 20: *Generative Models*.
+

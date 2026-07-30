@@ -37,7 +37,7 @@ This fails when the decision depends on **threshold interactions**:
 
 - "Approve loan if age $\ge$ 25 **and** income $\ge$ 50k." No single hyperplane captures
   this rectangular region.
-- "Flag fraud if transaction $> \$5{,}000$ **or** country is high-risk." The decision
+- "Flag fraud if transaction $> 5{,}000$ **or** country is high-risk." The decision
   boundary is a union of axis-aligned rectangles.
 
 A decision tree builds an **interpretable, piecewise-constant predictor** by recursively
@@ -303,3 +303,13 @@ often because they offer more candidate thresholds. Entropy-based gain ratio
   (e.g. model trees) is an active area.
 - **SVM** (topic 09). Kernel SVMs handle non-linear boundaries via feature mapping;
   trees handle them via recursive partitioning. Neither requires the other's machinery.
+
+---
+
+## 10. References
+
+- **Breiman, L., Friedman, J., Olshen, R., & Stone, C. (1984).** *Classification and Regression Trees*. Wadsworth & Brooks/Cole.
+- **Quinlan, J. R. (1986).** Induction of decision trees. *Machine Learning*, 1(1), 81–106.
+- **Quinlan, J. R. (1993).** *C4.5: Programs for Machine Learning*. Morgan Kaufmann.
+- **Hastie, T., Tibshirani, R., & Friedman, J. (2009).** *The Elements of Statistical Learning: Data Mining, Inference, and Prediction* (2nd ed.). Springer. Chapter 9.2: *Tree-Based Methods*.
+

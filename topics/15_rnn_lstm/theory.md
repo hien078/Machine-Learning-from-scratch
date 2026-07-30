@@ -276,3 +276,13 @@ moderate-length sequences.
 - **[Transformer](../16_transformer/README.md)** — attention replaces recurrence,
   enabling parallelism and direct access to all positions; largely supersedes RNNs
   for NLP tasks.
+
+---
+
+## 9. References
+
+- **Hochreiter, S., & Schmidhuber, J. (1997).** Long short-term memory. *Neural Computation*, 9(8), 1735–1780.
+- **Cho, K., van Merriënboer, B., Gulcehre, C., Bahdanau, D., Bougares, F., Schwenk, H., & Bengio, Y. (2014).** Learning phrase representations using RNN encoder-decoder for statistical machine translation. *EMNLP*, 1724–1734.
+- **Pascanu, R., Mikolov, T., & Bengio, Y. (2013).** On the difficulty of training recurrent neural networks. *International Conference on Machine Learning (ICML)*, 1310–1318.
+- **Goodfellow, I., Bengio, Y., & Courville, A. (2016).** *Deep Learning*. MIT Press. Chapter 10: *Sequence Modeling: Recurrent and Recursive Nets*.
+

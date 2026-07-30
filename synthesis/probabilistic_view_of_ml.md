@@ -11,7 +11,7 @@ Given independent observations $\{(x_i,y_i)\}_{i=1}^n$ and parameters $\theta$,
 maximum likelihood solves
 
 $$
-\hat\theta_{\mathrm{MLE}}
+\hat{\theta}_{\mathrm{MLE}}
 =\arg\max_\theta\sum_{i=1}^n\log p(y_i\mid x_i,\theta).
 $$
 
@@ -30,8 +30,8 @@ Minimizing negative log-likelihood gives the training loss.
 Maximum a posteriori estimation adds a log prior:
 
 $$
-\hat\theta_{\mathrm{MAP}}
-=\arg\min_\theta\left[-\log p(\mathcal D\mid\theta)-\log p(\theta)\right].
+\hat{\theta}_{\mathrm{MAP}}
+=\arg\min_\theta\left[-\log p(\mathcal{D}\mid\theta)-\log p(\theta)\right].
 $$
 
 A zero-mean Gaussian prior yields an $\ell_2$ penalty; a Laplace prior yields an

@@ -10,14 +10,14 @@ prediction error across model families.
 Assume observations satisfy $Y=f(X)+\varepsilon$, where
 $\mathbb{E}[\varepsilon\mid X]=0$ and
 $\operatorname{Var}(\varepsilon\mid X)=\sigma^2$. For a fitted predictor
-$\hat f_{\mathcal D}(x)$ that varies with training set $\mathcal D$,
+$\hat{f}_{\mathcal{D}}(x)$ that varies with training set $\mathcal{D}$,
 
 $$
-\mathbb{E}_{\mathcal D,\varepsilon}
-\left[(Y-\hat f_{\mathcal D}(x))^2\mid X=x\right]
+\mathbb{E}_{\mathcal{D},\varepsilon}
+\left[(Y-\hat{f}_{\mathcal{D}}(x))^2\mid X=x\right]
 =\sigma^2+
-\left(\mathbb{E}_{\mathcal D}[\hat f_{\mathcal D}(x)]-f(x)\right)^2+
-\operatorname{Var}_{\mathcal D}(\hat f_{\mathcal D}(x)).
+\left(\mathbb{E}_{\mathcal{D}}[\hat{f}_{\mathcal{D}}(x)]-f(x)\right)^2+
+\operatorname{Var}_{\mathcal{D}}(\hat{f}_{\mathcal{D}}(x)).
 $$
 
 The terms are irreducible noise, squared bias, and estimator variance. This identity is

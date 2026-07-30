@@ -24,7 +24,7 @@ This index covers only active First Principles material. Historical notebooks pr
 | 05 | [Decision Tree](topics/05_decision_tree/README.md) | Recursive splits on impurity | Entropy, Gini, greedy search | Information Theory | 2 |
 | 06 | [Ensemble Methods](topics/06_ensemble_methods/README.md) | Bagging (RF) and boosting (GB) | Bootstrap, variance reduction | 05 | 2 |
 | 07 | [KNN](topics/07_knn/README.md) | Majority vote of K nearest points | Norms, metric geometry | Linear Algebra | 2 |
-| 08 | [Naive Bayes](topics/08_naive_bayes/README.md) | P(y|x) via Bayes + independence | Bayes theorem, conditional independence | Probability | 2 |
+| 08 | [Naive Bayes](topics/08_naive_bayes/README.md) | P(y\|x) via Bayes + independence | Bayes theorem, conditional independence | Probability | 2 |
 | 09 | [SVM](topics/09_svm/README.md) | Maximum-margin hyperplane | Convex optimization, KKT | LA, Optimization | 2 |
 | 10 | [PCA](topics/10_pca/README.md) | Max-variance projection | Covariance, eigenvalues, SVD | LA, Statistics | 1 |
 | 11 | [Clustering](topics/11_clustering/README.md) | K-Means, DBSCAN, GMM | Distances, density, EM | LA, Probability | 2 |

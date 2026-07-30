@@ -27,7 +27,7 @@ $$\mathcal{L}_{\text{MSE}} = \frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2$$
 | Used by | Linear Regression, Polynomial Regression, Ridge, Neural Networks |
 | Assumption | Gaussian noise on targets |
 | Sensitivity | Sensitive to outliers (squared penalty) |
-| Gradient | $\nabla_{\hat{\mathbf y}}\mathcal L = \frac{2}{n}(\hat{\mathbf y}-\mathbf y)$ |
+| Gradient | $\nabla_{\hat{\mathbf y}}\mathcal{L} = \frac{2}{n}(\hat{\mathbf y}-\mathbf y)$ |
 | Probabilistic view | Equivalent to MLE under $y \sim \mathcal{N}(\hat{y}, \sigma^2)$ |
 | Convexity | Convex in $\hat{y}$ |
 
@@ -62,7 +62,7 @@ $$\mathcal{L}_{\text{BCE}} = -\frac{1}{n} \sum_{i=1}^{n} \left[ y_i \log(\hat{p}
 | Used by | Logistic Regression, Neural Networks (binary) |
 | Assumption | Bernoulli distribution on targets |
 | Sensitivity | Penalizes confident wrong predictions heavily |
-| Logit gradient | $\partial \ell/\partial z = \hat p-y$ for $\hat p=\sigma(z)$ |
+| Logit gradient | $\partial \ell/\partial z = \hat{p}-y$ for $\hat{p}=\sigma(z)$ |
 | Probabilistic view | Negative log-likelihood of Bernoulli |
 | Convexity | Convex in log-odds |
 

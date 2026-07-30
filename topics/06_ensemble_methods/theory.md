@@ -291,3 +291,14 @@ partial compensation but do not recover full transparency.
   regularization. Early stopping is analogous to limiting model complexity.
 - **Neural Networks** (topic 13). Dropout can be interpreted as an ensemble method
   (averaging over exponentially many sub-networks).
+
+---
+
+## 10. References
+
+- **Breiman, L. (2001).** Random forests. *Machine Learning*, 45(1), 5–32.
+- **Freund, Y., & Schapire, R. E. (1997).** A decision-theoretic generalization of on-line learning and an application to boosting. *Journal of Computer and System Sciences*, 55(1), 119–139.
+- **Friedman, J. H. (2001).** Greedy function approximation: A gradient boosting machine. *Annals of Statistics*, 29(5), 1189–1232.
+- **Chen, T., & Guestrin, C. (2016).** XGBoost: A scalable tree boosting system. *Proceedings of the 22nd ACM SIGKDD International Conference on Knowledge Discovery and Data Mining*, 785–794.
+- **Hastie, T., Tibshirani, R., & Friedman, J. (2009).** *The Elements of Statistical Learning: Data Mining, Inference, and Prediction* (2nd ed.). Springer. Chapter 10 (*Boosting and Additive Trees*) & Chapter 15 (*Random Forests*).
+

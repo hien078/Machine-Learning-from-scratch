@@ -19,7 +19,7 @@ Behavioral guidelines for this ML learning workspace. Biases toward caution over
 - **Tech:** Python 3.12+, NumPy, PyTorch, Matplotlib, Jupyter.
 - **Subproject layout (capstone or any multi-file project):** `README.md`, `requirements.txt`, `data/`, `notebooks/`, `src/`, `tests/`, `reports/`.
 - **Repo organization:** `foundations/` (math prerequisites) · `topics/` (17 algorithm stories) · `projects/` (portfolio applications) · `synthesis/` (cross-topic comparisons) · `maps/` (knowledge graph) · `src/ml_first_principles/` (reusable implementations) · `tests/`. Each topic folder follows the first-principles file pattern below.
-- **Map files (read first to navigate):** [README.md](README.md), [ML.md](ML.md) (20+ canonical models), [INDEX.md](INDEX.md) (algorithm × math-pillar matrix), [NOTEBOOK_STANDARDS.md](NOTEBOOK_STANDARDS.md) (quality contract), [_template_first_principles.ipynb](_template_first_principles.ipynb) (notebook boilerplate).
+- **Map files (read first to navigate):** [README.md](README.md), [INDEX.md](INDEX.md) (20+ canonical models), [NOTEBOOK_STANDARDS.md](NOTEBOOK_STANDARDS.md) (quality contract), [_template_first_principles.ipynb](_template_first_principles.ipynb) (notebook boilerplate).
 - **Web (edge case):** dark mode + HSL accent. WCAG 2.1 AA.
 
 **First-principles file pattern** — every topic folder. Each file has a distinct role; do not duplicate content across files.

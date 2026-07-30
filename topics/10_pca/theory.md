@@ -158,3 +158,13 @@ by raw loading values.
 - [Geometry of ML](../../synthesis/geometry_of_ml.md)
 - [Autoencoders](../17_autoencoder/README.md) (nonlinear PCA analogy)
 - [Regularization](../03_regularization/README.md) (PCA used for denoising / pre-processing)
+
+---
+
+## 9. References
+
+- **Pearson, K. (1901).** On lines and planes of closest fit to systems of points in space. *The London, Edinburgh, and Dublin Philosophical Magazine and Journal of Science*, 2(11), 559–572.
+- **Hotelling, H. (1933).** Analysis of a complex of statistical variables into principal components. *Journal of Educational Psychology*, 24(6), 417–441.
+- **Jolliffe, I. T. (2002).** *Principal Component Analysis* (2nd ed.). Springer Series in Statistics.
+- **Hastie, T., Tibshirani, R., & Friedman, J. (2009).** *The Elements of Statistical Learning: Data Mining, Inference, and Prediction* (2nd ed.). Springer. Chapter 14.5: *Principal Components Analysis*.
+

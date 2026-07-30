@@ -168,12 +168,11 @@ $P(x \mid y = k) = 0$ — one missing word kills the entire class probability.
 
 $$\hat{\theta}_{kj} = \frac{N_{kj} + \alpha}{N_k + \alpha \cdot d}, \qquad \alpha > 0. \qquad (5.2)$$
 
-With $\alpha = 1$ (Laplace smoothing), this is equivalent to placing a symmetric
-Dirichlet prior $\text{Dir}(\alpha, \dots, \alpha)$ on $\theta_k$ and computing the
-MAP estimate.
+**Why $\alpha \cdot d$ in the denominator?** Adding $\alpha$ pseudo-counts to each of the $d$ feature categories increases the total count in class $k$ by $\sum_{j=1}^d \alpha = \alpha \cdot d$. This exact normalization guarantees that the parameters form a valid probability distribution summing to 1: $\sum_{j=1}^d \hat{\theta}_{kj} = \frac{\sum_{j=1}^d (N_{kj} + \alpha)}{N_k + \alpha d} = \frac{N_k + \alpha d}{N_k + \alpha d} = 1$.
 
-**Result:** Laplace smoothing ensures every feature has nonzero probability in
-every class, preventing a single unseen feature from zeroing out a class.
+With $\alpha = 1$ (Laplace smoothing), this is equivalent to placing a symmetric Dirichlet prior $\text{Dir}(\alpha, \dots, \alpha)$ on $\theta_k$ and computing the MAP estimate.
+
+**Result:** Laplace smoothing ensures every feature has nonzero probability in every class, preventing a single unseen feature from zeroing out a class.
 
 ---
 
@@ -185,15 +184,13 @@ For binary features $x_j \in \{0, 1\}$:
 
 $$P(x_j \mid y = k) = \theta_{kj}^{x_j} (1 - \theta_{kj})^{1 - x_j}. \qquad (6.1)$$
 
-Unlike Multinomial NB, Bernoulli NB explicitly models the *absence* of a feature
-(the $(1 - \theta_{kj})$ term). This makes it more suitable when feature absence
-carries information (e.g., a spam word being absent is evidence against spam).
+Unlike Multinomial NB, Bernoulli NB explicitly models the *absence* of a feature (the $(1 - \theta_{kj})$ term). This makes it more suitable when feature absence carries information (e.g., a spam word being absent is evidence against spam).
 
 ### 6.2 Parameter Estimation
 
 $$\hat{\theta}_{kj} = \frac{(\text{count of examples in class } k \text{ with } x_j = 1) + \alpha}{n_k + 2\alpha}. \qquad (6.2)$$
 
-The denominator uses $2\alpha$ because each feature has two states (0 and 1).
+The denominator uses $2\alpha$ because each binary feature has exactly 2 possible states ($x_j = 1$ and $x_j = 0$), so adding $\alpha$ to each state adds $2\alpha$ to the total count.
 
 ---
 
@@ -209,17 +206,11 @@ The denominator uses $2\alpha$ because each feature has two states (0 and 1).
 
 ## 8. Generative vs. Discriminative
 
-Naive Bayes is a **generative** classifier: it models the joint distribution
-$P(x, y) = P(x \mid y) P(y)$ and uses Bayes' rule to infer $P(y \mid x)$.
+Naive Bayes is a **generative** classifier: it models the joint distribution $P(x, y) = P(x \mid y) P(y)$ and uses Bayes' rule to infer $P(y \mid x)$.
 
-Logistic regression is a **discriminative** classifier: it models $P(y \mid x)$
-directly as $\sigma(\theta^T x)$ without modeling $P(x \mid y)$.
+Logistic regression is a **discriminative** classifier: it models $P(y \mid x)$ directly as $\sigma(\theta^T x)$ without modeling $P(x \mid y)$.
 
-**Theorem (Ng & Jordan, 2001).** Under the naive Bayes model assumptions (class-
-conditional feature independence with exponential-family likelihoods), the posterior
-$P(y \mid x)$ has the logistic (sigmoid/softmax) form. Naive Bayes and logistic
-regression are therefore a **generative-discriminative pair** — they share the same
-model family but differ in parameter estimation:
+**Theorem (Ng & Jordan, 2001).** Under the naive Bayes model assumptions (class-conditional feature independence with exponential-family likelihoods), the posterior $P(y \mid x)$ has the logistic (sigmoid/softmax) form. Naive Bayes and logistic regression are therefore a **generative-discriminative pair** — they share the same model family but differ in parameter estimation:
 
 | Aspect | Naive Bayes | Logistic Regression |
 |---|---|---|
@@ -235,46 +226,38 @@ model family but differ in parameter estimation:
 
 ### 9.1 Correlated Features Violate Independence
 
-When features are highly correlated, the naive assumption double-counts evidence.
-Example: if $x_1$ and $x_2$ are copies of the same feature, Naive Bayes treats them
-as two independent pieces of evidence, making the posterior over-confident.
+When features are highly correlated, the naive assumption double-counts evidence. Example: if $x_1$ and $x_2$ are copies of the same feature, Naive Bayes treats them as two independent pieces of evidence, making the posterior over-confident.
 
-**Effect:** Probability estimates are badly calibrated (too close to 0 or 1),
-though classification accuracy may still be reasonable.
+**Effect:** Probability estimates are badly calibrated (too close to 0 or 1), though classification accuracy may still be reasonable.
 
 ### 9.2 Continuous Features with Non-Gaussian Distribution
 
-Gaussian NB assumes each feature is normally distributed within each class. If
-the true distribution is multimodal, heavy-tailed, or skewed, the Gaussian
-likelihood assigns wrong density values.
+Gaussian NB assumes each feature is normally distributed within each class. If the true distribution is multimodal, heavy-tailed, or skewed, the Gaussian likelihood assigns wrong density values.
 
-**Cure:** Transform features (log, Box-Cox), discretize into bins, or use
-kernel density estimation.
+**Cure:** Transform features (log, Box-Cox), discretize into bins, or use kernel density estimation.
 
 ### 9.3 Zero Variance Features
 
-If a feature is constant within a class, the Gaussian variance is zero and the
-density is undefined ($1 / \sqrt{0}$). Variance smoothing ($\epsilon > 0$) is
-required.
+If a feature is constant within a class, the Gaussian variance is zero and the density is undefined ($1 / \sqrt{0}$). Variance smoothing ($\epsilon > 0$) is required.
 
 ### 9.4 Unseen Feature Values (Discrete NB)
 
-Without smoothing, a single unseen feature-value pair produces $P(x_j \mid y = k) = 0$,
-which zeros out the entire class posterior regardless of all other features.
-Laplace smoothing (§5.2) is the standard fix.
+Without smoothing, a single unseen feature-value pair produces $P(x_j \mid y = k) = 0$, which zeros out the entire class posterior regardless of all other features. Laplace smoothing (§5.2) is the standard fix.
 
 ---
 
 ## 10. Connections
 
-- **[Probability & Statistics](../../foundations/probability_statistics/README.md):**
-  Bayes' theorem, MLE, MAP estimation — the mathematical foundation.
-- **[Logistic Regression](../04_logistic_regression/README.md):**
-  The discriminative counterpart. Same posterior form (sigmoid/softmax), different
-  parameter estimation (iterative vs. closed-form).
-- **[Information Theory](../../foundations/information_theory/README.md):**
-  Cross-entropy loss in logistic regression connects to KL divergence between
-  the empirical and model distributions.
-- **[Probabilistic View](../../synthesis/probabilistic_view_of_ml.md):**
-  Naive Bayes illustrates the generative modeling paradigm — model $P(x, y)$,
-  then derive $P(y \mid x)$ via Bayes' rule.
+- **[Probability & Statistics](../../foundations/probability_statistics/README.md):** Bayes' theorem, MLE, MAP estimation — the mathematical foundation.
+- **[Logistic Regression](../04_logistic_regression/README.md):** The discriminative counterpart. Same posterior form (sigmoid/softmax), different parameter estimation (iterative vs. closed-form).
+- **[Information Theory](../../foundations/information_theory/README.md):** Cross-entropy loss in logistic regression connects to KL divergence between the empirical and model distributions.
+- **[Probabilistic View](../../synthesis/probabilistic_view_of_ml.md):** Naive Bayes illustrates the generative modeling paradigm — model $P(x, y)$, then derive $P(y \mid x)$ via Bayes' rule.
+
+---
+
+## 11. References
+
+- **Ng, A. Y., & Jordan, M. I. (2001).** On discriminative vs. generative classifiers: A comparison of logistic regression and naive bayes. *Advances in Neural Information Processing Systems (NIPS)*, 14, 841–848.
+- **Bishop, C. M. (2006).** *Pattern Recognition and Machine Learning*. Springer. Chapter 4.2: *Probabilistic Generative Models*.
+- **McCallum, A., & Nigam, K. (1998).** A comparison of event models for Naive Bayes text classification. *AAAI-98 Workshop on Learning for Text Categorization*, 752, 41–48.
+

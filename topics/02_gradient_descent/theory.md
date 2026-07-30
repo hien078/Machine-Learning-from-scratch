@@ -299,3 +299,14 @@ A small $\|\nabla L(\theta)\|$ does not guarantee that $L(\theta)$ is close to $
 - **[04 Logistic Regression](../04_logistic_regression/README.md)** — No closed form; GD (or variants) is the standard solver.
 - **[13 Neural Networks](../13_neural_networks/README.md)** — Backpropagation computes gradients; SGD/Adam are the default optimizers.
 - **[Optimization Methods Compared](../../synthesis/optimization_methods_compared.md)** — Cross-topic comparison of optimization approaches.
+
+---
+
+## 11. References
+
+- **Boyd, S., & Vandenberghe, L. (2004).** *Convex Optimization*. Cambridge University Press. Chapter 9: *Unconstrained Minimization*.
+- **Nesterov, Y. (1983).** A method for solving the convex programming problem with convergence rate $O(1/k^2)$. *Doklady Akademii Nauk SSSR*, 269(3), 543–547.
+- **Polyak, B. T. (1964).** Some methods of speeding up the convergence of iteration methods. *USSR Computational Mathematics and Mathematical Physics*, 4(5), 1–17.
+- **Kingma, D. P., & Ba, J. (2014).** Adam: A method for stochastic optimization. *arXiv preprint arXiv:1412.6980*.
+- **Reddi, S. J., Kale, S., & Kumar, S. (2018).** On the convergence of Adam and beyond. *International Conference on Learning Representations (ICLR)*.
+

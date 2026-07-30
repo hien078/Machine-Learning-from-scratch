@@ -25,12 +25,12 @@ $P(a\le X\le b)=\int_a^b f(x)\,dx$. A density value is not itself a probability.
 
 Expectation and variance are
 
-$$\mathbb E[X]=\sum_x x p(x)\quad\text{or}\quad\int x f(x)\,dx,$$
+$$\mathbb{E}[X]=\sum_x x p(x)\quad\text{or}\quad\int x f(x)\,dx,$$
 
-$$\operatorname{Var}(X)=\mathbb E[(X-\mathbb E[X])^2].$$
+$$\operatorname{Var}(X)=\mathbb{E}[(X-\mathbb{E}[X])^2].$$
 
 Covariance measures linear co-variation:
-$\operatorname{Cov}(X,Y)=\mathbb E[(X-\mathbb E[X])(Y-\mathbb E[Y])]$.
+$\operatorname{Cov}(X,Y)=\mathbb{E}[(X-\mathbb{E}[X])(Y-\mathbb{E}[Y])]$.
 
 ## Sampling and Estimation
 

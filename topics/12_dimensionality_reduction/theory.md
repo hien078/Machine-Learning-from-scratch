@@ -239,3 +239,12 @@ $$\text{Perp}(P_i) = 2^{H(P_i)}, \quad H(P_i) = -\sum_{j} p_{j \mid i} \log_2 p_
   reduction; can be seen as a learnable t-SNE alternative.
 - **[Geometry of ML](../../synthesis/geometry_of_ml.md):** Subspace projection, manifold
   embedding, and metric preservation are geometric themes shared across PCA, LDA, and t-SNE.
+
+---
+
+## 8. References
+
+- **Fisher, R. A. (1936).** The use of multiple measurements in taxonomic problems. *Annals of Eugenics*, 7(2), 179–188.
+- **van der Maaten, L., & Hinton, G. (2008).** Visualizing data using t-SNE. *Journal of Machine Learning Research*, 9, 2579–2605.
+- **Hastie, T., Tibshirani, R., & Friedman, J. (2009).** *The Elements of Statistical Learning: Data Mining, Inference, and Prediction* (2nd ed.). Springer. Chapter 4.3: *Linear Discriminant Analysis*.
+

@@ -365,3 +365,14 @@ Training uses **teacher forcing**: the decoder receives the ground-truth target 
 - **Attention Variants (further reading):** FlashAttention (memory-efficient exact
   attention), Sparse Attention (Longformer, BigBird), Linear Attention (Performers),
   Sliding Window Attention.
+
+---
+
+## 10. References
+
+- **Vaswani, A., Shazeer, N., Parmar, N., Uszkoreit, J., Jones, L., Gomez, A. N., Kaiser, Ł., & Polosukhin, I. (2017).** Attention is all you need. *Advances in Neural Information Processing Systems (NIPS)*, 30, 5998–6008.
+- **Devlin, J., Chang, M. W., Lee, K., & Toutanova, K. (2019).** BERT: Pre-training of deep bidirectional transformers for language understanding. *NAACL-HLT*, 4171–4186.
+- **Radford, A., Narasimhan, K., Salimans, T., & Sutskever, I. (2018).** Improving language understanding by generative pre-training. *OpenAI Technical Report*.
+- **Su, J., Lu, Y., Pan, S., Murtadha, A., Wen, B., & Liu, Y. (2024).** RoFormer: Enhanced transformer with rotary position embedding. *Neurocomputing*, 568, 127063.
+- **Goodfellow, I., Bengio, Y., & Courville, A. (2016).** *Deep Learning*. MIT Press.
+

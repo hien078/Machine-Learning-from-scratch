@@ -153,16 +153,23 @@ are set to exactly zero.
 
 ### 4.4 Soft-thresholding
 
-The one-dimensional Lasso has a closed form:
+Consider the one-dimensional Lasso problem $\min_\theta \frac{1}{2}(z - \theta)^2 + \lambda |\theta|$. The subgradient optimality condition is:
+
+$$0 \in \theta - z + \lambda \partial |\theta|$$
+
+Analyzing the subdifferential $\partial |\theta|$ by cases:
+- If $\theta > 0$: $\theta - z + \lambda = 0 \implies \theta = z - \lambda$ (valid when $z > \lambda$).
+- If $\theta < 0$: $\theta - z - \lambda = 0 \implies \theta = z + \lambda$ (valid when $z < -\lambda$).
+- If $\theta = 0$: $|z - 0| \le \lambda \implies |z| \le \lambda$.
+
+Combining these three cases yields the **soft-thresholding operator**:
 
 $$
 S_\lambda(z)
 = \operatorname{sign}(z)\max(|z| - \lambda, 0)
 $$
 
-**Result:** soft-thresholding shrinks $z$ toward zero by exactly $\lambda$ and clips
-anything closer than $\lambda$ to zero. This formula drives coordinate descent: the
-$p$-dimensional Lasso reduces to a sequence of one-dimensional problems.
+**Result:** Soft-thresholding shrinks $z$ toward zero by exactly $\lambda$ and clips anything closer than $\lambda$ to zero. This closed-form solution drives coordinate descent: the $p$-dimensional Lasso reduces to a sequence of one-dimensional soft-thresholding problems.
 
 ## 5. Geometry — L1 vs L2
 
@@ -220,3 +227,13 @@ sparse; exact zeros arise from the MAP optimization.
 - [Regularization Across Models](../../synthesis/regularization_across_models.md)
 - [Linear Regression](../01_linear_regression/README.md)
 - [Gradient Descent](../02_gradient_descent/README.md)
+
+---
+
+## 9. References
+
+- **Hastie, T., Tibshirani, R., & Friedman, J. (2009).** *The Elements of Statistical Learning* (2nd ed.). Springer. Chapter 3.4: *Shrinkage Methods*.
+- **Hoerl, A. E., & Kennard, R. W. (1970).** Ridge regression: Biased estimation for nonorthogonal problems. *Technometrics*, 12(1), 55–67.
+- **Tibshirani, R. (1996).** Regression shrinkage and selection via the lasso. *Journal of the Royal Statistical Society: Series B (Methodological)*, 58(1), 267–288.
+- **Zou, H., & Hastie, T. (2005).** Regularization and variable selection via the elastic net. *Journal of the Royal Statistical Society: Series B (Statistical Methodology)*, 67(2), 301–320.
+

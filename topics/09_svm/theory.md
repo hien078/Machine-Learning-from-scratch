@@ -316,3 +316,13 @@ Only the support vectors ($\alpha_i > 0$) contribute to the sum.
 - **[Optimization](../../foundations/calculus_optimization/README.md).** SVM is a showcase
   for constrained optimization: Lagrangians, duality, KKT conditions. The Pegasos
   algorithm demonstrates subgradient methods for non-smooth optimization.
+
+---
+
+## 10. References
+
+- **Cortes, C., & Vapnik, V. (1995).** Support-vector networks. *Machine Learning*, 20(3), 273–297.
+- **Schölkopf, B., & Smola, A. J. (2002).** *Learning with Kernels: Support Vector Machines, Regularization, Optimization, and Beyond*. MIT Press.
+- **Boyd, S., & Vandenberghe, L. (2004).** *Convex Optimization*. Cambridge University Press. Chapter 5: *Duality*.
+- **Hastie, T., Tibshirani, R., & Friedman, J. (2009).** *The Elements of Statistical Learning: Data Mining, Inference, and Prediction* (2nd ed.). Springer. Chapter 12: *Support Vector Machines and Flexible Discriminants*.
+
