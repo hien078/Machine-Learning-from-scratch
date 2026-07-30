@@ -1,68 +1,125 @@
 # Machine Learning from First Principles
 
-An educational repository for deriving, implementing, and testing machine-learning
-methods from mathematical assumptions rather than treating libraries as black boxes.
+> **Derive, implement, and verify machine learning algorithms from mathematical principles without black-box dependencies.**
 
-> **WHY → WHAT → HOW → BUILD → VERIFY → CONNECTIONS**
+[![Python Version](https://img.shields.io/badge/python-3.12+-blue.svg?style=flat-square&logo=python)](https://www.python.org/)
+[![Mathematics](https://img.shields.io/badge/math-first__principles-crimson.svg?style=flat-square)](https://en.wikipedia.org/wiki/First_principle)
+[![Pytest](https://img.shields.io/badge/tests-passing-brightgreen.svg?style=flat-square&logo=pytest)](tests/)
+[![License](https://img.shields.io/badge/license-MIT-green.svg?style=flat-square)](LICENSE)
 
-## Repository Layout
+---
 
-| Path | Role |
-|---|---|
-| [`foundations/`](foundations/) | Reusable mathematics and numerical-computing tools |
-| [`topics/`](topics/) | Seventeen First Principles algorithm stories |
-| [`synthesis/`](synthesis/) | Cross-model comparisons and decision guides |
-| [`src/ml_first_principles/`](src/ml_first_principles/) | Installable from-scratch implementations |
-| [`tests/`](tests/) | Numerical and behavioral regression tests |
+## 🎯 Core Philosophy
 
-## Topic Sequence
+Machine Learning is applied mathematics and numerical computation. This repository strictly follows a **first-principles methodology**:
 
-| Phase | Topics |
-|---|---|
-| Core mathematical ML | Linear Regression, Gradient Descent, Regularization, Logistic Regression, PCA |
-| Classical models | Decision Tree, Ensemble Methods, KNN, Naive Bayes, SVM, Clustering, Dimensionality Reduction |
-| Deep learning | Neural Networks, CNN, RNN/LSTM, Transformer, Autoencoder |
+```text
+Phenomenon & Motivation
+→ Mathematical Formulation
+→ Analytical Derivation
+→ From-Scratch NumPy/PyTorch Implementation
+→ Numerical Verification & Behavioral Tests
+→ ML/AI Connections & Trade-offs
+```
 
-See [`INDEX.md`](INDEX.md) for the full curriculum index with prerequisite graph,
-math-to-algorithm mapping, and cross-topic navigation.
+Every algorithm is built step-by-step from raw matrix operations and calculus before comparing with production libraries.
 
-## File Roles
+---
 
-Each topic uses the smallest set of files needed for its reasoning story:
+## 📂 Repository Structure
 
-| File | Responsibility |
-|---|---|
-| `README.md` | Scope, prerequisites, maturity, and navigation |
-| `theory.md` | WHY, formal WHAT, assumptions, notation, and derivations |
-| `first_principles.ipynb` | HOW, BUILD, experiments, failures, and VERIFY |
-| `exercises.ipynb` | Hand calculations, coding tasks, and conceptual checks |
+```text
+Machine-Learning-from-scratch/
+├── foundations/               # Mathematical prerequisites (calculus, linalg, probability, information theory)
+├── topics/                    # 17 algorithm modules (theory, implementation, exercises)
+├── synthesis/                 # Cross-model comparisons & decision guides
+├── src/ml_first_principles/   # Clean, installable Python library written from scratch
+├── tests/                     # Unit tests & numerical regression suites
+├── INDEX.md                   # Full curriculum index & prerequisite DAG
+├── NOTEBOOK_STANDARDS.md      # Writing & coding standards
+└── README.md
+```
 
-The boundary between Markdown, notebooks, and reusable Python is defined in
-[`NOTEBOOK_STANDARDS.md`](NOTEBOOK_STANDARDS.md).
+---
 
-## Installation
+## 🗺️ Topics & Curriculum
 
-Python 3.12 or newer is required.
+The repository covers 17 distinct algorithmic modules organized into three main phases:
+
+### Phase 1: Core Mathematical ML
+| Topic | Module | Mathematical Core | Status |
+|---|---|---|---|
+| `01` | Linear Regression | OLS, Normal Equations, QR Decomposition | ✅ Complete |
+| `02` | Gradient Descent | Convexity, Step Size, Momentum, Adaptive Rates | ✅ Complete |
+| `03` | Regularization | L1/L2 Norms, Lasso, Ridge, ElasticNet, KKT | ✅ Complete |
+| `04` | Logistic Regression | MLE, Sigmoid, Cross-Entropy, Newton-Raphson | ✅ Complete |
+| `10` | PCA | SVD, Eigendecomposition, Covariance Manifolds | ✅ Complete |
+
+### Phase 2: Classical Machine Learning
+| Topic | Module | Mathematical Core | Status |
+|---|---|---|---|
+| `05` | Decision Trees | Gini Impurity, Information Gain, Entropy | ✅ Complete |
+| `06` | Ensemble Methods | Bagging, Random Forest, AdaBoost, Gradient Boosting | ✅ Complete |
+| `07` | K-Nearest Neighbors | Metric Spaces, KD-Trees, Distance Measures | ✅ Complete |
+| `08` | Naive Bayes | Bayes Theorem, MAP, Gaussian/Multinomial Priors | ✅ Complete |
+| `09` | Support Vector Machines | Dual Formulation, Convex Quadratic Program, Kernels | ✅ Complete |
+| `11` | Clustering | K-Means, EM Algorithm, Gaussian Mixture Models | ✅ Complete |
+| `12` | Dimensionality Reduction | t-SNE, UMAP, Spectral Embeddings | ✅ Complete |
+
+### Phase 3: Deep Learning & Neural Architectures
+| Topic | Module | Mathematical Core | Status |
+|---|---|---|---|
+| `13` | Neural Networks | Computational Graphs, Chain Rule, Backprop | ✅ Complete |
+| `14` | Convolutional Networks | Cross-Correlation, Receptive Fields, Pooling | ✅ Complete |
+| `15` | Recurrent Networks | RNNs, BPTT, Vanishing Gradients, LSTM, GRU | ✅ Complete |
+| `16` | Transformers | Scaled Dot-Product, Multi-Head Self-Attention, Positional Encoding | ✅ Complete |
+| `17` | Autoencoders | Bottleneck Representations, Variational Inference (VAE) | ✅ Complete |
+
+---
+
+## ⚡ Quick Start & Installation
+
+### Prerequisites
+- **Python 3.12+**
+- Virtual environment (`venv` or `conda`)
+
+### 1. Clone & Setup Environment
 
 ```bash
+git clone https://github.com/hien078/Machine-Learning-from-scratch.git
+cd Machine-Learning-from-scratch
+
 python -m venv .venv
-source .venv/bin/activate
-python -m pip install -r requirements.txt
-python -m pip install --no-deps --no-build-isolation -e .
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 ```
 
-For deep-learning comparisons, also install PyTorch (`pip install torch`).
-
-On Windows PowerShell, activate with `.venv\Scripts\Activate.ps1`.
-
-## Verification
+### 2. Install Dependencies
 
 ```bash
-python -m pytest -p no:cacheprovider
-ruff check src tests scripts
-python scripts/normalize_notebooks.py
+pip install -r requirements.txt
+pip install -e .
 ```
 
-## License
+### 3. Run Verification Tests
 
-Released under the [MIT License](LICENSE).
+Ensure all algorithm implementations pass the unit test suite:
+
+```bash
+pytest
+```
+
+---
+
+## 🔬 Software Engineering & Testing
+
+All algorithm implementations inside `src/ml_first_principles/` are paired with automated regression tests in `tests/`:
+
+- Linear Models, Optimizers, Tree Models, Ensembles
+- Distance Metrics, Probabilistic Models, Neural Core
+- Gradient checks and numerical stability checks
+
+---
+
+## 📄 License
+
+This repository is released under the [MIT License](LICENSE).
