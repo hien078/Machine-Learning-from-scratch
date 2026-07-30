@@ -238,8 +238,10 @@ class LogisticRegression:
 
     def predict(self, X: ArrayLike, threshold: float = 0.5) -> NDArray:
         """Predict original class labels at a probability threshold."""
-        if self.classes_ is None or not 0.0 <= threshold <= 1.0:
-            raise ValueError("fit must be called and threshold must lie in [0, 1]")
+        if self.classes_ is None:
+            raise RuntimeError("fit must be called before predict")
+        if not (0.0 <= threshold <= 1.0):
+            raise ValueError("threshold must lie in [0, 1]")
         indices = (self.predict_proba(X) >= threshold).astype(int)
         return self.classes_[indices]
 
