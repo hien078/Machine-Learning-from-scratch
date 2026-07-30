@@ -1,39 +1,49 @@
-# CLAUDE.md v2.4
+# CLAUDE.md v2.5
 
 Behavioral guidelines for this ML learning workspace. Biases toward caution over speed. On conflict → read sections in order §1 → §11.
 
-> **Mirror of [AGENTS.md](AGENTS.md).** §1–§10 are byte-for-byte identical between the two files; §11 is tool-specific (Claude Code here, Antigravity there). **When updating shared rules, edit both files.**
+> **Mirror of [AGENTS.md](AGENTS.md).** §2–§10 are identical between the two files; §1 and §11 are tool-specific. **When updating shared rules, edit both files.**
 
 ## 1. Stop — Ask Before
 
 - `rm`, `git reset --hard`, force-push, deleting files/folders.
 - Installing new dependencies (`pip install`, `npm install`).
-- Edits > 500 lines/call, or files outside `d:\AI\Machine Learning\`.
+- Edits > 500 lines/call, or files outside the project root.
 - Training/download > 30s wall-time.
 - Dataset download > 100MB, or any write/delete inside `data/`.
 
 ## 2. Project Context
 
-- **Root:** `d:\AI\Machine Learning\`
 - **Purpose:** Educational ML workspace — learning, experimentation, implementation from scratch.
 - **Stage:** Learning phase (notebooks/scripts OK, production rules apply when project > 1 file).
 - **Tech:** Python 3.12+, NumPy, PyTorch, Matplotlib, Jupyter.
 - **Subproject layout (capstone or any multi-file project):** `README.md`, `requirements.txt`, `data/`, `notebooks/`, `src/`, `tests/`, `reports/`.
-- **Repo organization:** numbered top-level modules `00_foundations/` → `05_reinforcement_learning/` + `99_capstone/`. Each algorithm folder follows the 5-notebook pattern below.
-- **Map files (read first to navigate):** [README.md](README.md), [ML.md](ML.md) (20+ canonical models), [INDEX.md](INDEX.md) (algorithm × math-pillar matrix), [_template.ipynb](_template.ipynb) (boilerplate for any new notebook).
+- **Repo organization:** `foundations/` (math prerequisites) · `topics/` (17 algorithm stories) · `projects/` (portfolio applications) · `synthesis/` (cross-topic comparisons) · `maps/` (knowledge graph) · `src/ml_first_principles/` (reusable implementations) · `tests/`. Each topic folder follows the first-principles file pattern below.
+- **Map files (read first to navigate):** [README.md](README.md), [ML.md](ML.md) (20+ canonical models), [INDEX.md](INDEX.md) (algorithm × math-pillar matrix), [NOTEBOOK_STANDARDS.md](NOTEBOOK_STANDARDS.md) (quality contract), [_template_first_principles.ipynb](_template_first_principles.ipynb) (notebook boilerplate).
 - **Web (edge case):** dark mode + HSL accent. WCAG 2.1 AA.
 
-**5-notebook pattern** — every algorithm folder. Stay in your lane; do not pollute one role with another's content.
+**First-principles file pattern** — every topic folder. Each file has a distinct role; do not duplicate content across files.
 
-| Notebook | Role | Allowed |
+| File | Role | Content |
 |---|---|---|
-| `01_intuition` | Visual intuition | Plots, analogies, failure-mode visuals. No formal math. |
-| `02_mathematics` | Pure math | Theorems, derivations, notation. **Markdown only — no code, no plots.** |
-| `03_optimization` | Algorithms | Pseudocode + minimal demo (GD / closed form / EM). |
-| `04_statistics` | Estimator properties | Math + minimal sim (bias/variance, consistency, assumptions). |
-| `05_hands_on_programming` | Implementation | From-scratch NumPy first, then sklearn / PyTorch comparison. |
+| `README.md` | Navigation | Scope, prerequisites, maturity, file order, related synthesis/projects. |
+| `theory.md` | WHY + WHAT | Motivation, assumptions, notation, derivations. **Markdown only — no code.** |
+| `first_principles.ipynb` | HOW + BUILD + VERIFY | From-scratch NumPy implementation, library comparison, experiments, failure cases. |
+| `exercises.ipynb` | Practice | Hand derivation, coding task with deterministic check, conceptual question. |
 
-**Commands (PowerShell):** `.venv\Scripts\Activate.ps1` to activate · `pip install -r requirements.txt` to install (ask per §1) · `jupyter lab` to launch. No test/lint/CI yet — verification = notebook runs clean top-to-bottom on a fresh kernel (§9).
+Large topics may add focused notebooks (e.g. `variants.ipynb`, `geometry_and_sparsity.ipynb`). The boundary between Markdown, notebooks, and reusable Python is defined in [NOTEBOOK_STANDARDS.md](NOTEBOOK_STANDARDS.md).
+
+**First-principles checklist** — before writing any topic content, identify:
+
+1. **Problem**: what real-world or mathematical problem requires this method?
+2. **Assumptions**: what simplifications make the model tractable?
+3. **Variables & parameters**: what changes ($x$, $y$) vs what is fixed ($\lambda$, $\alpha$)?
+4. **Objective**: what quantity is being minimized/maximized/estimated?
+5. **Governing principle**: optimization, probabilistic inference, geometric separation, information compression, …
+6. **Formulation**: convert assumptions into equations — do not introduce formulas without justification.
+7. **Verification**: simple cases, limiting behavior, numerical comparison with a trusted library.
+
+**Commands (bash):** `source .venv/bin/activate` · `pip install -r requirements.txt` (ask per §1) · `jupyter lab`. Verification = notebook runs clean top-to-bottom on a fresh kernel (§9). On Windows PowerShell: `.venv\Scripts\Activate.ps1`.
 
 ## 3. Language
 
@@ -92,7 +102,7 @@ The test: every changed line should trace directly to the user's request.
 
 **Numerical:** inference with `torch.no_grad()` / `@inference_mode()`. Float comparison via `np.isclose`/`torch.allclose` + explicit `atol`. Log-space for probabilities (`logsumexp`, `log_softmax`). Accuracy to 4dp, loss scale-dependent.
 
-**Jupyter:** first cell = imports + `%load_ext autoreload` + seed. Split `01_eda.ipynb` / `02_train.ipynb`. Clear outputs before commit. Edit by cell index, never overwrite entire file.
+**Jupyter:** first cell = imports + `%load_ext autoreload` + seed. Split `theory.md` (derivations) / `first_principles.ipynb` (implementation + verification). Clear outputs before commit. Edit by cell index, never overwrite entire file.
 
 **LaTeX:** `pdflatex` default, `xelatex` when Unicode needed. Clean compile (0 errors) before reporting done. `biblatex+biber`, no mixing `natbib`. Gitignore `*.aux *.log *.out *.bbl`. Filename: snake_case, no spaces/diacritics.
 
@@ -148,7 +158,7 @@ Output overflow prevention: prefer `--max-count`, `head -50`, `PAGER=cat`; pass 
 - **Agent (Explore):** for codebase searches > 3 queries, spawn Agent with `subagent_type=Explore` rather than chaining Globs / Greps. Briefer prompts than for general-purpose.
 - **Plan mode:** use `EnterPlanMode` for non-trivial implementations *before* writing code; exit with `ExitPlanMode` only after the plan is finalized.
 - **Skills:** when the user types `/name`, invoke only if `name` appears in the available-skills list. Never invent a skill name from training data.
-- **Memory:** persistent memory at `C:\Users\Admin\.claude\projects\d--AI-Machine-Learning\memory\`. Save user / feedback / project / reference per the auto-memory system. Do NOT save things derivable from code (patterns, paths, git history).
+- **Memory:** persistent memory managed by Claude Code's auto-memory system. Do NOT save things derivable from code (patterns, paths, git history).
 - **Parallel tool calls:** when calls are independent, batch in one message; only serialize when later calls depend on earlier results.
 
 ---
