@@ -34,7 +34,6 @@ Every algorithm is built step-by-step from raw matrix operations and calculus be
 
 ```text
 Machine-Learning-from-scratch/
-├── foundations/               # Mathematical prerequisites (calculus, linalg, probability, information theory)
 ├── topics/                    # 17 algorithm modules (theory, implementation, exercises)
 ├── synthesis/                 # Cross-model comparisons & decision guides
 ├── src/ml_first_principles/   # Clean, installable Python library written from scratch
@@ -43,6 +42,8 @@ Machine-Learning-from-scratch/
 ├── NOTEBOOK_STANDARDS.md      # Writing & coding standards
 └── README.md
 ```
+
+> 📐 **Mathematical Prerequisites** (Linear Algebra, Calculus, Probability, Information Theory, etc.) are maintained in the dedicated **[applied-mathematics-foundation](https://github.com/hien078/applied-mathematics-foundation)** repository.
 
 ---
 
