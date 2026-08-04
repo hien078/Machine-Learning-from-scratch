@@ -2,17 +2,19 @@
 
 > **Phase:** 1 | **Status:** ✅ Complete | **Prerequisites:** Linear Algebra, Calculus
 
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/hien078/Machine-Learning-from-scratch/blob/master/topics/01_linear_regression/first_principles.ipynb)
+
 ## Overview
 
 Least squares, projection, normal equation, gradient descent, polynomial features
 
 ## Contents
 
-| File | Type | Description |
-|---|---|---|
-| `theory.md` | Theory | Pure concepts, definitions, derivations |
-| `first_principles.ipynb` | Computation | WHY→WHAT→HOW→BUILD→VERIFY→CONNECTIONS |
-| `exercises.ipynb` | Practice | Hand-calc, coding, conceptual problems |
+| File | Type | Description | Colab |
+|---|---|---|---|
+| `theory.md` | Theory | Pure concepts, definitions, derivations | — |
+| `first_principles.ipynb` | Computation | WHY→WHAT→HOW→BUILD→VERIFY→CONNECTIONS | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/hien078/Machine-Learning-from-scratch/blob/master/topics/01_linear_regression/first_principles.ipynb) |
+| `exercises.ipynb` | Practice | Hand-calc, coding, conceptual problems | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/hien078/Machine-Learning-from-scratch/blob/master/topics/01_linear_regression/exercises.ipynb) |
 
 ## Connections
 
