@@ -2,8 +2,6 @@
 
 > **Phase:** 1 | **Status:** ✅ Complete | **Prerequisites:** Probability, 02 GD
 
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/hien078/Machine-Learning-from-scratch/blob/master/topics/04_logistic_regression/first_principles.ipynb)
-
 ## Overview
 
 Binary classification via sigmoid, cross-entropy / NLL loss, gradient and Hessian,
@@ -12,11 +10,11 @@ softmax multi-class extension, ROC / AUC, calibration.
 
 ## Contents
 
-| # | File | Type | Description | Colab |
-|--:|---|---|---|---|
-| 1 | `theory.md` | Theory | Sigmoid identities, likelihood derivation, gradient & Hessian proofs, convexity, IRLS, regularization, softmax, statistical properties | — |
-| 2 | `first_principles.ipynb` | Computation | WHY→BUILD→VERIFY — binary & softmax from scratch, GD vs Newton convergence, sklearn comparison, decision boundary, ROC/AUC, failure cases | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/hien078/Machine-Learning-from-scratch/blob/master/topics/04_logistic_regression/first_principles.ipynb) |
-| 3 | `exercises.ipynb` | Practice | Sigmoid identities, cross-entropy calculation, gradient coding task, decision boundary visualization, perfect separation, log-odds interpretation | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/hien078/Machine-Learning-from-scratch/blob/master/topics/04_logistic_regression/exercises.ipynb) |
+| # | File | Type | Description |
+|--:|---|---|---|
+| 1 | `theory.md` | Theory | Sigmoid identities, likelihood derivation, gradient & Hessian proofs, convexity, IRLS, regularization, softmax, statistical properties |
+| 2 | `first_principles.ipynb` | Computation | WHY→BUILD→VERIFY — binary & softmax from scratch, GD vs Newton convergence, sklearn comparison, decision boundary, ROC/AUC, failure cases |
+| 3 | `exercises.ipynb` | Practice | Sigmoid identities, cross-entropy calculation, gradient coding task, decision boundary visualization, perfect separation, log-odds interpretation |
 
 ## Connections
 
