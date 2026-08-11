@@ -18,6 +18,6 @@ variational autoencoder (ELBO, reparameterization trick, KL regularization).
 
 ## Connections
 
-- **Prereqs:** [13 Neural Networks](../13_neural_networks/README.md), [10 PCA](../10_pca/README.md), [Information Theory](../../foundations/information_theory/)
+- **Prereqs:** [13 Neural Networks](../13_neural_networks/README.md), [10 PCA](../10_pca/README.md), [Information Theory](https://github.com/hien078/applied-mathematics-foundation)
 - **Synthesis:** [Probabilistic View of ML](../../synthesis/probabilistic_view_of_ml.md), [Geometry of ML](../../synthesis/geometry_of_ml.md)
 - **Next:** Generative models (GANs, diffusion)

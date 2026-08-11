@@ -231,7 +231,7 @@ $$\text{Perp}(P_i) = 2^{H(P_i)}, \quad H(P_i) = -\sum_{j} p_{j \mid i} \log_2 p_
 
 - **[PCA](../10_pca/README.md):** Unsupervised linear baseline; LDA extends PCA with
   label information; t-SNE provides a nonlinear alternative.
-- **[Information Theory](../../foundations/information_theory/README.md):** t-SNE
+- **[Information Theory](https://github.com/hien078/applied-mathematics-foundation):** t-SNE
   minimizes KL divergence; perplexity is defined via entropy.
 - **[Clustering](../11_clustering/README.md):** t-SNE is often used to visualize
   cluster structure (but does not itself cluster).

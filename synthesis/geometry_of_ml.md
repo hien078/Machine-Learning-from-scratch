@@ -36,7 +36,7 @@ or clusters without changing the downstream algorithm.
 
 ## Connections
 
-- [Linear Algebra](../foundations/linear_algebra/README.md)
+- [Linear Algebra](https://github.com/hien078/applied-mathematics-foundation)
 - [Regularization](../topics/03_regularization/README.md)
 - [KNN](../topics/07_knn/README.md)
 - [SVM](../topics/09_svm/README.md)

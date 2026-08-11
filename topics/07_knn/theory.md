@@ -240,7 +240,7 @@ This ensures each feature contributes proportionally to the distance.
   Decision trees partition axis-aligned; KNN partitions by distance spheres.
 - **Bias-variance tradeoff.** $K$ plays the same role as regularization strength $\lambda$
   in parametric models: controls the smoothness of the decision boundary.
-- [Norms and Distances](../../foundations/linear_algebra/norms_distances.ipynb)
+- [Norms and Distances](https://github.com/hien078/applied-mathematics-foundation)
 - [Clustering](../11_clustering/README.md)
 - [Dimensionality Reduction](../12_dimensionality_reduction/README.md)
 - [Model Selection](../../synthesis/model_selection_guide.md)

@@ -313,7 +313,7 @@ Only the support vectors ($\alpha_i > 0$) contribute to the sum.
   hinge loss is a linear SVM. Kernel SVM can be seen as a two-layer network where the
   first layer is fixed (kernel features) and only the output weights are learned.
 
-- **[Optimization](../../foundations/calculus_optimization/README.md).** SVM is a showcase
+- **[Optimization](https://github.com/hien078/applied-mathematics-foundation).** SVM is a showcase
   for constrained optimization: Lagrangians, duality, KKT conditions. The Pegasos
   algorithm demonstrates subgradient methods for non-smooth optimization.
 

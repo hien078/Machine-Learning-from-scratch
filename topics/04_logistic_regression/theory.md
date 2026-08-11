@@ -557,7 +557,7 @@ ranks a random positive higher than a random negative.
   $\log(1 + e^{-y' z})$ instead of the kinked hinge loss $\max(0, 1 - y' z)$.
 - **Generalised linear models (GLM).** IRLS generalises to any exponential family
   (Poisson regression, gamma regression) by varying $W_k$ and $z_k$.
-- [Probability](../../foundations/probability_statistics/README.md)
+- [Probability](https://github.com/hien078/applied-mathematics-foundation)
 - [Gradient Descent](../02_gradient_descent/README.md)
 - [Loss Functions](../../synthesis/loss_functions_map.md)
 

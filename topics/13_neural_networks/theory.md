@@ -198,7 +198,7 @@ will find the approximating parameters, nor that the required width will be prac
 - [Gradient Descent](../02_gradient_descent/README.md) — optimizer used in training
 - [Logistic Regression](../04_logistic_regression/README.md) — special case: MLP with 0 hidden layers
 - [Regularization](../03_regularization/README.md) — weight decay is L2 regularization
-- [Numerical Computing](../../foundations/numerical_computing/README.md) — log-sum-exp stability
+- [Numerical Computing](https://github.com/hien078/applied-mathematics-foundation) — log-sum-exp stability
 - [CNN / RNN / Transformer](../14_cnn/README.md) — architectures that generalize the MLP
 
 ---

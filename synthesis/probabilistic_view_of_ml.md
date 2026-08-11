@@ -47,7 +47,7 @@ distribution.
 
 ## Connections
 
-- [Probability and Statistics](../foundations/probability_statistics/README.md)
+- [Probability and Statistics](https://github.com/hien078/applied-mathematics-foundation)
 - [Logistic Regression](../topics/04_logistic_regression/README.md)
 - [Naive Bayes](../topics/08_naive_bayes/README.md)
 - [Clustering](../topics/11_clustering/README.md)

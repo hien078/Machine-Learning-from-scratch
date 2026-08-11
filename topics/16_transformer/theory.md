@@ -360,7 +360,7 @@ Training uses **teacher forcing**: the decoder receives the ground-truth target 
   MLP; attention + FFN is the Transformer's alternative to dense layers.
 - [RNN/LSTM](../15_rnn_lstm/README.md) — the sequential model that Transformers replace.
   Comparison: $O(n)$ memory but sequential, vs $O(n^2)$ memory but parallel.
-- [Information Theory](../../foundations/information_theory/README.md) — cross-entropy loss
+- [Information Theory](https://github.com/hien078/applied-mathematics-foundation) — cross-entropy loss
   used in language modelling; softmax as a probability distribution.
 - **Attention Variants (further reading):** FlashAttention (memory-efficient exact
   attention), Sparse Attention (Longformer, BigBird), Linear Attention (Performers),

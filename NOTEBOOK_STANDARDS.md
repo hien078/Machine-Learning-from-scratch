@@ -69,7 +69,8 @@ The topic README records:
 - prerequisites with valid relative links;
 - scope and explicit exclusions;
 - files in recommended order;
-- related synthesis documents and projects.
+- related synthesis documents and, where useful, the sister
+  [applied-mathematics-foundation](https://github.com/hien078/applied-mathematics-foundation) repository.
 
 ## 4. Main Notebook Structure
 
@@ -252,7 +253,7 @@ A topic may be marked Verified only when:
 - the notebook passes schema, static, link, and fresh-kernel checks;
 - scratch and reference results agree within stated tolerances;
 - source outputs remain cleared after validation;
-- all foundation, synthesis, project, and graph links resolve.
+- all synthesis, topic, and prerequisite-graph links resolve.
 
 ## 11. Safe Execution Protocol
 

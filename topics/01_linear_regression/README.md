@@ -16,6 +16,6 @@ Least squares, projection, normal equation, gradient descent, polynomial feature
 
 ## Connections
 
-- **Prereqs:** [Linear Algebra](../../foundations/linear_algebra/), [Calculus](../../foundations/calculus_optimization/)
+- **Prereqs:** [Linear Algebra](https://github.com/hien078/applied-mathematics-foundation), [Calculus](https://github.com/hien078/applied-mathematics-foundation)
 - **Next:** [02 Gradient Descent](../02_gradient_descent/README.md), [03 Regularization](../03_regularization/README.md), [04 Logistic Regression](../04_logistic_regression/README.md)
 

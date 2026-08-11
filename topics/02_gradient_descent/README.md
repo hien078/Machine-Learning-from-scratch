@@ -1,6 +1,6 @@
 # Gradient Descent
 
-> **Phase:** 1 | **Status:** ✅ Complete | **Prerequisites:** [01 Linear Regression](../01_linear_regression/README.md), [Calculus & Optimization](../../foundations/calculus_optimization/README.md)
+> **Phase:** 1 | **Status:** ✅ Complete | **Prerequisites:** [01 Linear Regression](../01_linear_regression/README.md), [Calculus & Optimization](https://github.com/hien078/applied-mathematics-foundation)
 
 ## Overview
 
@@ -16,7 +16,7 @@ The foundational iterative optimization algorithm for machine learning. Covers f
 
 ## Connections
 
-- **Prereqs:** [01 Linear Regression](../01_linear_regression/README.md), [Calculus & Optimization](../../foundations/calculus_optimization/README.md)
+- **Prereqs:** [01 Linear Regression](../01_linear_regression/README.md), [Calculus & Optimization](https://github.com/hien078/applied-mathematics-foundation)
 - **Synthesis:** [Optimization Methods Compared](../../synthesis/optimization_methods_compared.md)
 - **Next:** [03 Regularization](../03_regularization/README.md), [04 Logistic Regression](../04_logistic_regression/README.md)
 - **Used by:** Every iterative ML algorithm — logistic regression, SVM, neural networks, ensemble boosting

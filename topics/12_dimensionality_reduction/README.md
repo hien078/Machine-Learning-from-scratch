@@ -1,6 +1,6 @@
 # Dimensionality Reduction (LDA + t-SNE)
 
-> **Phase:** 2 | **Status:** ✅ Complete | **Prerequisites:** [10 PCA](../10_pca/README.md), [Information Theory](../../foundations/information_theory/README.md)
+> **Phase:** 2 | **Status:** ✅ Complete | **Prerequisites:** [10 PCA](../10_pca/README.md), [Information Theory](https://github.com/hien078/applied-mathematics-foundation)
 
 ## Overview
 
@@ -20,6 +20,6 @@ kernel. Includes comparison of PCA vs LDA vs t-SNE on classification datasets.
 
 ## Connections
 
-- **Prereqs:** [10 PCA](../10_pca/README.md), [Information Theory](../../foundations/information_theory/README.md)
+- **Prereqs:** [10 PCA](../10_pca/README.md), [Information Theory](https://github.com/hien078/applied-mathematics-foundation)
 - **Synthesis:** [Geometry of ML](../../synthesis/geometry_of_ml.md)
 - **Next:** [17 Autoencoder](../17_autoencoder/README.md)

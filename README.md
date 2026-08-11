@@ -34,12 +34,14 @@ Every algorithm is built step-by-step from raw matrix operations and calculus be
 
 ```text
 Machine-Learning-from-scratch/
-├── topics/                    # 17 algorithm modules (theory, implementation, exercises)
+├── topics/                    # 22 algorithm modules (theory, implementation, exercises)
 ├── synthesis/                 # Cross-model comparisons & decision guides
 ├── src/ml_first_principles/   # Clean, installable Python library written from scratch
 ├── tests/                     # Unit tests & numerical regression suites
+├── scripts/                   # Notebook validation & normalization tooling
 ├── INDEX.md                   # Full curriculum index & prerequisite DAG
 ├── NOTEBOOK_STANDARDS.md      # Writing & coding standards
+├── pyproject.toml             # Package metadata, dev extras, lint & test config
 └── README.md
 ```
 
@@ -49,12 +51,12 @@ Machine-Learning-from-scratch/
 
 ## 🗺️ Topics & Curriculum
 
-The repository covers 17 distinct algorithmic modules organized into three main phases:
+The repository covers 22 distinct algorithmic modules organized into five phases:
 
 ### Phase 1: Core Mathematical ML
 | Topic | Module | Mathematical Core | Status |
 |---|---|---|---|
-| `01` | Linear Regression | OLS, Normal Equations, QR Decomposition | ✅ Complete |
+| `01` | Linear Regression | OLS, Normal Equations, Projection Geometry | ✅ Complete |
 | `02` | Gradient Descent | Convexity, Step Size, Momentum, Adaptive Rates | ✅ Complete |
 | `03` | Regularization | L1/L2 Norms, Lasso, Ridge, ElasticNet, KKT | ✅ Complete |
 | `04` | Logistic Regression | MLE, Sigmoid, Cross-Entropy, Newton-Raphson | ✅ Complete |
@@ -69,7 +71,7 @@ The repository covers 17 distinct algorithmic modules organized into three main 
 | `08` | Naive Bayes | Bayes Theorem, MAP, Gaussian/Multinomial Priors | ✅ Complete |
 | `09` | Support Vector Machines | Dual Formulation, Convex Quadratic Program, Kernels | ✅ Complete |
 | `11` | Clustering | K-Means, EM Algorithm, Gaussian Mixture Models | ✅ Complete |
-| `12` | Dimensionality Reduction | t-SNE, UMAP, Spectral Embeddings | ✅ Complete |
+| `12` | Dimensionality Reduction | LDA, t-SNE, KL-Divergence Embeddings | ✅ Complete |
 
 ### Phase 3: Deep Learning & Neural Architectures
 | Topic | Module | Mathematical Core | Status |
@@ -77,8 +79,21 @@ The repository covers 17 distinct algorithmic modules organized into three main 
 | `13` | Neural Networks | Computational Graphs, Chain Rule, Backprop | ✅ Complete |
 | `14` | Convolutional Networks | Cross-Correlation, Receptive Fields, Pooling | ✅ Complete |
 | `15` | Recurrent Networks | RNNs, BPTT, Vanishing Gradients, LSTM, GRU | ✅ Complete |
+| `17` | Autoencoders | Bottleneck Representations, Reconstruction Loss | ✅ Complete |
+
+### Phase 4: Transformers
+| Topic | Module | Mathematical Core | Status |
+|---|---|---|---|
 | `16` | Transformers | Scaled Dot-Product, Multi-Head Self-Attention, Positional Encoding | ✅ Complete |
-| `17` | Autoencoders | Bottleneck Representations, Variational Inference (VAE) | ✅ Complete |
+
+### Phase 5: Modern AI & Advanced Architectures
+| Topic | Module | Mathematical Core | Status |
+|---|---|---|---|
+| `18` | Reinforcement Learning | MDPs, Bellman Equations, Q-Learning, DQN, Policy Gradients | ✅ Complete |
+| `19` | Generative Models | VAE (ELBO), GAN (Minimax/Wasserstein), Diffusion (DDPM) | ✅ Complete |
+| `20` | Graph Neural Networks | Spectral Graph Convolutions, Graph Laplacian, Message Passing (GCN, GAT) | ✅ Complete |
+| `21` | LLM Engineering | BPE Tokenizer, LoRA Rank Factorization, DPO Alignment | ✅ Complete |
+| `22` | Self-Supervised Learning | InfoNCE Contrastive Loss, SimCLR, Masked Autoencoders | ✅ Complete |
 
 ---
 
@@ -102,8 +117,12 @@ source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 
 ```bash
 pip install -r requirements.txt
-pip install -e .
+pip install -e ".[dev]"   # library + pytest test tooling
 ```
+
+> **Optional — PyTorch:** the library-comparison sections of topics 13–17 additionally
+> import `torch`. Install it separately (`pip install torch`) to execute those notebooks;
+> everything else runs on the pinned dependencies above.
 
 ### 3. Run Verification Tests
 
@@ -120,8 +139,13 @@ pytest
 All algorithm implementations inside `src/ml_first_principles/` are paired with automated regression tests in `tests/`:
 
 - Linear Models, Optimizers, Tree Models, Ensembles
-- Distance Metrics, Probabilistic Models, Neural Core
-- Gradient checks and numerical stability checks
+- Distance Metrics, Probabilistic Models, Neural Core, Visualization
+- Phase 5 modules: RL (GridWorld, Q-Learning), Generative (VAE/GAN), GNN (GCN/GAT), LLM (BPE/LoRA/DPO), SSL (InfoNCE/MAE)
+- Gradient checks, numerical stability checks, and package-export consistency
+
+Notebook health is validated separately: `python scripts/execute_all_notebooks.py` executes
+every notebook top-to-bottom on a fresh kernel (in-memory, without writing outputs), and
+`python scripts/normalize_notebooks.py` verifies cleared outputs and canonical metadata.
 
 ---
 

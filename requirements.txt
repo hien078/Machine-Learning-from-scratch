@@ -1,6 +1,9 @@
-# Supported environment: CPython 3.14 on Linux.
+# Supported environment: CPython 3.12+ (validated on 3.14, Linux).
 # These are direct dependency pins. A complete transitive lock is generated
 # from a clean, successfully validated virtual environment.
+# Test tooling (pytest) is provided by the package dev extra: pip install -e ".[dev]"
+# Optional: topics 13-17 library-comparison notebooks additionally need torch
+# (install separately: pip install torch).
 
 # Numerical computing and data
 numpy==2.4.6

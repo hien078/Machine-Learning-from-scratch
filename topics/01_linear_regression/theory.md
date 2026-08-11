@@ -5,8 +5,8 @@
 
 ## Prerequisites
 
-- [Foundations: Linear Algebra](../../foundations/linear_algebra/README.md)
-- [Foundations: Calculus & Optimization](../../foundations/calculus_optimization/README.md)
+- [Foundations: Linear Algebra](https://github.com/hien078/applied-mathematics-foundation)
+- [Foundations: Calculus & Optimization](https://github.com/hien078/applied-mathematics-foundation)
 
 ---
 
@@ -428,7 +428,7 @@ $$\hat{\mathbf{w}} = \Phi^+\mathbf{y}$$
 ## 13. Connections
 
 - **Related models:** [Polynomial Regression (above)](#10-polynomial-regression-extension), [03 Regularization](../03_regularization/README.md)
-- **Foundations used:** [Linear Algebra](../../foundations/linear_algebra/README.md) (Projection), [Calculus](../../foundations/calculus_optimization/README.md) (Derivatives)
+- **Foundations used:** [Linear Algebra](https://github.com/hien078/applied-mathematics-foundation) (Projection), [Calculus](https://github.com/hien078/applied-mathematics-foundation) (Derivatives)
 - **Synthesis:** [Optimization Methods](../../synthesis/optimization_methods_compared.md)
 - **Graph Map:** See [INDEX.md](../../INDEX.md)
 

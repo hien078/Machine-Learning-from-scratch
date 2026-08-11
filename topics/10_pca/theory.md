@@ -154,7 +154,7 @@ by raw loading values.
 
 ## 8. Connections
 
-- [Linear Algebra Foundations](../../foundations/linear_algebra/)
+- [Linear Algebra Foundations](https://github.com/hien078/applied-mathematics-foundation)
 - [Geometry of ML](../../synthesis/geometry_of_ml.md)
 - [Autoencoders](../17_autoencoder/README.md) (nonlinear PCA analogy)
 - [Regularization](../03_regularization/README.md) (PCA used for denoising / pre-processing)

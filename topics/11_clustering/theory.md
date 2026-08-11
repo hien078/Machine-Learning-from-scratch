@@ -5,8 +5,8 @@
 
 ## Prerequisites
 
-- [Foundations: Linear Algebra](../../foundations/linear_algebra/README.md)
-- [Foundations: Probability & Statistics](../../foundations/probability_statistics/README.md)
+- [Foundations: Linear Algebra](https://github.com/hien078/applied-mathematics-foundation)
+- [Foundations: Probability & Statistics](https://github.com/hien078/applied-mathematics-foundation)
 
 ---
 
@@ -257,8 +257,8 @@ K-Means can be viewed as a degenerate GMM where:
 
 ## 7. Connections
 
-- **Distance foundation:** [Norms and Distances](../../foundations/linear_algebra/norms_distances.ipynb) — K-Means and DBSCAN both rely on Euclidean distance.
-- **Probability foundation:** [Probability & Statistics](../../foundations/probability_statistics/README.md) — GMM builds on multivariate Gaussians and Bayes' rule.
+- **Distance foundation:** [Norms and Distances](https://github.com/hien078/applied-mathematics-foundation) — K-Means and DBSCAN both rely on Euclidean distance.
+- **Probability foundation:** [Probability & Statistics](https://github.com/hien078/applied-mathematics-foundation) — GMM builds on multivariate Gaussians and Bayes' rule.
 - **Dimensionality reduction:** [10 PCA](../10_pca/README.md) — often used as a pre-processing step before clustering; PCA + K-Means is a common pipeline.
 - **Distance-based supervised:** [07 KNN](../07_knn/README.md) — shares the Euclidean distance primitive; KNN is supervised while K-Means is unsupervised.
 - **Synthesis:** [Supervised vs. Unsupervised](../../synthesis/supervised_vs_unsupervised.md) — clustering is the prototypical unsupervised task.

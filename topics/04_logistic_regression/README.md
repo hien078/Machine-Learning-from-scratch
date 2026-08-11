@@ -18,7 +18,7 @@ softmax multi-class extension, ROC / AUC, calibration.
 
 ## Connections
 
-- **Prereqs:** [Probability & Statistics](../../foundations/probability_statistics/README.md), [02 Gradient Descent](../02_gradient_descent/README.md)
+- **Prereqs:** [Probability & Statistics](https://github.com/hien078/applied-mathematics-foundation), [02 Gradient Descent](../02_gradient_descent/README.md)
 - **Builds on:** [01 Linear Regression](../01_linear_regression/README.md), [03 Regularization](../03_regularization/README.md)
 - **Synthesis:** [Loss Functions](../../synthesis/loss_functions_map.md), [Probabilistic View](../../synthesis/probabilistic_view_of_ml.md)
 - **Next:** [09 SVM](../09_svm/README.md) (margin view), [13 Neural Networks](../13_neural_networks/README.md) (logistic = 1-layer NN)

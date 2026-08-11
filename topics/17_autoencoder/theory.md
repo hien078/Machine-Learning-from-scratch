@@ -247,7 +247,7 @@ $$\mathcal{L} = \frac{1}{n}\sum_{i=1}^{n}\mathcal{L}_{\text{VAE}}(x_i)$$
 - [Neural Networks](../13_neural_networks/README.md) — encoder/decoder are MLPs trained with backpropagation
 - [Dimensionality Reduction](../12_dimensionality_reduction/README.md) — autoencoder as nonlinear alternative
 - [Probabilistic View](../../synthesis/probabilistic_view_of_ml.md) — VAE as variational inference
-- [Information Theory](../../foundations/information_theory/) — KL divergence, ELBO
+- [Information Theory](https://github.com/hien078/applied-mathematics-foundation) — KL divergence, ELBO
 
 ---
 

@@ -6,7 +6,7 @@
 ## Prerequisites
 
 - [01 Linear Regression](../01_linear_regression/README.md) — uses GD as an alternative to the normal equation
-- [Foundations: Calculus & Optimization](../../foundations/calculus_optimization/README.md)
+- [Foundations: Calculus & Optimization](https://github.com/hien078/applied-mathematics-foundation)
 
 ---
 

@@ -156,6 +156,6 @@ Can you solve it analytically?
 ## Connections
 
 - **Topics:** [02 Gradient Descent](../topics/02_gradient_descent/README.md), [01 Linear Regression](../topics/01_linear_regression/README.md), [03 Regularization](../topics/03_regularization/README.md), [04 Logistic Regression](../topics/04_logistic_regression/README.md), [13 Neural Networks](../topics/13_neural_networks/README.md)
-- **Foundations:** [Calculus & Optimization](../foundations/calculus_optimization/README.md)
+- **Foundations:** [Calculus & Optimization](https://github.com/hien078/applied-mathematics-foundation)
 - **Related synthesis:** [Loss Functions Map](loss_functions_map.md)
 - **Maps:** [INDEX.md](../INDEX.md)

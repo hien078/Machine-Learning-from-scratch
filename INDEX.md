@@ -1,17 +1,19 @@
 # Active Curriculum Index
 
-This index covers only active First Principles material. Historical notebooks previously lived under
-`_archive/` (removed for simplicity).
+This index covers the active First Principles curriculum: 22 topics across five phases.
 
 ## Mathematical Foundations
 
+The mathematical prerequisites are maintained in the sister repository
+[applied-mathematics-foundation](https://github.com/hien078/applied-mathematics-foundation).
+
 | Foundation | Main concepts | Used heavily by |
 |---|---|---|
-| [Linear Algebra](foundations/linear_algebra/README.md) | Projections, eigendecomposition, SVD, norms | Linear Regression, KNN, SVM, PCA, neural networks |
-| [Calculus and Optimization](foundations/calculus_optimization/README.md) | Gradients, Hessians, Taylor approximation, convexity | Gradient Descent, Logistic Regression, SVM, neural networks |
-| [Probability and Statistics](foundations/probability_statistics/README.md) | Conditional probability, expectation, MLE/MAP | Linear/Logistic Regression, Naive Bayes, GMM |
-| [Information Theory](foundations/information_theory/README.md) | Entropy, cross-entropy, KL divergence | Trees, classification losses, t-SNE |
-| [Numerical Computing](foundations/numerical_computing/README.md) | Conditioning, stability, vectorization | Every computational topic |
+| Linear Algebra | Projections, eigendecomposition, SVD, norms | Linear Regression, KNN, SVM, PCA, neural networks |
+| Calculus and Optimization | Gradients, Hessians, Taylor approximation, convexity | Gradient Descent, Logistic Regression, SVM, neural networks |
+| Probability and Statistics | Conditional probability, expectation, MLE/MAP | Linear/Logistic Regression, Naive Bayes, GMM |
+| Information Theory | Entropy, cross-entropy, KL divergence | Trees, classification losses, t-SNE |
+| Numerical Computing | Conditioning, stability, vectorization | Every computational topic |
 
 ## Topic Matrix
 
@@ -34,6 +36,11 @@ This index covers only active First Principles material. Historical notebooks pr
 | 15 | [RNN/LSTM](topics/15_rnn_lstm/README.md) | Recurrence for sequential data | BPTT, gating mechanisms | 13 | 3 |
 | 16 | [Transformer](topics/16_transformer/README.md) | Self-attention: softmax(QKᵀ/√dₖ)V | Attention, positional encoding | 13 | 4 |
 | 17 | [Autoencoder](topics/17_autoencoder/README.md) | Encode → latent → decode | Representation, reconstruction | 13 | 3 |
+| 18 | [Reinforcement Learning](topics/18_reinforcement_learning/README.md) | MDPs, Q-Learning, Policy Gradient | Bellman equations, Markov property | Calculus, Probability, 13 | 5 |
+| 19 | [Generative Models](topics/19_generative_models/README.md) | VAE, GAN, Diffusion Models | ELBO, Wasserstein distance, SDEs | Probability, Calculus, 13, 17 | 5 |
+| 20 | [Graph Neural Networks](topics/20_graph_neural_networks/README.md) | Spectral & Spatial Graph Convolutions | Graph Laplacian, Message passing | LA, Calculus, 13 | 5 |
+| 21 | [LLM Engineering](topics/21_llm_engineering/README.md) | Tokenization, PEFT (LoRA), DPO | Subword algorithms, rank decomposition | 13, 16 | 5 |
+| 22 | [Self-Supervised Learning](topics/22_self_supervised_learning/README.md) | Contrastive loss, MAE, SimCLR | InfoNCE, mutual information bound | Probability, 13, 17 | 5 |
 
 ## Prerequisite Graph
 
@@ -50,10 +57,12 @@ graph TD
     CO --> NC
     PS --> IT
 
-    subgraph Phase1["Phase 1 — Core Regression"]
+    subgraph Phase1["Phase 1 — Core Mathematical ML"]
         T01["01 Linear Regression"]
         T02["02 Gradient Descent"]
         T03["03 Regularization"]
+        T04["04 Logistic Regression"]
+        T10["10 PCA"]
     end
 
     LA --> T01
@@ -65,13 +74,14 @@ graph TD
     T01 --> T03
     T02 --> T03
 
-    subgraph Phase2["Phase 2 — Classification & Ensembles"]
-        T04["04 Logistic Regression"]
+    subgraph Phase2["Phase 2 — Classical Machine Learning"]
         T05["05 Decision Tree"]
         T06["06 Ensemble Methods"]
         T07["07 KNN"]
         T08["08 Naive Bayes"]
         T09["09 SVM"]
+        T11["11 Clustering"]
+        T12["12 Dimensionality Reduction"]
     end
 
     T01 --> T04
@@ -88,10 +98,11 @@ graph TD
     CO --> T09
     T02 --> T09
 
-    subgraph Phase3["Phase 3 — Unsupervised"]
-        T10["10 PCA"]
-        T11["11 Clustering"]
-        T12["12 Dimensionality Reduction"]
+    subgraph Phase3["Phase 3 — Deep Learning"]
+        T13["13 Neural Networks"]
+        T14["14 CNN"]
+        T15["15 RNN / LSTM"]
+        T17["17 Autoencoder"]
     end
 
     LA --> T10
@@ -101,12 +112,8 @@ graph TD
     T10 --> T12
     IT --> T12
 
-    subgraph Phase4["Phase 4 — Deep Learning"]
-        T13["13 Neural Networks"]
-        T14["14 CNN"]
-        T15["15 RNN / LSTM"]
+    subgraph Phase4["Phase 4 — Transformers"]
         T16["16 Transformer"]
-        T17["17 Autoencoder"]
     end
 
     LA --> T13
@@ -121,6 +128,26 @@ graph TD
     T13 --> T17
     T10 --> T17
     IT --> T17
+
+    subgraph Phase5["Phase 5 — Modern AI & Advanced Architectures"]
+        T18["18 Reinforcement Learning"]
+        T19["19 Generative Models"]
+        T20["20 Graph Neural Networks"]
+        T21["21 LLM Engineering"]
+        T22["22 Self-Supervised Learning"]
+    end
+
+    T13 --> T18
+    PS --> T18
+    T13 --> T19
+    T17 --> T19
+    PS --> T19
+    LA --> T20
+    T13 --> T20
+    T16 --> T21
+    T13 --> T21
+    T13 --> T22
+    T17 --> T22
 ```
 
 > Topics 5–9 and 10–12 can be studied in parallel once their prerequisites are met.
