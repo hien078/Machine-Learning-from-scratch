@@ -1,3 +1,5 @@
+"""Probabilistic models: Gaussian Naive Bayes evaluated in log space."""
+
 from __future__ import annotations
 
 import numpy as np
@@ -32,7 +34,10 @@ class GaussianNB:
         self.mean_ = np.empty((n_classes, n_features))
         self.var_ = np.empty((n_classes, n_features))
         counts = np.bincount(encoded, minlength=n_classes)
-        epsilon = self.var_smoothing * max(float(np.var(features, axis=0).max()), 1.0)
+        # Relative smoothing as in scikit-learn; fall back to an absolute floor
+        # only when every feature is constant (maximum variance of zero).
+        max_variance = float(np.var(features, axis=0).max())
+        epsilon = self.var_smoothing * (max_variance if max_variance > 0.0 else 1.0)
         for index in range(n_classes):
             class_data = features[encoded == index]
             self.mean_[index] = class_data.mean(axis=0)

@@ -1,3 +1,5 @@
+"""Linear models: linear, ridge, lasso, logistic regression, polynomial features."""
+
 from __future__ import annotations
 
 from itertools import combinations_with_replacement

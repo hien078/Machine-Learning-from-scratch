@@ -1,3 +1,12 @@
+"""Validate that notebooks execute cleanly without touching the source files.
+
+Runs every notebook (or the paths given on the command line) top-to-bottom on a
+fresh kernel against an in-memory copy, per NOTEBOOK_STANDARDS.md §11: source
+notebooks are never overwritten with generated outputs.
+"""
+
+from __future__ import annotations
+
 import glob
 import os
 import sys
@@ -8,24 +17,25 @@ import nbformat
 from nbclient import NotebookClient
 from nbclient.exceptions import CellExecutionError
 
-def find_notebooks():
+
+def find_notebooks() -> list[str]:
     patterns = [
-        "foundations/**/*.ipynb",
         "topics/**/*.ipynb",
-        "_template_first_principles.ipynb"
+        "_template_first_principles.ipynb",
     ]
     notebooks = []
     for pattern in patterns:
         for path in glob.glob(pattern, recursive=True):
             if os.path.isfile(path) and not path.startswith("."):
                 notebooks.append(path)
-    return sorted(list(set(notebooks)))
+    return sorted(set(notebooks))
 
-def run_notebook(path: str, python_path: str) -> tuple[bool, str]:
+
+def run_notebook(path: str) -> tuple[bool, str]:
     print(f"Executing: {path}...", end="", flush=True)
     start_time = time.time()
     try:
-        with open(path, "r", encoding="utf-8") as f:
+        with open(path, encoding="utf-8") as f:
             nb = nbformat.read(f, as_version=4)
 
         # Environment with PYTHONPATH pointing to src
@@ -33,20 +43,17 @@ def run_notebook(path: str, python_path: str) -> tuple[bool, str]:
         env = os.environ.copy()
         env["PYTHONPATH"] = src_path + ":" + env.get("PYTHONPATH", "")
 
+        # Execute the in-memory copy only; errors must fail the run.
         client = NotebookClient(
             nb,
             timeout=180,
-            allow_errors=True,
-            kernel_name="python3"
+            allow_errors=False,
+            kernel_name="python3",
         )
-
         client.execute(env=env)
 
-        with open(path, "w", encoding="utf-8") as f:
-            nbformat.write(nb, f)
-
         elapsed = time.time() - start_time
-        print(f" DONE ({elapsed:.2f}s)")
+        print(f" OK ({elapsed:.2f}s)")
         return True, ""
     except CellExecutionError as e:
         elapsed = time.time() - start_time
@@ -55,25 +62,21 @@ def run_notebook(path: str, python_path: str) -> tuple[bool, str]:
     except Exception as e:
         elapsed = time.time() - start_time
         print(f" ERROR ({elapsed:.2f}s)")
-        return False, f"Error: {str(e)}"
+        return False, f"Error: {e}"
 
-def main():
-    python_path = str(Path(".venv/bin/python").resolve())
-    notebooks = find_notebooks()
-    print(f"Found {len(notebooks)} notebooks to execute.")
 
-    successes = []
+def main() -> None:
+    notebooks = sys.argv[1:] or find_notebooks()
+    print(f"Found {len(notebooks)} notebooks to validate.")
+
     failures = []
-
     for path in notebooks:
-        ok, err = run_notebook(path, python_path)
-        if ok:
-            successes.append(path)
-        else:
+        ok, err = run_notebook(path)
+        if not ok:
             failures.append((path, err))
 
     print("\n" + "=" * 60)
-    print(f"EXECUTION SUMMARY: {len(successes)}/{len(notebooks)} Succeeded")
+    print(f"VALIDATION SUMMARY: {len(notebooks) - len(failures)}/{len(notebooks)} Succeeded")
     print("=" * 60)
 
     if failures:
@@ -81,8 +84,8 @@ def main():
         for path, err in failures:
             print(f"  - {path}: {err}")
         sys.exit(1)
-    else:
-        print("\nAll notebooks executed and saved successfully!")
+    print("\nAll notebooks executed cleanly; source files left untouched.")
+
 
 if __name__ == "__main__":
     main()

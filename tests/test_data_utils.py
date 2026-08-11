@@ -4,6 +4,7 @@ import pytest
 from ml_first_principles.data_utils import (
     generate_classification_data,
     k_fold_split,
+    normalize,
     standardize,
     train_test_split,
 )
@@ -47,6 +48,13 @@ def test_k_folds_partition_validation_indices_once():
     validation = np.concatenate([fold[1] for fold in folds])
     np.testing.assert_array_equal(np.sort(validation), np.arange(10))
     assert all(set(train).isdisjoint(valid) for train, valid in folds)
+
+
+def test_normalize_produces_unit_rows_and_keeps_zero_rows():
+    X = np.array([[3.0, 4.0], [0.0, 0.0], [1.0, 0.0]])
+    normalized = normalize(X)
+    np.testing.assert_allclose(np.linalg.norm(normalized[[0, 2]], axis=1), [1.0, 1.0])
+    np.testing.assert_array_equal(normalized[1], [0.0, 0.0])
 
 
 @pytest.mark.parametrize("test_size", [0.0, 1.0, -0.1, 1.1])

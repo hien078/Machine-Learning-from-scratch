@@ -1,3 +1,5 @@
+"""First-order optimizers: gradient descent, SGD, Adam, and coordinate descent."""
+
 from __future__ import annotations
 
 from collections.abc import Callable

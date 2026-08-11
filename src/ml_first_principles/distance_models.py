@@ -1,3 +1,5 @@
+"""Distance-based models: k-nearest neighbors and k-means clustering."""
+
 from __future__ import annotations
 
 import numpy as np
@@ -124,5 +126,6 @@ class KMeans:
     def fit_predict(self, X: ArrayLike) -> NDArray[np.int64]:
         """Fit the model and return training assignments."""
         self.fit(X)
-        assert self.labels_ is not None
+        if self.labels_ is None:
+            raise RuntimeError("fit did not produce labels")
         return self.labels_

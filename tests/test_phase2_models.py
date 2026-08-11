@@ -31,11 +31,15 @@ def test_knn():
 
 
 def test_kmeans():
-    np.random.seed(42)
-    X = np.vstack([np.random.randn(50, 2) + [2, 2], np.random.randn(50, 2) + [-2, -2]])
-    model = KMeans(n_clusters=2)
+    rng = np.random.default_rng(42)
+    X = np.vstack([rng.normal(size=(50, 2)) + [2, 2], rng.normal(size=(50, 2)) + [-2, -2]])
+    model = KMeans(n_clusters=2, random_state=0)
     model.fit(X)
     assert model.cluster_centers_.shape == (2, 2)
+    centers = model.cluster_centers_[np.argsort(model.cluster_centers_[:, 0])]
+    np.testing.assert_allclose(centers, [[-2.0, -2.0], [2.0, 2.0]], atol=0.5)
+    assert model.labels_.shape == (100,)
+    assert model.inertia_ > 0.0
 
 
 def test_naive_bayes():

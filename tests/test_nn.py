@@ -1,6 +1,6 @@
 import numpy as np
 
-from ml_first_principles.nn_core import Dense, Sequential, Sigmoid
+from ml_first_principles.nn_core import Dense, ReLU, Sequential, Sigmoid
 
 
 def test_xor_neural_network():
@@ -43,3 +43,11 @@ def test_dense_backward_matches_finite_difference():
         layer.weights[index] = original[index]
 
     np.testing.assert_allclose(layer.weights_gradient_, numerical, atol=1e-7)
+
+
+def test_relu_forward_and_backward():
+    layer = ReLU()
+    x = np.array([[-1.0, 0.0, 2.0]])
+    np.testing.assert_allclose(layer.forward(x), [[0.0, 0.0, 2.0]])
+    upstream = np.array([[1.0, 1.0, 1.0]])
+    np.testing.assert_allclose(layer.backward(upstream, learning_rate=0.0), [[0.0, 0.0, 1.0]])

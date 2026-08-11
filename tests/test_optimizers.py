@@ -3,8 +3,9 @@ Unit tests for optimizers (GD, SGD, Adam).
 """
 
 import numpy as np
+from sklearn.linear_model import Lasso
 
-from ml_first_principles.optimizers import adam, gradient_descent, sgd
+from ml_first_principles.optimizers import adam, coordinate_descent_lasso, gradient_descent, sgd
 
 
 def test_gradient_descent():
@@ -48,3 +49,15 @@ def test_sgd():
     w_opt, history = sgd(grad_batch_fn, w0, n_samples=100, lr=0.1, max_iter=50, batch_size=10)
 
     np.testing.assert_allclose(w_opt, true_w, rtol=1e-2)
+
+
+def test_coordinate_descent_lasso_matches_sklearn():
+    # Both objectives are (1/2n)||y - Xw||^2 + lam * ||w||_1 without intercept.
+    rng = np.random.default_rng(0)
+    X = rng.standard_normal((60, 4))
+    true_w = np.array([2.0, 0.0, -3.0, 0.0])
+    y = X @ true_w + 0.01 * rng.standard_normal(60)
+    lam = 0.1
+    weights = coordinate_descent_lasso(X, y, lam=lam, max_iter=2000, tol=1e-8)
+    reference = Lasso(alpha=lam, fit_intercept=False, max_iter=50_000, tol=1e-10).fit(X, y)
+    np.testing.assert_allclose(weights, reference.coef_, atol=1e-4)

@@ -1,3 +1,5 @@
+"""Minimal feed-forward neural-network layers and training loop."""
+
 from __future__ import annotations
 
 import logging
@@ -7,6 +9,8 @@ import numpy as np
 from numpy.typing import ArrayLike, NDArray
 
 logger = logging.getLogger(__name__)
+
+LOG_INTERVAL_EPOCHS = 10
 
 
 class Layer:
@@ -164,6 +168,6 @@ class Sequential:
                     gradient = layer.backward(gradient, learning_rate)
             loss = total_loss / features.shape[0]
             history.append(loss)
-            if verbose and (epoch + 1) % 10 == 0:
+            if verbose and (epoch + 1) % LOG_INTERVAL_EPOCHS == 0:
                 logger.info("epoch %d/%d loss %.6f", epoch + 1, epochs, loss)
         return history

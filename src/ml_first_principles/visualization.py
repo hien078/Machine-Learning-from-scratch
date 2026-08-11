@@ -1,3 +1,5 @@
+"""Matplotlib plotting helpers for models, metrics, and training curves."""
+
 from __future__ import annotations
 
 from collections.abc import Sequence
@@ -55,9 +57,10 @@ def plot_decision_boundary(
         np.arange(y_min, y_max, mesh_step),
     )
     mesh = np.column_stack((xx.ravel(), yy.ravel()))
-    labels = np.unique(np.concatenate((target, np.asarray(model.predict(mesh)))))
+    predictions = np.asarray(model.predict(mesh))
+    labels = np.unique(np.concatenate((target, predictions)))
     label_to_index = {label: index for index, label in enumerate(labels)}
-    region = np.array([label_to_index[label] for label in model.predict(mesh)]).reshape(xx.shape)
+    region = np.array([label_to_index[label] for label in predictions]).reshape(xx.shape)
     colors = np.array([label_to_index[label] for label in target])
     figure, axis = plt.subplots(figsize=(8, 6))
     axis.contourf(xx, yy, region, alpha=0.3, cmap="coolwarm")

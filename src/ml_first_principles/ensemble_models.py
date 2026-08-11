@@ -1,3 +1,5 @@
+"""Ensemble models built on bootstrap aggregation of decision trees."""
+
 from __future__ import annotations
 
 import numpy as np
@@ -34,8 +36,12 @@ class RandomForestClassifier:
             return max(1, int(np.sqrt(n_features)))
         if value == "log2":
             return max(1, int(np.log2(n_features)))
-        if isinstance(value, int) and 1 <= value <= n_features:
-            return value
+        if isinstance(value, bool):
+            raise ValueError("max_features must be None, sqrt, log2, a valid count, or a fraction")
+        if isinstance(value, int):
+            if 1 <= value <= n_features:
+                return value
+            raise ValueError(f"integer max_features must lie in [1, {n_features}]")
         if isinstance(value, float) and 0.0 < value <= 1.0:
             return max(1, int(np.ceil(value * n_features)))
         raise ValueError("max_features must be None, sqrt, log2, a valid count, or a fraction")
