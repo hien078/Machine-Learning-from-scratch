@@ -13,8 +13,8 @@
 | $A \in \mathbb{R}^{r \times k}$ | matrix | LoRA up-projection matrix |
 | $r$ | scalar | LoRA rank |
 | $\alpha$ | scalar | LoRA scaling factor |
-| $\pi_\theta(y\|x)$ | distribution | Policy (LLM) parameterized by $\theta$ |
-| $\pi_{\text{ref}}(y\|x)$ | distribution | Reference policy (SFT model) |
+| $\pi_\theta(y \mid x)$ | distribution | Policy (LLM) parameterized by $\theta$ |
+| $\pi_{\text{ref}}(y \mid x)$ | distribution | Reference policy (SFT model) |
 | $y_w$ | sequence | Winning (preferred) completion |
 | $y_l$ | sequence | Losing (rejected) completion |
 | $r(x, y)$ | scalar function | Reward model evaluating completion $y$ for prompt $x$ |
@@ -137,7 +137,7 @@ Base models hallucinate, generate toxic text, and fail to follow instructions pe
 ### RLHF Pipeline (Reinforcement Learning from Human Feedback)
 1.  **Reward Model (RM) Training:** Train a classifier $r_\phi(x, y)$ on human preference data to predict human scoring.
 2.  **PPO Optimization:** Use Proximal Policy Optimization (RL) to update the policy $\pi_\theta$ to maximize the reward.
-    $$ \max_{\pi_\theta} \mathbb{E}_{x \sim D, y \sim \pi_\theta} [r_\phi(x, y)] - \beta \mathbb{KL}[\pi_\theta(y\|x) \| \pi_{\text{ref}}(y\|x)] $$
+    $$ \max_{\pi_\theta} \mathbb{E}_{x \sim D, y \sim \pi_\theta} [r_\phi(x, y)] - \beta \mathbb{KL}[\pi_\theta(y \mid x) \| \pi_{\text{ref}}(y \mid x)] $$
     The KL penalty prevents the policy from drifting too far from the reference model (preventing "reward hacking").
 
 ### Direct Preference Optimization (DPO)
@@ -146,12 +146,12 @@ RLHF is complex, requiring a distinct reward model and unstable RL loops. DPO ma
 
 **Step 1: The Optimal Policy**
 Starting from the RLHF objective, the optimal policy $\pi^*$ that maximizes the regularized reward has a closed-form solution:
-$$ \pi^*(y\|x) = \frac{1}{Z(x)} \pi_{\text{ref}}(y\|x) \exp\left( \frac{1}{\beta} r(x, y) \right) $$
-Where $Z(x) = \sum_y \pi_{\text{ref}}(y\|x) \exp\left( \frac{1}{\beta} r(x, y) \right)$ is the partition function.
+$$ \pi^*(y\|x) = \frac{1}{Z(x)} \pi_{\text{ref}}(y \mid x) \exp\left( \frac{1}{\beta} r(x, y) \right) $$
+Where $Z(x) = \sum_y \pi_{\text{ref}}(y \mid x) \exp\left( \frac{1}{\beta} r(x, y) \right)$ is the partition function.
 
 **Step 2: Rewriting the Reward**
 By taking the log and rearranging (algebraic manipulation), we can express the reward function $r(x,y)$ in terms of the optimal policy and reference policy:
-$$ r(x, y) = \beta \log \frac{\pi^*(y\|x)}{\pi_{\text{ref}}(y\|x)} + \beta \log Z(x) $$
+$$ r(x, y) = \beta \log \frac{\pi^*(y\|x)}{\pi_{\text{ref}}(y \mid x)} + \beta \log Z(x) $$
 
 **Step 3: The Bradley-Terry Preference Model**
 The probability that human prefers $y_w$ over $y_l$ under the Bradley-Terry model is:
@@ -160,7 +160,7 @@ $$ P(y_w \succ y_l \| x) = \sigma(r(x, y_w) - r(x, y_l)) $$
 **Step 4: The DPO Derivation**
 Substitute the reward formulation from Step 2 into the Bradley-Terry model. The partition function $Z(x)$ cancels out because it only depends on $x$!
 $$ r(x, y_w) - r(x, y_l) = \beta \log \frac{\pi_\theta(y_w\|x)}{\pi_{\text{ref}}(y_w\|x)} - \beta \log \frac{\pi_\theta(y_l\|x)}{\pi_{\text{ref}}(y_l\|x)} $$
-Let the implicit reward for a completion under policy $\pi_\theta$ be $\hat{r}_\theta(x, y) = \beta \log \frac{\pi_\theta(y\|x)}{\pi_{\text{ref}}(y\|x)}$.
+Let the implicit reward for a completion under policy $\pi_\theta$ be $\hat{r}_\theta(x, y) = \beta \log \frac{\pi_\theta(y \mid x)}{\pi_{\text{ref}}(y \mid x)}$.
 The probability of preference becomes:
 $$ P(y_w \succ y_l \| x) = \sigma\left( \hat{r}_\theta(x, y_w) - \hat{r}_\theta(x, y_l) \right) $$
 

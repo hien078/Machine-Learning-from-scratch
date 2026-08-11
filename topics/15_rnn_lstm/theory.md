@@ -144,7 +144,7 @@ where $\gamma \leq 1$ accounts for the $\tanh'$ saturation.
 | Problem | Symptom | Mitigation |
 |---|---|---|
 | Vanishing | Model cannot learn long-range dependencies; early inputs are forgotten | LSTM/GRU gates, skip connections |
-| Exploding | Loss spikes to NaN; weights diverge | Gradient clipping: $g \leftarrow g \cdot \min(1, \theta / \|g\|)$ |
+| Exploding | Loss spikes to NaN; weights diverge | Gradient clipping: $g \leftarrow g \cdot \min(1, \theta / \Vert g\Vert)$ |
 
 **Result:** Vanilla RNNs can in principle capture long-range dependencies, but in
 practice the gradient signal decays (or explodes) exponentially with sequence length,

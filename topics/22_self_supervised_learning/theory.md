@@ -12,8 +12,8 @@
 | $f_\theta(\cdot)$ | Function | Encoder network $f_\theta: \mathbb{R}^D \to \mathbb{R}^d$ |
 | $h_i$ | Vector | Representation vector $h_i = f_\theta(\tilde{x}_i) \in \mathbb{R}^d$ |
 | $g_\phi(\cdot)$ | Function | Projection head $g_\phi: \mathbb{R}^d \to \mathbb{R}^k$ |
-| $z_i$ | Vector | Normalized projection $z_i = g_\phi(h_i) / \|g_\phi(h_i)\|_2 \in S^{k-1}$ |
-| $\text{sim}(u, v)$ | Scalar | Cosine similarity $u^T v / (\|u\|_2 \|v\|_2)$ |
+| $z_i$ | Vector | Normalized projection $z_i = g_\phi(h_i) / \Vert g_\phi(h_i)\Vert_2 \in S^{k-1}$ |
+| $\text{sim}(u, v)$ | Scalar | Cosine similarity $u^T v / (\Vert u\Vert_2 \Vert v\Vert_2)$ |
 | $\tau$ | Scalar | Temperature hyperparameter ($\tau > 0$) |
 | $K$ | Integer | Number of negative samples |
 | $\mathcal{L}_{\text{InfoNCE}}$ | Scalar | InfoNCE / NT-Xent loss value |

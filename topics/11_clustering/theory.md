@@ -26,7 +26,7 @@
 | $\Sigma_k$ | matrix $\in \mathbb{R}^{d \times d}$ | covariance matrix of component $k$ |
 | $r_{ik}$ | scalar $\in [0, 1]$ | responsibility: posterior probability that point $i$ belongs to component $k$ |
 | $\varepsilon$ | scalar $> 0$ | DBSCAN neighbourhood radius |
-| $N_\varepsilon(x_i)$ | set | $\varepsilon$-neighbourhood: $\{x_j : \|x_j - x_i\| \le \varepsilon\}$ |
+| $N_\varepsilon(x_i)$ | set | $\varepsilon$-neighbourhood: $\{x_j : \Vert x_j - x_i\Vert  \le \varepsilon\}$ |
 | $\text{minPts}$ | scalar $\in \mathbb{N}$ | DBSCAN minimum density threshold |
 | $J$ | scalar | K-Means objective (inertia) |
 | $\mathcal{L}$ | scalar | log-likelihood of the GMM |
@@ -131,8 +131,8 @@ DBSCAN (Density-Based Spatial Clustering of Applications with Noise) defines clu
 
 | Type | Condition | Role |
 |---|---|---|
-| **Core point** | $|N_\varepsilon(x_i)| \ge \text{minPts}$ | Forms the dense backbone of a cluster |
-| **Border point** | Not core, but $\exists$ core point $x_j$ with $\|x_i - x_j\| \le \varepsilon$ | Belongs to a cluster but does not expand it |
+| **Core point** | $\vert N_\varepsilon(x_i)\vert  \ge \text{minPts}$ | Forms the dense backbone of a cluster |
+| **Border point** | Not core, but $\exists$ core point $x_j$ with $\Vert x_i - x_j\Vert  \le \varepsilon$ | Belongs to a cluster but does not expand it |
 | **Noise point** | Neither core nor border | Not assigned to any cluster |
 
 ### 3.2 Algorithm
@@ -249,7 +249,7 @@ K-Means can be viewed as a degenerate GMM where:
 
 | Failure | Cause | Diagnostic |
 |---|---|---|
-| Covariance collapse | A component collapses onto a single point ($|\Sigma_k| \to 0$) | Add regularisation: $\Sigma_k \leftarrow \Sigma_k + \epsilon I$ |
+| Covariance collapse | A component collapses onto a single point ($\vert \Sigma_k\vert  \to 0$) | Add regularisation: $\Sigma_k \leftarrow \Sigma_k + \epsilon I$ |
 | Non-Gaussian data | Model assumes Gaussian components | Visualise; consider kernel methods |
 | Too many components | Overfits; some components become redundant | Use BIC/AIC for model selection |
 

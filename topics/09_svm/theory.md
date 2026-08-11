@@ -252,7 +252,7 @@ set of points $\{x_1, \dots, x_n\}$.
 |---|---|---|---|
 | Linear | $x^T x'$ | — | Original space |
 | Polynomial | $(x^T x' + c)^d$ | degree $d$, offset $c \ge 0$ | All monomials up to degree $d$ |
-| RBF (Gaussian) | $\exp(-\gamma \|x - x'\|^2)$ | $\gamma > 0$ | Infinite-dimensional |
+| RBF (Gaussian) | $\exp(-\gamma \Vert x - x'\Vert^2)$ | $\gamma > 0$ | Infinite-dimensional |
 | Sigmoid | $\tanh(\kappa \, x^T x' + c)$ | $\kappa > 0$, $c$ | Not always valid (not PSD for all $\kappa, c$) |
 
 **RBF intuition.** Two points close together ($\|x - x'\|$ small) → $K \approx 1$.

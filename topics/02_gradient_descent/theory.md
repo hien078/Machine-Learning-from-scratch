@@ -140,7 +140,7 @@ For the quadratic $L(\theta) = \frac{1}{2}\theta^\top A\theta - b^\top\theta$ wi
 |---|---|---|---|
 | **Full-batch GD** | $\nabla L(\theta) = \frac{1}{n}\sum_{i=1}^n \nabla \ell_i(\theta)$ | $O(nd)$ | Deterministic, smooth |
 | **SGD** | $\nabla \ell_i(\theta)$ for random $i$ | $O(d)$ | Noisy, needs decaying $\alpha$ |
-| **Mini-batch SGD** | $\frac{1}{|B|}\sum_{i \in B} \nabla \ell_i(\theta)$ | $O(Bd)$ | Reduced variance vs SGD |
+| **Mini-batch SGD** | $\frac{1}{\vert B\vert}\sum_{i \in B} \nabla \ell_i(\theta)$ | $O(Bd)$ | Reduced variance vs SGD |
 
 ### 4.2 SGD convergence
 

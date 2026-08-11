@@ -35,7 +35,7 @@ Every symbol used later, defined once.
 | $X^+$ | matrix $\in \mathbb{R}^{p \times n}$ | Moore–Penrose pseudoinverse of $X$ |
 | $\varepsilon_i$ | scalar (random) | noise term in the probabilistic model |
 | $\sigma^2$ | scalar $> 0$ | noise variance |
-| $\|\cdot\|$ | scalar | Euclidean ($\ell^2$) norm |
+| $\Vert \cdot\Vert $ | scalar | Euclidean ($\ell^2$) norm |
 | $\langle \cdot, \cdot \rangle$ | scalar | Euclidean inner product; $\langle a, b \rangle = a^\top b$ |
 | $\text{Col}(X)$ | subspace $\subseteq \mathbb{R}^n$ | column space of $X$ (span of its columns) |
 | $\text{Null}(X)$ | subspace $\subseteq \mathbb{R}^p$ | null space of $X$; $\{ v : Xv = 0 \}$ |

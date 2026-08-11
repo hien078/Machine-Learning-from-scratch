@@ -5,7 +5,7 @@
 | Symbol | Type | Meaning |
 |--------|------|---------|
 | $G = (V, E)$ | Tuple | Graph with vertices $V$ and edges $E$ |
-| $N$ | Scalar | Number of nodes, $|V|$ |
+| $N$ | Scalar | Number of nodes, $\vert V\vert $ |
 | $F$ | Scalar | Dimensionality of node features |
 | $A$ | Matrix | Adjacency matrix of size $N \times N$ |
 | $D$ | Matrix | Degree matrix (diagonal) of size $N \times N$ |

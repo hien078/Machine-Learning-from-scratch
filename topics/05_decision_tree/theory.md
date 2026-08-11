@@ -12,8 +12,8 @@ All symbols used below — defined once.
 | $y_i$ | scalar | label of the $i$-th example (class label or continuous value) |
 | $K$ | scalar | number of distinct classes (classification) |
 | $\mathcal{R}$ | set | set of examples reaching a given node |
-| $|\mathcal{R}|$ | scalar | number of examples in a node |
-| $p_k$ | scalar in $[0, 1]$ | proportion of class $k$ in a node: $p_k = |\{i \in \mathcal{R} : y_i = k\}| / |\mathcal{R}|$ |
+| $\vert \mathcal{R}\vert $ | scalar | number of examples in a node |
+| $p_k$ | scalar in $[0, 1]$ | proportion of class $k$ in a node: $p_k = \vert \{i \in \mathcal{R} : y_i = k\}\vert  / \vert \mathcal{R}\vert $ |
 | $G(\mathcal{R})$ | scalar in $[0, 1]$ | Gini impurity of node $\mathcal{R}$ |
 | $H(\mathcal{R})$ | scalar $\ge 0$ | entropy of node $\mathcal{R}$ |
 | $j$ | scalar | feature index used for splitting |
@@ -22,7 +22,7 @@ All symbols used below — defined once.
 | $D$ | scalar | maximum allowed tree depth |
 | $n_{\min}$ | scalar | minimum samples required to split a node |
 | $\alpha$ | scalar $\ge 0$ | cost-complexity pruning parameter |
-| $|T|$ | scalar | number of leaf nodes in tree $T$ |
+| $\vert T\vert $ | scalar | number of leaf nodes in tree $T$ |
 
 **Convention.** All logarithms are base-2 ($\log_2$) unless stated otherwise. For entropy
 in nats, use $\ln$; the formulas are identical up to a constant factor. We define

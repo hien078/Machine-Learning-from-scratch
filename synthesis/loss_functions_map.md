@@ -74,7 +74,7 @@ $$\mathcal{L}_{\text{CE}} = -\frac{1}{n} \sum_{i=1}^{n} \sum_{k=1}^{K} y_{ik} \l
 |---|---|
 | Used by | Softmax classifier, Neural Networks (multiclass) |
 | Connection | Generalizes BCE to K classes |
-| Related to | KL divergence: $\text{CE}(p, q) = H(p) + D_{\text{KL}}(p \| q)$ |
+| Related to | KL divergence: $\text{CE}(p, q) = H(p) + D_{\text{KL}}(p \mid q)$ |
 
 ### Hinge Loss
 
@@ -94,9 +94,9 @@ $$\mathcal{L}_{\text{hinge}} = \frac{1}{n} \sum_{i=1}^{n} \max(0, 1 - y_i \cdot 
 
 | Penalty | Formula | Effect | Used by |
 |---|---|---|---|
-| L2 (Ridge) | $\lambda \|\mathbf{w}\|_2^2$ | Shrinks all weights toward zero | Ridge, Weight Decay |
-| L1 (Lasso) | $\lambda \|\mathbf{w}\|_1$ | Drives some weights to exactly zero | Lasso, Sparse models |
-| Elastic Net | $\lambda_1 \|\mathbf{w}\|_1 + \lambda_2 \|\mathbf{w}\|_2^2$ | Combines sparsity + shrinkage | Elastic Net |
+| L2 (Ridge) | $\lambda \Vert \mathbf{w}\Vert_2^2$ | Shrinks all weights toward zero | Ridge, Weight Decay |
+| L1 (Lasso) | $\lambda \Vert \mathbf{w}\Vert_1$ | Drives some weights to exactly zero | Lasso, Sparse models |
+| Elastic Net | $\lambda_1 \Vert \mathbf{w}\Vert_1 + \lambda_2 \Vert \mathbf{w}\Vert_2^2$ | Combines sparsity + shrinkage | Elastic Net |
 | Dropout | Random activation masking during training | Stochastic capacity control | Neural Networks |
 
 ---
@@ -119,11 +119,11 @@ $$G(p) = 1 - \sum_k p_k^2$$
 
 ### KL Divergence
 
-$$D_{\text{KL}}(p \| q) = \sum_k p_k \log \frac{p_k}{q_k}$$
+$$D_{\text{KL}}(p \mid q) = \sum_k p_k \log \frac{p_k}{q_k}$$
 
 - Used by: VAE (ELBO), t-SNE, knowledge distillation
 - Not symmetric, not a true metric
-- Connection: $\text{CE}(p, q) = H(p) + D_{\text{KL}}(p \| q)$
+- Connection: $\text{CE}(p, q) = H(p) + D_{\text{KL}}(p \mid q)$
 
 ---
 
