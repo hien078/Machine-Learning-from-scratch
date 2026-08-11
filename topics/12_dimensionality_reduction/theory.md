@@ -89,7 +89,7 @@ non-trivial because $\text{rank}(S_B) \leq C - 1$.
 For $C = 2$, $S_B = n_1 n_2 / n \cdot (\mu_1 - \mu_2)(\mu_1 - \mu_2)^\top$ has rank 1.
 The single discriminant direction (up to scale) is:
 
-$$w^* = S_W^{-1}(\mu_1 - \mu_2)$$
+$$w^\ast = S_W^{-1}(\mu_1 - \mu_2)$$
 
 **Result:** In the two-class case, LDA reduces to a single closed-form direction —
 no eigendecomposition needed.

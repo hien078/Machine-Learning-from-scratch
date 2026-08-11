@@ -15,7 +15,7 @@
 | Symbol | Type | Meaning |
 |---|---|---|
 | $\theta$ | vector $\in \mathbb{R}^d$ | parameters (weights) to optimize |
-| $\theta^*$ | vector $\in \mathbb{R}^d$ | a minimizer of $L$ |
+| $\theta^\ast$ | vector $\in \mathbb{R}^d$ | a minimizer of $L$ |
 | $L(\theta)$ | scalar function | loss (objective) function; $L : \mathbb{R}^d \to \mathbb{R}$ |
 | $\nabla L(\theta)$ | vector $\in \mathbb{R}^d$ | gradient of $L$ at $\theta$ |
 | $\nabla^2 L(\theta)$ | matrix $\in \mathbb{R}^{d \times d}$ | Hessian of $L$ at $\theta$ |
@@ -103,9 +103,9 @@ $$\boxed{\alpha < \frac{2}{M}}$$
 
 > **Theorem (sublinear rate).** If $L$ is convex and $M$-smooth, and $\alpha = 1/M$, then after $T$ steps:
 >
-> $$L(\theta_T) - L(\theta^*) \le \frac{M\|\theta_0 - \theta^*\|^2}{2T}$$
+> $$L(\theta_T) - L(\theta^\ast) \le \frac{M\|\theta_0 - \theta^\ast\|^2}{2T}$$
 
-**Proof sketch.** From the descent lemma with $\alpha = 1/M$: each step gives $L(\theta_{t+1}) \le L(\theta_t) - \frac{1}{2M}\|\nabla L(\theta_t)\|^2$. Summing telescopically and using convexity ($L(\theta_t) - L(\theta^*) \le \nabla L(\theta_t)^\top(\theta_t - \theta^*)$), the bound follows by averaging.
+**Proof sketch.** From the descent lemma with $\alpha = 1/M$: each step gives $L(\theta_{t+1}) \le L(\theta_t) - \frac{1}{2M}\|\nabla L(\theta_t)\|^2$. Summing telescopically and using convexity ($L(\theta_t) - L(\theta^\ast) \le \nabla L(\theta_t)^\top(\theta_t - \theta^\ast)$), the bound follows by averaging.
 
 **Result:** Convex, smooth GD converges at rate $O(1/T)$. To halve the error, double the iterations.
 
@@ -117,7 +117,7 @@ $$\boxed{\alpha < \frac{2}{M}}$$
 
 > **Theorem (linear rate).** If $L$ is $\mu$-strongly convex and $M$-smooth, with $\alpha = 1/M$:
 >
-> $$\|\theta_T - \theta^*\|^2 \le \left(1 - \frac{\mu}{M}\right)^T \|\theta_0 - \theta^*\|^2$$
+> $$\|\theta_T - \theta^\ast\|^2 \le \left(1 - \frac{\mu}{M}\right)^T \|\theta_0 - \theta^\ast\|^2$$
 
 **Result:** Strong convexity yields a **linear (exponential) convergence rate**. The convergence factor is $1 - 1/\kappa$ where $\kappa = M/\mu$ is the condition number. Ill-conditioned problems ($\kappa \gg 1$) converge slowly.
 
@@ -146,7 +146,7 @@ For the quadratic $L(\theta) = \frac{1}{2}\theta^\top A\theta - b^\top\theta$ wi
 
 For convex $L$ with bounded gradient variance $\sigma^2$, SGD with $\alpha_t = c/\sqrt{t}$ achieves:
 
-$$\mathbb{E}[L(\bar{\theta}_T)] - L(\theta^*) = O\!\left(\frac{1}{\sqrt{T}}\right)$$
+$$\mathbb{E}[L(\bar{\theta}_T)] - L(\theta^\ast) = O\!\left(\frac{1}{\sqrt{T}}\right)$$
 
 This is slower than full-batch $O(1/T)$, but each iteration costs $O(d)$ instead of $O(nd)$. For large $n$, SGD reaches a given accuracy faster in wall-clock time.
 
@@ -176,7 +176,7 @@ $$\theta_{t+1} = \theta_t + v_{t+1}$$
 
 > **Theorem (Nesterov).** For convex, $M$-smooth $L$, NAG achieves:
 >
-> $$L(\theta_T) - L(\theta^*) = O\!\left(\frac{1}{T^2}\right)$$
+> $$L(\theta_T) - L(\theta^\ast) = O\!\left(\frac{1}{T^2}\right)$$
 
 This $O(1/T^2)$ rate is provably optimal among first-order methods with access only to gradients (Nemirovski & Yudin, 1983).
 
@@ -278,7 +278,7 @@ Adam does not converge on all convex problems. Reddi et al. (2018) showed a simp
 
 ### 8.6 Small gradient ≠ small loss gap
 
-A small $\|\nabla L(\theta)\|$ does not guarantee that $L(\theta)$ is close to $L(\theta^*)$. On flat plateaus, the gradient is small but the function value may be far from optimal.
+A small $\|\nabla L(\theta)\|$ does not guarantee that $L(\theta)$ is close to $L(\theta^\ast)$. On flat plateaus, the gradient is small but the function value may be far from optimal.
 
 ---
 

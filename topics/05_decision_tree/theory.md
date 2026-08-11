@@ -105,7 +105,7 @@ At each node $\mathcal{R}$:
         $\mathcal{R}_R = \{i : x_{ij} \ge t\}$.
       - Compute the weighted impurity
         $\frac{|\mathcal{R}_L|}{|\mathcal{R}|} I(\mathcal{R}_L) + \frac{|\mathcal{R}_R|}{|\mathcal{R}|} I(\mathcal{R}_R)$.
-2. **Pick** the $(j^*, t^*)$ that minimises the weighted child impurity (equivalently,
+2. **Pick** the $(j^\ast, t^\ast)$ that minimises the weighted child impurity (equivalently,
    maximises information gain).
 3. **Recurse** on $\mathcal{R}_L$ and $\mathcal{R}_R$.
 

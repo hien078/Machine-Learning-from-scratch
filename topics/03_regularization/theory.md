@@ -142,11 +142,11 @@ $$
 
 ### 4.3 First-order optimality (KKT)
 
-A point $\theta^*$ minimizes $L_{\text{lasso}}$ if and only if:
+A point $\theta^\ast$ minimizes $L_{\text{lasso}}$ if and only if:
 
-- If $\theta_j^* > 0$: $(2/n)x_j^\top r = -\lambda$ where $r = X\theta^* - y$
-- If $\theta_j^* < 0$: $(2/n)x_j^\top r = +\lambda$
-- If $\theta_j^* = 0$: $|x_j^\top r| \le n\lambda/2$
+- If $\theta_j^\ast > 0$: $(2/n)x_j^\top r = -\lambda$ where $r = X\theta^\ast - y$
+- If $\theta_j^\ast < 0$: $(2/n)x_j^\top r = +\lambda$
+- If $\theta_j^\ast = 0$: $|x_j^\top r| \le n\lambda/2$
 
 The last condition explains sparsity: features with small correlation to the residual
 are set to exactly zero.

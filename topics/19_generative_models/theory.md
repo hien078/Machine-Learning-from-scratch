@@ -90,7 +90,7 @@ Here, $D(x)$ predicts the probability that $x$ is real. $G$ tries to minimize th
 
 ### Optimal Discriminator Proof
 
-For a fixed generator $G$, we find the optimal discriminator $D^*$.
+For a fixed generator $G$, we find the optimal discriminator $D^\ast$.
 
 **Step 1 (Calculus of Variations):** Write the expected value as an integral over $x$. Note that sampling $z \sim p(z)$ and applying $G(z)$ is equivalent to sampling $x \sim p_g(x)$:
 
@@ -102,13 +102,13 @@ We maximize $f(y) = a \log(y) + b \log(1 - y)$ with respect to $y$.
 **Step 3 (Derivative):** Set derivative to zero:
 $$ \frac{df}{dy} = \frac{a}{y} - \frac{b}{1 - y} = 0 \implies a(1 - y) = by \implies y = \frac{a}{a+b} $$
 
-**Result:** The optimal discriminator is $D^*(x) = \frac{p_{\text{data}}(x)}{p_{\text{data}}(x) + p_g(x)}$.
+**Result:** The optimal discriminator is $D^\ast(x) = \frac{p_{\text{data}}(x)}{p_{\text{data}}(x) + p_g(x)}$.
 
 ### Connection to Jensen-Shannon Divergence
 
-Substitute $D^*$ back into $V$:
+Substitute $D^\ast$ back into $V$:
 
-$$ V(G, D^*) = \mathbb{E}_{x \sim p_{\text{data}}}\left[ \log \frac{p_{\text{data}}(x)}{p_{\text{data}}(x) + p_g(x)} \right] + \mathbb{E}_{x \sim p_g}\left[ \log \frac{p_g(x)}{p_{\text{data}}(x) + p_g(x)} \right] $$
+$$ V(G, D^\ast) = \mathbb{E}_{x \sim p_{\text{data}}}\left[ \log \frac{p_{\text{data}}(x)}{p_{\text{data}}(x) + p_g(x)} \right] + \mathbb{E}_{x \sim p_g}\left[ \log \frac{p_g(x)}{p_{\text{data}}(x) + p_g(x)} \right] $$
 
 Multiply numerator and denominator by $\frac{1}{2}$:
 
@@ -118,12 +118,12 @@ Extract $\log \frac{1}{2} = -\log 2$:
 
 $$ = -2 \log 2 + D_{\text{KL}}\left(p_{\text{data}} \Big\| \frac{p_{\text{data}} + p_g}{2}\right) + D_{\text{KL}}\left(p_g \Big\| \frac{p_{\text{data}} + p_g}{2}\right) $$
 
-**Result:** $V(G, D^*) = -\log 4 + 2 \cdot JSD(p_{\text{data}} \| p_g)$.
+**Result:** $V(G, D^\ast) = -\log 4 + 2 \cdot JSD(p_{\text{data}} \| p_g)$.
 
 ### Training Instabilities
 
 1. **Mode Collapse:** The generator finds a single output (or a few) that fools the discriminator and produces only that, ignoring the rest of the data distribution.
-2. **Vanishing Gradients:** If $D$ becomes too good (closer to $D^*$), the function $-\log(1 - D(G(z)))$ saturates and gives vanishing gradients to $G$.
+2. **Vanishing Gradients:** If $D$ becomes too good (closer to $D^\ast$), the function $-\log(1 - D(G(z)))$ saturates and gives vanishing gradients to $G$.
 
 ### Wasserstein GAN (WGAN)
 

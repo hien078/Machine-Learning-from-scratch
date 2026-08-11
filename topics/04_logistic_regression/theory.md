@@ -343,7 +343,7 @@ $$L_{\text{smooth}} \le \frac{1}{4 n} \, \lambda_{\max}(X^T X),$$
 because $W_{ii} = p_i (1 - p_i) \le 1/4$ for every $p_i \in (0, 1)$ (maximum at
 $p_i = 1/2$). With step $\eta = 1 / L_{\text{smooth}}$, convergence is
 
-$$L(\theta_k) - L(\theta^*) \le \frac{\|\theta_0 - \theta^*\|_2^2}{2 \eta \cdot k} = O(1 / k).$$
+$$L(\theta_k) - L(\theta^\ast) \le \frac{\|\theta_0 - \theta^\ast\|_2^2}{2 \eta \cdot k} = O(1 / k).$$
 
 **Result:** Sub-linear convergence — simple but slow.
 
@@ -363,7 +363,7 @@ At each step we solve a *weighted OLS* problem with weights $W_k$ and response $
 weights depend on $\theta_k$, so we *re-weight* and re-solve at every iteration — hence
 **iteratively reweighted least squares** (IRLS).
 
-**Convergence.** Quadratic: $\|\theta_{k+1} - \theta^*\|_2 \le C \cdot \|\theta_k - \theta^*\|_2^2$.
+**Convergence.** Quadratic: $\|\theta_{k+1} - \theta^\ast\|_2 \le C \cdot \|\theta_k - \theta^\ast\|_2^2$.
 The number of correct digits *doubles* every iteration. 5–15 iterations reach machine
 precision on typical problems.
 
@@ -499,15 +499,15 @@ by either (i) setting one class as reference ($\theta_K = 0$), or (ii) adding an
 ### 12.1 Consistency
 
 Under mild regularity ($X$ full rank with high probability, $E[\|x_i\|^4] < \infty$), the
-MLE is **consistent**: $\hat{\theta}_n \to \theta^*$ in probability as $n \to \infty$.
+MLE is **consistent**: $\hat{\theta}_n \to \theta^\ast$ in probability as $n \to \infty$.
 
 ### 12.2 Asymptotic normality
 
-$$\sqrt{n} (\hat{\theta}_n - \theta^*) \xrightarrow{d} \text{Normal}(0, \mathcal{I}(\theta^*)^{-1}),$$
+$$\sqrt{n} (\hat{\theta}_n - \theta^\ast) \xrightarrow{d} \text{Normal}(0, \mathcal{I}(\theta^\ast)^{-1}),$$
 
-where $\mathcal{I}(\theta^*)$ is the **Fisher information matrix**:
+where $\mathcal{I}(\theta^\ast)$ is the **Fisher information matrix**:
 
-$$\mathcal{I}(\theta^*) := \mathbb{E}_x [\sigma(x^T \theta^*) (1 - \sigma(x^T \theta^*)) \, x x^T].$$
+$$\mathcal{I}(\theta^\ast) := \mathbb{E}_x [\sigma(x^T \theta^\ast) (1 - \sigma(x^T \theta^\ast)) \, x x^T].$$
 
 The empirical analogue is $(1/n) X^T W X$ — the Hessian from Theorem 5.1.
 
@@ -526,7 +526,7 @@ The model outputs $p(x) = P(y = 1 \mid x)$. To produce a class label, pick thres
 - **0-1 loss.** Bayes-optimal threshold is $\tau = 0.5$.
 - **Asymmetric costs.** If false positive costs $c_{10}$ and false negative costs $c_{01}$:
 
-$$\tau^* = \frac{c_{10}}{c_{10} + c_{01}}.$$
+$$\tau^\ast = \frac{c_{10}}{c_{10} + c_{01}}.$$
 
 ### 12.5 Calibration
 

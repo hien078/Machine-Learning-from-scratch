@@ -145,13 +145,13 @@ Base models hallucinate, generate toxic text, and fail to follow instructions pe
 RLHF is complex, requiring a distinct reward model and unstable RL loops. DPO mathematically demonstrates that the reward model can be bypassed entirely.
 
 **Step 1: The Optimal Policy**
-Starting from the RLHF objective, the optimal policy $\pi^*$ that maximizes the regularized reward has a closed-form solution:
-$$ \pi^*(y\|x) = \frac{1}{Z(x)} \pi_{\text{ref}}(y \mid x) \exp\left( \frac{1}{\beta} r(x, y) \right) $$
+Starting from the RLHF objective, the optimal policy $\pi^\ast$ that maximizes the regularized reward has a closed-form solution:
+$$ \pi^\ast(y \mid x) = \frac{1}{Z(x)} \pi_{\text{ref}}(y \mid x) \exp\left( \frac{1}{\beta} r(x, y) \right) $$
 Where $Z(x) = \sum_y \pi_{\text{ref}}(y \mid x) \exp\left( \frac{1}{\beta} r(x, y) \right)$ is the partition function.
 
 **Step 2: Rewriting the Reward**
 By taking the log and rearranging (algebraic manipulation), we can express the reward function $r(x,y)$ in terms of the optimal policy and reference policy:
-$$ r(x, y) = \beta \log \frac{\pi^*(y\|x)}{\pi_{\text{ref}}(y \mid x)} + \beta \log Z(x) $$
+$$ r(x, y) = \beta \log \frac{\pi^\ast(y \mid x)}{\pi_{\text{ref}}(y \mid x)} + \beta \log Z(x) $$
 
 **Step 3: The Bradley-Terry Preference Model**
 The probability that human prefers $y_w$ over $y_l$ under the Bradley-Terry model is:

@@ -51,7 +51,7 @@ A policy defines the agent's behavior.
 - **Stochastic Policy:** $\pi(a \mid s) = \mathbb{P}(A_t = a \mid S_t = s)$, maps states to a probability distribution over actions.
 
 **Objective Function:**
-The goal of RL is to find an optimal policy $\pi^*$ that maximizes the expected cumulative discounted reward from any initial state.
+The goal of RL is to find an optimal policy $\pi^\ast$ that maximizes the expected cumulative discounted reward from any initial state.
 
 ## 2.5 Multi-Armed Bandits
 
@@ -61,8 +61,8 @@ The simplest setting of RL removes states entirely, focusing purely on actions a
 - The goal is to maximize total reward over $T$ time steps.
 
 **Regret:**
-We define the optimal mean reward as $\mu^* = \max_a \mu_a$. The performance is measured by **Regret** $R_T$, the expected loss from not picking the optimal action every time:
-$$ R_T = T \cdot \mu^* - \sum_{t=1}^T \mu_{a_t} $$
+We define the optimal mean reward as $\mu^\ast = \max_a \mu_a$. The performance is measured by **Regret** $R_T$, the expected loss from not picking the optimal action every time:
+$$ R_T = T \cdot \mu^\ast - \sum_{t=1}^T \mu_{a_t} $$
 
 **Action-Value Estimation:**
 The agent estimates the value of each action using the sample average of observed rewards:
@@ -134,23 +134,23 @@ where $Q^\pi(s, a) = \sum_{s' \in \mathcal{S}} P(s' \mid s, a) [ R(s, a, s') + \
 
 ### Bellman Optimality Equations
 
-For the optimal policy $\pi^*$, the value functions satisfy:
-$$ V^*(s) = \max_{a} Q^*(s, a) = \max_{a} \sum_{s'} P(s' \mid s, a) [ R(s, a, s') + \gamma V^*(s') ] $$
-$$ Q^*(s, a) = \sum_{s'} P(s' \mid s, a) \left[ R(s, a, s') + \gamma \max_{a'} Q^*(s', a') \right] $$
+For the optimal policy $\pi^\ast$, the value functions satisfy:
+$$ V^\ast(s) = \max_{a} Q^\ast(s, a) = \max_{a} \sum_{s'} P(s' \mid s, a) [ R(s, a, s') + \gamma V^\ast(s') ] $$
+$$ Q^\ast(s, a) = \sum_{s'} P(s' \mid s, a) \left[ R(s, a, s') + \gamma \max_{a'} Q^\ast(s', a') \right] $$
 
 **Convergence (Contraction Mapping Theorem):**
-The Bellman optimality operator $B$ applied to a value function $V$ is defined as $(BV)(s) = \max_a \sum_{s'} P(s' \mid s, a) [R + \gamma V(s')]$. It can be shown that $B$ is a $\gamma$-contraction in the max norm: $||BV_1 - BV_2||_\infty \leq \gamma ||V_1 - V_2||_\infty$. By the Banach fixed-point theorem, repeated application of $B$ converges to a unique fixed point $V^*$.
+The Bellman optimality operator $B$ applied to a value function $V$ is defined as $(BV)(s) = \max_a \sum_{s'} P(s' \mid s, a) [R + \gamma V(s')]$. It can be shown that $B$ is a $\gamma$-contraction in the max norm: $||BV_1 - BV_2||_\infty \leq \gamma ||V_1 - V_2||_\infty$. By the Banach fixed-point theorem, repeated application of $B$ converges to a unique fixed point $V^\ast$.
 
 ## 5. HOW: Dynamic Programming
 
 When the MDP model ($P$ and $R$) is completely known, we can compute optimal policies using Dynamic Programming (DP).
 
 **Value Iteration:**
-Repeatedly apply the Bellman optimality operator to find $V^*$.
+Repeatedly apply the Bellman optimality operator to find $V^\ast$.
 1. Initialize $V_0(s) = 0$ for all $s$.
 2. Update: $V_{k+1}(s) = \max_{a} \sum_{s'} P(s' \mid s, a) [ R(s, a, s') + \gamma V_k(s') ]$
 3. Stop when $\max_s |V_{k+1}(s) - V_k(s)| < \theta$.
-4. Extract deterministic policy: $\pi^*(s) = \text{argmax}_a \sum_{s'} P(s' \mid s, a) [ R(s, a, s') + \gamma V^*(s') ]$.
+4. Extract deterministic policy: $\pi^\ast(s) = \text{argmax}_a \sum_{s'} P(s' \mid s, a) [ R(s, a, s') + \gamma V^\ast(s') ]$.
 
 **Policy Iteration:**
 Alternates between Policy Evaluation (finding $V^\pi$ for a fixed $\pi$) and Policy Improvement (updating $\pi$ greedily with respect to $V^\pi$). Guaranteed to converge in finite steps for finite MDPs.
@@ -220,7 +220,7 @@ To ensure all state-action pairs are visited infinitely often (a requirement for
 - With probability $1 - \epsilon$, choose $a = \text{argmax}_a Q(s, a)$ (Exploit).
 - With probability $\epsilon$, choose a random action $a \in \mathcal{A}$ (Explore).
 
-**Convergence:** Q-Learning converges to $Q^*$ with probability 1 if all $(s,a)$ pairs are visited infinitely often and the learning rate $\alpha$ decays appropriately ($\sum \alpha_t = \infty, \sum \alpha_t^2 < \infty$).
+**Convergence:** Q-Learning converges to $Q^\ast$ with probability 1 if all $(s,a)$ pairs are visited infinitely often and the learning rate $\alpha$ decays appropriately ($\sum \alpha_t = \infty, \sum \alpha_t^2 < \infty$).
 
 ## 7. HOW: Policy Gradients
 

@@ -108,7 +108,7 @@ Random initialisation often leads to poor local minima. K-Means++ selects initia
    - Compute $D(x_i) = \min_{j < k} \|x_i - \mu_j\|^2$ for each point.
    - Select $\mu_k = x_i$ with probability proportional to $D(x_i)$.
 
-> **Theorem (Arthur & Vassilvitskii, 2007).** K-Means++ initialisation guarantees $\mathbb{E}[J] \le 8(\ln K + 2) \cdot J^*$, where $J^*$ is the optimal objective.
+> **Theorem (Arthur & Vassilvitskii, 2007).** K-Means++ initialisation guarantees $\mathbb{E}[J] \le 8(\ln K + 2) \cdot J^\ast$, where $J^\ast$ is the optimal objective.
 
 **Result:** K-Means++ provides an $O(\log K)$-competitive initialisation in expectation.
 

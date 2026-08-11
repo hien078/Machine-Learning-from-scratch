@@ -26,11 +26,11 @@ Every symbol used later, defined once.
 | $\hat{y}_i$ | scalar | model prediction for example $i$; $\hat{y}_i = x_i^\top \theta$ |
 | $\hat{y}$ | vector $\in \mathbb{R}^n$ | prediction vector; $\hat{y} = X \theta$ |
 | $r_i$ | scalar | residual for example $i$; $r_i = \hat{y}_i - y_i$ |
-| $r^*$ | vector $\in \mathbb{R}^n$ | residual vector at the optimum; $r^* = \hat{y}^* - y$ |
+| $r^\ast$ | vector $\in \mathbb{R}^n$ | residual vector at the optimum; $r^\ast = \hat{y}^\ast - y$ |
 | $L(\theta)$ | scalar function | the MSE loss; $L : \mathbb{R}^p \to \mathbb{R}^+$ |
 | $\nabla L(\theta)$ | vector $\in \mathbb{R}^p$ | gradient of $L$ at $\theta$ |
 | $\nabla^2 L(\theta)$ | matrix $\in \mathbb{R}^{p \times p}$ | Hessian of $L$ at $\theta$ |
-| $\theta^*$ | vector $\in \mathbb{R}^p$ | a minimiser of $L$ |
+| $\theta^\ast$ | vector $\in \mathbb{R}^p$ | a minimiser of $L$ |
 | $H$ | matrix $\in \mathbb{R}^{n \times n}$ | hat matrix; $H := X (X^\top X)^{-1} X^\top$ |
 | $X^+$ | matrix $\in \mathbb{R}^{p \times n}$ | Moore–Penrose pseudoinverse of $X$ |
 | $\varepsilon_i$ | scalar (random) | noise term in the probabilistic model |
@@ -128,7 +128,7 @@ L(\theta) &= \frac{1}{n} \sum_i r_i(\theta)^2 & \text{(scalar form)} \\
 
 **Ordinary least squares (OLS)** is the optimisation problem
 
-$$\theta^* \in \arg\min_{\theta \in \mathbb{R}^p} L(\theta)$$
+$$\theta^\ast \in \arg\min_{\theta \in \mathbb{R}^p} L(\theta)$$
 
 ### 4.2 Theorem (MSE is the Gaussian negative log-likelihood)
 
@@ -236,15 +236,15 @@ This is the system of **normal equations** for OLS.
 
 ### 6.2 Existence and uniqueness
 
-> **Theorem.** Let $X \in \mathbb{R}^{n \times p}$, $y \in \mathbb{R}^n$, and $L(\theta) = \frac{1}{n} \|X\theta - y\|^2$. Define $\Theta^* := \arg\min_\theta L(\theta)$. Then
+> **Theorem.** Let $X \in \mathbb{R}^{n \times p}$, $y \in \mathbb{R}^n$, and $L(\theta) = \frac{1}{n} \|X\theta - y\|^2$. Define $\Theta^\ast := \arg\min_\theta L(\theta)$. Then
 >
-> 1. **(Existence.)** $\Theta^*$ is non-empty.
-> 2. **(Uniqueness.)** $|\Theta^*| = 1$ $\iff$ $\text{rank}(X) = p$ $\iff$ $X^\top X$ is invertible.
+> 1. **(Existence.)** $\Theta^\ast$ is non-empty.
+> 2. **(Uniqueness.)** $|\Theta^\ast| = 1$ $\iff$ $\text{rank}(X) = p$ $\iff$ $X^\top X$ is invertible.
 > 3. **(Closed form.)** When $\text{rank}(X) = p$, the unique minimiser is
 >
-> $$\theta^* = (X^\top X)^{-1} X^\top y$$
+> $$\theta^\ast = (X^\top X)^{-1} X^\top y$$
 >
-> When $\text{rank}(X) < p$, $\Theta^*$ is an affine subspace of $\mathbb{R}^p$ of dimension $p - \text{rank}(X)$. §8 selects its unique minimum-norm element via the pseudoinverse.
+> When $\text{rank}(X) < p$, $\Theta^\ast$ is an affine subspace of $\mathbb{R}^p$ of dimension $p - \text{rank}(X)$. §8 selects its unique minimum-norm element via the pseudoinverse.
 
 **Proof.**
 
@@ -252,7 +252,7 @@ This is the system of **normal equations** for OLS.
 
 *(2) Uniqueness.* $L$ is strictly convex iff $\text{rank}(X) = p$ (§5.4). A strictly convex function has at most one minimiser; combined with (1), exactly one.
 
-*(3) Closed form.* Under $\text{rank}(X) = p$, $X^\top X$ is invertible, so the normal equations have the unique solution $\theta^* = (X^\top X)^{-1} X^\top y$. $\blacksquare$
+*(3) Closed form.* Under $\text{rank}(X) = p$, $X^\top X$ is invertible, so the normal equations have the unique solution $\theta^\ast = (X^\top X)^{-1} X^\top y$. $\blacksquare$
 
 **Result:** $\hat{\theta} = (X^\top X)^{-1} X^\top y$ when $X$ has full column rank.
 
@@ -264,15 +264,15 @@ This is the system of **normal equations** for OLS.
 
 Rewrite the normal equations as
 
-$$X^\top (X \theta^* - y) = 0$$
+$$X^\top (X \theta^\ast - y) = 0$$
 
-i.e. $X^\top r^* = 0$, where $r^* := X \theta^* - y$. The residual is orthogonal to every column of $X$, hence to every vector in $\text{Col}(X)$. This is the linear-algebra signature of an **orthogonal projection**: $\hat{y}^* = X \theta^*$ is the unique vector in $\text{Col}(X)$ such that $y - \hat{y}^* \perp \text{Col}(X)$.
+i.e. $X^\top r^\ast = 0$, where $r^\ast := X \theta^\ast - y$. The residual is orthogonal to every column of $X$, hence to every vector in $\text{Col}(X)$. This is the linear-algebra signature of an **orthogonal projection**: $\hat{y}^\ast = X \theta^\ast$ is the unique vector in $\text{Col}(X)$ such that $y - \hat{y}^\ast \perp \text{Col}(X)$.
 
 ### 7.2 Definition (hat matrix)
 
-Assume $\text{rank}(X) = p$. Substituting $\theta^* = (X^\top X)^{-1} X^\top y$ into $\hat{y}^* = X \theta^*$:
+Assume $\text{rank}(X) = p$. Substituting $\theta^\ast = (X^\top X)^{-1} X^\top y$ into $\hat{y}^\ast = X \theta^\ast$:
 
-$$\hat{y}^* = X (X^\top X)^{-1} X^\top y = H y$$
+$$\hat{y}^\ast = X (X^\top X)^{-1} X^\top y = H y$$
 
 where $H := X (X^\top X)^{-1} X^\top \in \mathbb{R}^{n \times n}$. $H$ is called the **hat matrix** — it puts the hat on $y$.
 
@@ -299,17 +299,17 @@ where $H := X (X^\top X)^{-1} X^\top \in \mathbb{R}^{n \times n}$. $H$ is called
 
 ### 7.4 Corollary (Pythagoras)
 
-> $\|y\|^2 = \|\hat{y}^*\|^2 + \|r^*\|^2$
+> $\|y\|^2 = \|\hat{y}^\ast\|^2 + \|r^\ast\|^2$
 
-**Proof.** $r^* \perp \text{Col}(X)$ and $\hat{y}^* \in \text{Col}(X)$, so $\langle \hat{y}^*, r^* \rangle = 0$. Since $y = \hat{y}^* - r^*$:
+**Proof.** $r^\ast \perp \text{Col}(X)$ and $\hat{y}^\ast \in \text{Col}(X)$, so $\langle \hat{y}^\ast, r^\ast \rangle = 0$. Since $y = \hat{y}^\ast - r^\ast$:
 
-$$\|y\|^2 = \|\hat{y}^*\|^2 - 2\langle \hat{y}^*, r^* \rangle + \|r^*\|^2 = \|\hat{y}^*\|^2 + \|r^*\|^2 \quad \blacksquare$$
+$$\|y\|^2 = \|\hat{y}^\ast\|^2 - 2\langle \hat{y}^\ast, r^\ast \rangle + \|r^\ast\|^2 = \|\hat{y}^\ast\|^2 + \|r^\ast\|^2 \quad \blacksquare$$
 
 ---
 
 ## 8. Singular Case — SVD and Moore–Penrose Pseudoinverse
 
-When $\text{rank}(X) < p$ (the *multicollinear* regime), $X^\top X$ is singular, the closed form is undefined, and $\Theta^*$ is an infinite affine subspace.
+When $\text{rank}(X) < p$ (the *multicollinear* regime), $X^\top X$ is singular, the closed form is undefined, and $\Theta^\ast$ is an infinite affine subspace.
 
 ### 8.1 The singular value decomposition
 
@@ -329,8 +329,8 @@ $$X^+ := V \Sigma^+ U^\top \in \mathbb{R}^{p \times n}$$
 
 > **Theorem.**
 >
-> 1. If $\text{rank}(X) = p$, then $X^+ = (X^\top X)^{-1} X^\top$. Hence $\theta^* = X^+ y$ agrees with the OLS closed form.
-> 2. For arbitrary $X$, $\theta_{\text{minnorm}} := X^+ y$ is the unique element of $\Theta^*$ with smallest Euclidean norm.
+> 1. If $\text{rank}(X) = p$, then $X^+ = (X^\top X)^{-1} X^\top$. Hence $\theta^\ast = X^+ y$ agrees with the OLS closed form.
+> 2. For arbitrary $X$, $\theta_{\text{minnorm}} := X^+ y$ is the unique element of $\Theta^\ast$ with smallest Euclidean norm.
 > 3. The prediction $X X^+ y$ is the orthogonal projection of $y$ onto $\text{Col}(X)$, regardless of rank.
 
 **Result:** When the design is multicollinear, the *parameters* $\theta$ are non-unique, but the *predictions* $\hat{y}$ are. The pseudoinverse picks the shortest coordinate vector that lands on the projection. Numerically, solve least squares with QR or SVD rather than forming the inverse.

@@ -56,7 +56,7 @@ $$\hat{\mathbf{w}}_{\text{ridge}} = (\mathbf{X}^\top \mathbf{X} + \lambda \mathb
 $$\mathbf{w}_{t+1} = \mathbf{w}_t - \eta \nabla \mathcal{L}(\mathbf{w}_t)$$
 
 **Convergence theory:**
-- Convex + L-Lipschitz gradient: $\mathcal{L}(\mathbf{w}_T) - \mathcal{L}^* \le \frac{L \|\mathbf{w}_0 - \mathbf{w}^*\|^2}{2T}$
+- Convex + L-Lipschitz gradient: $\mathcal{L}(\mathbf{w}_T) - \mathcal{L}^\ast \le \frac{L \|\mathbf{w}_0 - \mathbf{w}^\ast\|^2}{2T}$
 - Strongly convex: linear convergence rate
 - Learning rate: $\eta < \frac{2}{L}$ for convergence
 

@@ -249,6 +249,6 @@ This ensures each feature contributes proportionally to the distance.
 
 ## 10. References
 
-- **Cover, T., & Hart, P. (1967).** Nearest neighbor pattern classification. *IEEE Transactions on Information Theory*, 13(1), 21–27. (Cover-Hart theorem: $R^* \le R_{1\text{-NN}} \le 2 R^*$).
+- **Cover, T., & Hart, P. (1967).** Nearest neighbor pattern classification. *IEEE Transactions on Information Theory*, 13(1), 21–27. (Cover-Hart theorem: $R^\ast \le R_{1\text{-NN}} \le 2 R^\ast$).
 - **Hastie, T., Tibshirani, R., & Friedman, J. (2009).** *The Elements of Statistical Learning: Data Mining, Inference, and Prediction* (2nd ed.). Springer. Chapter 13.3: *$k$-Nearest-Neighbor Classifiers*.
 - **Bishop, C. M. (2006).** *Pattern Recognition and Machine Learning*. Springer. Chapter 2.5: *Non-parametric Methods*.
