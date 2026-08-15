@@ -16,6 +16,7 @@ All symbols used below — defined once.
 | $z_i$ | scalar | linear score for example $i$: $z_i := x_i^T \theta$ |
 | $\sigma(z)$ | scalar in $(0, 1)$ | **sigmoid** function: $\sigma(z) := 1 / (1 + e^{-z})$ |
 | $p_i$ | scalar in $(0, 1)$ | model probability $P(y_i = 1 \mid x_i, \theta) = \sigma(z_i)$ |
+| $p$ | vector of length $n$ | stacked probabilities $(p_1, \dots, p_n)$; distinguished from the feature count $p$ by context and type |
 | $L(\theta)$ | scalar | the cross-entropy / NLL loss; defined in §3 |
 | $\lambda$ | scalar $\ge 0$ | regularisation strength |
 | $I_p$ | matrix of size $p \times p$ | identity matrix |
@@ -52,10 +53,10 @@ $(-\infty, +\infty) \to (0, 1)$. That function is the sigmoid.
 ## 1.1 Assumptions
 
 1. **Bernoulli response.** Each $y_i \in \{0, 1\}$ is Bernoulli with success probability $p_i = \sigma(x_i^T \theta)$.
-2. **Independence.** Training examples are i.i.d. given $\theta$.
+2. **Conditional independence.** Given the features and $\theta$, the labels $y_1, \dots, y_n$ are independent (equivalently: the pairs $(x_i, y_i)$ are i.i.d.).
 3. **Linear log-odds.** The log-odds $\log(p_i / (1 - p_i)) = x_i^T \theta$ is a linear function of features.
-4. **No perfect multicollinearity.** $X$ has full column rank (required for unique MLE and finite standard errors).
-5. **No perfect separability.** The classes cannot be separated by a hyperplane (otherwise MLE doesn't exist; see §5.3).
+4. **No perfect multicollinearity.** $X$ has full column rank (needed for the MLE — when it exists — to be unique, and for finite standard errors).
+5. **No separation.** No hyperplane separates the classes completely or quasi-completely; otherwise the MLE does not exist (Albert & Anderson, 1984; see §5.3).
 
 ---
 
@@ -126,8 +127,9 @@ Three key observations:
 2. **Asymmetric per example.** For $y_i = 1$ only $\log p_i$ appears; for $y_i = 0$ only
    $\log(1 - p_i)$. The loss for one example is large exactly when the model puts low
    probability on the *true* class.
-3. **Saturates badly at confident wrong predictions.** If $y_i = 1$ but $p_i \to 0$,
-   then $-\log p_i \to +\infty$. Cross-entropy *aggressively* punishes confident-but-wrong
+3. **Blows up on confident wrong predictions.** If $y_i = 1$ but $p_i \to 0$,
+   then $-\log p_i \to +\infty$: the per-example loss is *unbounded* (the sigmoid saturates;
+   the loss does not). Cross-entropy *aggressively* punishes confident-but-wrong
    predictions — precisely why softmax + cross-entropy is the default loss in deep learning.
 
 ### 3.4 Rewriting the loss with $z_i$ — the margin form
@@ -179,13 +181,17 @@ Average over $i$ to get (4.1). $\blacksquare$
 
 | Model | Gradient | Residual |
 |---|---|---|
-| Linear regression | $(2/n) \cdot X^T r$ | $r = X\theta - y$ |
+| Linear regression | $(1/n) \cdot X^T r$ | $r = X\theta - y$ |
 | **Logistic regression** | $(1/n) \cdot X^T r$ | $r = p - y$, with $p_i = \sigma(x_i^T \theta)$ |
 
 The structure is *identical* — sum over examples of (residual) $\cdot$ (feature). The only
 change is that the residual is now $p_i - y_i$ (predicted probability minus label). This
 is why every linear-regression algorithm (GD, SGD, coordinate descent) generalises straight
 to logistic regression with almost no change.
+
+*Convention note.* The linear-regression row uses the loss $\frac{1}{2n}\|X\theta - y\|_2^2$; with the
+plain MSE $\frac{1}{n}\|X\theta - y\|_2^2$ the gradient is $(2/n) X^T r$ instead — a cosmetic constant
+that does not change the minimiser.
 
 ### 4.3 First-order condition
 
@@ -222,7 +228,8 @@ In matrix form this is exactly $(1/n) \cdot X^T W X$. $\blacksquare$
 ### 5.2 Theorem (convexity)
 
 > **Theorem 5.2.** The cross-entropy loss $L(\theta)$ is convex on $\mathbb{R}^p$. If $X$
-> has full column rank and at least one $W_{ii} > 0$, then $L$ is strictly convex.
+> has full column rank, then $L$ is strictly convex. (No condition on $W$ is needed:
+> $W_{ii} = p_i(1 - p_i) > 0$ automatically, since $\sigma$ never reaches $0$ or $1$ at finite $\theta$.)
 
 **Proof.** A twice-differentiable function is convex iff its Hessian is positive
 semidefinite everywhere. For any vector $v \in \mathbb{R}^p$:
@@ -235,9 +242,11 @@ sum is $\ge 0$ → positive semidefinite → convex.
 If $X$ has full column rank, then $Xv = 0$ implies $v = 0$, so the sum is *strictly*
 positive for $v \ne 0$ → positive definite → strictly convex. $\blacksquare$
 
-**Result:** The cross-entropy loss is convex, with a unique global optimum when $X$ is
-full rank. This is what separates logistic regression from neural networks (non-convex,
-multiple local minima).
+**Result:** The cross-entropy loss is convex — strictly convex when $X$ has full column
+rank — so it has *at most one* global minimiser and no spurious local minima. This is what
+separates logistic regression from neural networks (non-convex, multiple local minima).
+Caution: strict convexity guarantees *uniqueness*, not *existence* — on separable data no
+minimiser exists (§5.3).
 
 ### 5.3 Failure case — perfect separability
 
@@ -245,8 +254,15 @@ If the two classes are *perfectly linearly separable*, then $L(\theta)$ has *no 
 minimiser*: shrinking the loss toward zero requires $\|\theta\| \to \infty$ to push the
 sigmoid to 0/1 saturation on every example. The MLE does not exist.
 
-**Cure:** Add *any* strictly convex regulariser (e.g. $\lambda \|\theta\|_2^2$, §10).
-The regularised loss has a finite minimum even on perfectly separable data.
+The same failure occurs under *quasi-complete* separation (a separating hyperplane with some
+points lying exactly on it); Albert & Anderson (1984) show the MLE exists **iff** neither
+kind of separation is present.
+
+**Cure:** Add a *coercive* penalty such as the ridge term $\lambda \|\theta\|_2^2$ (§10). The
+penalised loss then tends to $+\infty$ as $\|\theta\|_2 \to \infty$, so a finite minimiser exists
+even on perfectly separable data — and it is unique, since the ridge term is strictly convex.
+(Strict convexity alone would *not* be enough: it guarantees uniqueness, not existence;
+coercivity is what restores existence.)
 
 ---
 
@@ -263,7 +279,9 @@ Each term contains $\sigma(x_i^T \theta)$ — a *non-linear* function of $\theta
 no way to factor $\theta$ out and isolate it. The equation is *transcendental*.
 
 We are forced to solve iteratively. The good news (Theorem 5.2): the loss is convex, so
-any descent algorithm converges to the global optimum from any starting point.
+there are no bad local minima — provided a minimiser exists (no separation, §5.3) and step
+sizes are chosen appropriately (§9), standard descent methods converge to the global optimum
+from any starting point.
 
 ---
 
@@ -274,7 +292,7 @@ In $d$ dimensions, the logistic model predicts
 $$P(y = 1 \mid x) = \sigma(\theta_0 + \theta_1 x_1 + \cdots + \theta_d x_d).$$
 
 The **decision boundary** is the set of points where the model is on the fence —
-$P(y = 1 \mid x) = 0.5$ — which (by the reflection identity I1) is exactly
+$P(y = 1 \mid x) = 0.5$ — which (since $\sigma(0) = 1/2$ and $\sigma$ is strictly increasing) is exactly
 
 $$\theta_0 + \theta_1 x_1 + \cdots + \theta_d x_d = 0.$$
 
@@ -287,7 +305,9 @@ What varies across space is how *confident* the model is — not the *shape* of 
 - Far from the hyperplane, on the "0" side, probability tends to 0.
 - Right *on* the hyperplane, probability is 0.5.
 - The transition band where the probability swings from 0.1 to 0.9 has a width
-  controlled by $\|\theta\|$ — a larger $\|\theta\|$ means a sharper transition.
+  proportional to $1 / \|w\|_2$, where $w := (\theta_1, \dots, \theta_d)$ is the weight part of
+  $\theta$ (the intercept $\theta_0$ shifts the boundary but not its sharpness) — a larger
+  $\|w\|_2$ means a sharper transition.
 
 **Practical consequence.** Logistic regression cannot separate XOR-shaped data with a
 single boundary. When a non-linear classifier is needed, either engineer non-linear
@@ -341,7 +361,8 @@ $\nabla L(\theta_k) = (1/n) X^T(p_k - y)$.
 $$L_{\text{smooth}} \le \frac{1}{4 n} \, \lambda_{\max}(X^T X),$$
 
 because $W_{ii} = p_i (1 - p_i) \le 1/4$ for every $p_i \in (0, 1)$ (maximum at
-$p_i = 1/2$). With step $\eta = 1 / L_{\text{smooth}}$, convergence is
+$p_i = 1/2$). With step $\eta = 1 / L_{\text{smooth}}$ (and assuming a minimiser $\theta^\ast$ exists — no
+separation, §5.3), convergence is
 
 $$L(\theta_k) - L(\theta^\ast) \le \frac{\|\theta_0 - \theta^\ast\|_2^2}{2 \eta \cdot k} = O(1 / k).$$
 
@@ -363,9 +384,11 @@ At each step we solve a *weighted OLS* problem with weights $W_k$ and response $
 weights depend on $\theta_k$, so we *re-weight* and re-solve at every iteration — hence
 **iteratively reweighted least squares** (IRLS).
 
-**Convergence.** Quadratic: $\|\theta_{k+1} - \theta^\ast\|_2 \le C \cdot \|\theta_k - \theta^\ast\|_2^2$.
-The number of correct digits *doubles* every iteration. 5–15 iterations reach machine
-precision on typical problems.
+**Convergence.** *Locally* quadratic — once $\theta_k$ is close enough to $\theta^\ast$:
+$\|\theta_{k+1} - \theta^\ast\|_2 \le C \cdot \|\theta_k - \theta^\ast\|_2^2$, so the number of
+correct digits roughly *doubles* per iteration. (Far from the optimum, a damped / line-search
+Newton step is used to guarantee progress.) 5–15 iterations reach machine precision on
+typical problems.
 
 **Cost per step.** $\Theta(n p^2 + p^3)$ — one $p \times p$ matrix solve per iteration.
 Fine when $p \lesssim 10^3$.
@@ -377,7 +400,7 @@ the cost of $O(p^3)$ per step.
 
 Compute the gradient on a random *mini-batch* of size $b \ll n$, paying $O(b p)$ per step
 instead of $O(n p)$. With a decaying step size $\eta_k \propto 1/\sqrt{k}$, SGD converges
-at rate $O(1/\sqrt{k})$ in the convex case.
+at rate $O(1/\sqrt{k})$ in expectation (for the averaged iterate) in the convex case.
 
 **When to use:** $n$ very large (millions of examples), online learning (data arrives
 in a stream), or deep learning (logistic regression is the smallest such network).
@@ -387,7 +410,8 @@ in a stream), or deep learning (logistic regression is the smallest such network
 **L-BFGS** (Limited-memory BFGS) is a quasi-Newton method that *approximates* the inverse
 Hessian using only the last $m$ gradient differences (typically $m = 10$–$20$). It gets:
 
-- Newton-like fast convergence (super-linear).
+- Fast convergence in practice (full-memory BFGS is provably super-linear; L-BFGS itself is
+  guaranteed only linear, yet is typically far faster than GD).
 - GD-like memory cost ($O(mp)$, no $p \times p$ Hessian).
 - No second derivatives needed.
 
@@ -407,9 +431,12 @@ intercept):
 
 $$L_{\text{ridge}}(\theta) := L(\theta) + \lambda \|\theta\|_2^2, \qquad L_{\text{lasso}}(\theta) := L(\theta) + \lambda \|\theta\|_1. \qquad (10.1)$$
 
-Both are convex (sum of two convex functions). L2-regularised logistic regression is
-*strictly* convex even on linearly separable data — the regulariser fixes the failure case
-of §5.3.
+(Per §0, the norms in (10.1) run over $\theta_1, \dots, \theta_{p-1}$ only — the intercept
+$\theta_0$ is never penalised.)
+
+Both are convex (sum of two convex functions). The L2-penalised objective is *strictly*
+convex **and coercive**, so it has a unique finite minimiser even on linearly separable
+data — the regulariser fixes the failure case of §5.3.
 
 ### 10.2 Bayesian interpretation
 
@@ -428,8 +455,9 @@ Identifying the multiplier with $\lambda$ gives the claim. $\blacksquare$
 ### 10.3 Gradient of the regularised loss
 
 - **L2.** $\nabla L_{\text{ridge}}(\theta) = \frac{1}{n} X^T (p - y) + 2 \lambda \theta$.
-- **L1.** $\nabla L_{\text{lasso}}(\theta) \ni \frac{1}{n} X^T (p - y) + \lambda \, s$,
-  where $s \in \partial \|\theta\|_1$ is a subgradient.
+- **L1.** $L_{\text{lasso}}$ is not differentiable where any $\theta_j = 0$; work with the *subdifferential*
+  $\partial L_{\text{lasso}}(\theta) = \big\{ \frac{1}{n} X^T (p - y) + \lambda s \,:\, s \in \partial \|\theta\|_1 \big\}$,
+  where $s_j = \operatorname{sign}(\theta_j)$ if $\theta_j \ne 0$ and $s_j \in [-1, 1]$ if $\theta_j = 0$.
 
 ### 10.4 Algorithmic changes
 
@@ -446,7 +474,10 @@ applies unchanged.
 
 **Result:** L1 logistic regression produces sparse coefficients (variable selection for
 classification). L2 logistic regression shrinks coefficients smoothly and is the default
-in most software (scikit-learn uses L2 with $C = 1/\lambda$).
+in most software. In scikit-learn's `LogisticRegression`, `C` is the *inverse* regularisation
+strength (larger `C` = weaker penalty); it minimises
+$\frac{1}{2}\|w\|_2^2 + C \sum_i \log(1 + e^{-y_i' z_i})$, so under the conventions of (10.1)
+the exact correspondence is $C = 1/(2 n \lambda)$.
 
 ---
 
@@ -498,8 +529,10 @@ by either (i) setting one class as reference ($\theta_K = 0$), or (ii) adding an
 
 ### 12.1 Consistency
 
-Under mild regularity ($X$ full rank with high probability, $E[\|x_i\|^4] < \infty$), the
-MLE is **consistent**: $\hat{\theta}_n \to \theta^\ast$ in probability as $n \to \infty$.
+Everything in §12.1–12.3 assumes the model is **correctly specified**: there exists a true
+$\theta^\ast$ with $P(y = 1 \mid x) = \sigma(x^T \theta^\ast)$. Under this and mild regularity
+($X$ full rank with high probability, $E[\|x_i\|^4] < \infty$), the MLE is **consistent**:
+$\hat{\theta}_n \to \theta^\ast$ in probability as $n \to \infty$.
 
 ### 12.2 Asymptotic normality
 
@@ -516,14 +549,14 @@ The empirical analogue is $(1/n) X^T W X$ — the Hessian from Theorem 5.1.
 $$\widehat{\text{Var}}(\hat{\theta}_n) \approx (X^T \widehat{W} X)^{-1},$$
 
 where $\widehat{W}$ uses plug-in probabilities $\hat{p}_i = \sigma(x_i^T \hat{\theta}_n)$.
-The $j$-th diagonal entry gives $\widehat{SE}(\hat{\theta}_j)$; a 95% CI is
+The square root of the $j$-th diagonal entry gives $\widehat{SE}(\hat{\theta}_j)$; a 95% CI is
 $\hat{\theta}_j \pm 1.96 \cdot \widehat{SE}(\hat{\theta}_j)$.
 
 ### 12.4 Threshold selection
 
 The model outputs $p(x) = P(y = 1 \mid x)$. To produce a class label, pick threshold $\tau$:
 
-- **0-1 loss.** Bayes-optimal threshold is $\tau = 0.5$.
+- **0-1 loss.** If $p(x)$ is the true conditional probability, the Bayes-optimal threshold is $\tau = 0.5$.
 - **Asymmetric costs.** If false positive costs $c_{10}$ and false negative costs $c_{01}$:
 
 $$\tau^\ast = \frac{c_{10}}{c_{10} + c_{01}}.$$
@@ -538,8 +571,8 @@ Logistic regression is usually well-calibrated when the model is correctly speci
 
 Sweep $\tau$ from 1 to 0. At each $\tau$: TPR = $P(\hat{y}=1 \mid y=1)$,
 FPR = $P(\hat{y}=1 \mid y=0)$. The ROC curve plots TPR vs FPR. **AUC** (Area Under the
-Curve) is threshold-free and equals $P(p(x_+) > p(x_-))$ — the probability that the model
-ranks a random positive higher than a random negative.
+Curve) is threshold-free and equals $P(p(x_+) > p(x_-)) + \tfrac{1}{2} P(p(x_+) = p(x_-))$ — the
+probability that the model ranks a random positive above a random negative (ties count half).
 
 ---
 
@@ -585,5 +618,5 @@ ranks a random positive higher than a random negative.
 - **Hastie, T., Tibshirani, R., & Friedman, J. (2009).** *The Elements of Statistical Learning: Data Mining, Inference, and Prediction* (2nd ed.). Springer. Chapter 4.4: *Logistic Regression*.
 - **Bishop, C. M. (2006).** *Pattern Recognition and Machine Learning*. Springer. Chapter 4.3: *Probabilistic Discriminative Models*.
 - **McCullagh, P., & Nelder, J. A. (1989).** *Generalized Linear Models* (2nd ed.). Chapman and Hall/CRC.
-- **Albert, A., & Anderson, J. A. (1984).** On the existence of maximum likelihood estimates in logistic regression models. *Biometrika*, 71(1), 1–10. (Linearly separable weight explosion theorem).
+- **Albert, A., & Anderson, J. A. (1984).** On the existence of maximum likelihood estimates in logistic regression models. *Biometrika*, 71(1), 1–10. (Shows the MLE exists iff the data exhibit neither complete nor quasi-complete separation — the theory behind §5.3.)
 
