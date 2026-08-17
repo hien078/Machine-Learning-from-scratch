@@ -16,7 +16,7 @@ CANONICAL_KERNELSPEC = {
     "language": "python",
     "name": "python3",
 }
-EXCLUDED_DIRECTORIES = {".git", ".ipynb_checkpoints", ".venv"}
+EXCLUDED_DIRECTORIES = {".git", ".ipynb_checkpoints", ".venv", "site"}
 
 
 def _stable_cell_id(relative_path: Path, cell_index: int) -> str:
