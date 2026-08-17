@@ -19,7 +19,7 @@ The modern LLM pipeline consists of pre-training, parameter-efficient fine-tunin
 | 2 | [`first_principles.ipynb`](first_principles.ipynb) | Computation | WHY→BUILD→VERIFY — from-scratch NumPy implementations of BPE Tokenizer, LoRA Linear layer, and DPO loss |
 | 3 | [`exercises.ipynb`](exercises.ipynb) | Practice | Hand calculation of BPE merges, LoRA parameter savings computation, conceptual analysis of DPO vs RLHF |
 
-The reusable, unit-tested reference implementations live in [`src/ml_first_principles/llm_models.py`](../../src/ml_first_principles/llm_models.py) (`BPETokenizer` with `fit`/`encode`/`decode`, `LoRALinear`, `dpo_loss`), covered by `tests/test_phase5_models.py`.
+The reusable, unit-tested reference implementations live in [`src/ml_first_principles/llm_models.py`](https://github.com/hien078/Machine-Learning-from-scratch/blob/master/src/ml_first_principles/llm_models.py) (`BPETokenizer` with `fit`/`encode`/`decode`, `LoRALinear`, `dpo_loss`), covered by `tests/test_phase5_models.py`.
 
 ## Connections
 

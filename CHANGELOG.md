@@ -17,6 +17,11 @@ versions follow [SemVer](https://semver.org/).
 - CI: ruff format check, coverage report, notebook format gate on every push;
   weekly full notebook execution job.
 
+- Documentation site at <https://hien078.github.io/Machine-Learning-from-scratch/>:
+  MkDocs Material + mkdocs-jupyter (renders committed notebook outputs without
+  executing), MathJax via arithmatex (existing ```math fences render unchanged),
+  native mermaid; built `--strict` and deployed to GitHub Pages on every push
+  (`.github/workflows/docs.yml`); `docs` extra in pyproject.
 - Three new synthesis documents covering curriculum phases 3–5:
   `deep_learning_building_blocks.md`, `sequence_models_and_attention.md`,
   `generative_and_self_supervised.md`.
@@ -34,6 +39,10 @@ versions follow [SemVer](https://semver.org/).
 - All 22 topics now carry the Verified maturity rung in INDEX.md.
 
 ### Fixed
+- Dead links in `topics/01_linear_regression/theory.md` to the removed local
+  `foundations/` directory — now point at the sister repo
+  applied-mathematics-foundation. Topic README links into `src/` made absolute
+  so they resolve both on GitHub and on the docs site.
 - Wrong hand-computed expected values in two old exercises notebooks, hidden
   behind commented-out asserts: RNN second-step forward values (topic 15) and
   the 2-D cross-correlation example (topic 14). Both now assert-checked.

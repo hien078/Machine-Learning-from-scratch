@@ -32,7 +32,7 @@ Reinforcement Learning (RL) addresses how agents ought to take actions in an env
 | [deep_rl_advances.ipynb](deep_rl_advances.ipynb) | Deep RL advances including Double DQN and DDPG, with a conceptual outlook on Soft Actor-Critic (SAC). |
 | [exercises.ipynb](exercises.ipynb) | Pen-and-paper calculations, implementation exercises (SARSA, Double DQN), and conceptual analysis. |
 
-The reusable, unit-tested reference implementations live in [`src/ml_first_principles/rl_models.py`](../../src/ml_first_principles/rl_models.py) (`GridWorldEnv`, `QLearningAgent`), covered by `tests/test_phase5_models.py`.
+The reusable, unit-tested reference implementations live in [`src/ml_first_principles/rl_models.py`](https://github.com/hien078/Machine-Learning-from-scratch/blob/master/src/ml_first_principles/rl_models.py) (`GridWorldEnv`, `QLearningAgent`), covered by `tests/test_phase5_models.py`.
 
 ## Connections
 

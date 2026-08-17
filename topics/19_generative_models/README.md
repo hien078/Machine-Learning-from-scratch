@@ -19,7 +19,7 @@ Generative models aim to learn the underlying true data distribution $p_{\text{d
 | [`first_principles.ipynb`](first_principles.ipynb) | 💻 Implementation | NumPy implementation of VAE, GAN, and the diffusion forward process plus an exact-score reverse process on a toy mixture. |
 | [`exercises.ipynb`](exercises.ipynb) | 🛠️ Practice | KL divergence computation, reparameterization gradients, conceptual comparisons. |
 
-The reusable, unit-tested reference implementations live in [`src/ml_first_principles/generative_models.py`](../../src/ml_first_principles/generative_models.py) (`VAE`, `vae_elbo_loss`, `GANGenerator`, `GANDiscriminator`, GAN losses), covered by `tests/test_phase5_models.py`.
+The reusable, unit-tested reference implementations live in [`src/ml_first_principles/generative_models.py`](https://github.com/hien078/Machine-Learning-from-scratch/blob/master/src/ml_first_principles/generative_models.py) (`VAE`, `vae_elbo_loss`, `GANGenerator`, `GANDiscriminator`, GAN losses), covered by `tests/test_phase5_models.py`.
 
 ## Connections
 

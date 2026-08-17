@@ -9,7 +9,7 @@ Per-topic maturity is tracked in [INDEX.md](INDEX.md); this file tracks phases a
 |---|---|---|---|
 | 1 | Infrastructure | Verification foundation | ✅ Done |
 | 2 | Curriculum | Curriculum hardening | 🟡 Content done, CI streak pending |
-| 3 | Publishing | Docs site | ⚪ Planned |
+| 3 | Publishing | Docs site | ✅ Done |
 | 4 | Projects | Applied capstone projects | ⚪ Planned |
 | 5 | Library | v0.2.0 + release | ⚪ Planned |
 
@@ -40,9 +40,9 @@ Make the [NOTEBOOK_STANDARDS.md](NOTEBOOK_STANDARDS.md) §9 *Verified* gate pass
 
 ## Phase 3 — Docs Site
 
-- [ ] MkDocs Material + `mkdocs-jupyter` (`execute: false` — renders committed outputs), arithmatex generic mode + superfences `math` fence so existing ```math fences render unchanged, native mermaid
-- [ ] Nav mirrors INDEX.md; sister repo [applied-mathematics-foundation](https://github.com/hien078/applied-mathematics-foundation) linked as prerequisites
-- [ ] `docs` extra in pyproject; GitHub Pages deploy workflow, `mkdocs build --strict` in CI
+- [x] MkDocs Material + `mkdocs-jupyter` (`execute: false` — renders committed outputs), arithmatex generic mode + superfences `math` fence so existing ```math fences render unchanged, native mermaid
+- [x] Nav mirrors INDEX.md; sister repo [applied-mathematics-foundation](https://github.com/hien078/applied-mathematics-foundation) linked as prerequisites
+- [x] `docs` extra in pyproject; GitHub Pages deploy workflow, `mkdocs build --strict` in CI
 
 **Done when:** site live on Pages; math + mermaid render correctly; theory.md files unmodified (still GitHub-renderable).
 

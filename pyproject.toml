@@ -37,6 +37,10 @@ dev = [
 deep-learning = [
     "torch>=2.0",
 ]
+docs = [
+    "mkdocs-material>=9.5",
+    "mkdocs-jupyter>=0.25",
+]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

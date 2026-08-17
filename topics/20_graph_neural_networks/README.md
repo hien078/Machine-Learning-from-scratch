@@ -19,7 +19,7 @@ Graph Neural Networks (GNNs) extend deep learning methods to graph-structured da
 | [`first_principles.ipynb`](./first_principles.ipynb) | Pure NumPy implementation of Graph Laplacian, GCN, and GAT layers with node-classification training and over-smoothing experiments. |
 | [`exercises.ipynb`](./exercises.ipynb) | Pen-and-paper derivations, implementations, and conceptual exercises. |
 
-The reusable, unit-tested reference implementations live in [`src/ml_first_principles/gnn_models.py`](../../src/ml_first_principles/gnn_models.py) (`GCNLayer`, `GATLayer`), covered by `tests/test_phase5_models.py`.
+The reusable, unit-tested reference implementations live in [`src/ml_first_principles/gnn_models.py`](https://github.com/hien078/Machine-Learning-from-scratch/blob/master/src/ml_first_principles/gnn_models.py) (`GCNLayer`, `GATLayer`), covered by `tests/test_phase5_models.py`.
 
 ## Connections
 

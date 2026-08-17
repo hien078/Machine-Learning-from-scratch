@@ -19,7 +19,7 @@ Self-Supervised Learning (SSL) enables representation learning without human ann
 | [first_principles.ipynb](first_principles.ipynb) | Code | NumPy implementation of InfoNCE, contrastive training loop, embedding visualization, and temperature ablation. |
 | [exercises.ipynb](exercises.ipynb) | Practice | Hand-computing contrastive loss, NT-Xent implementation, and conceptual comparisons between SSL paradigms. |
 
-The reusable, unit-tested reference implementations live in [`src/ml_first_principles/ssl_models.py`](../../src/ml_first_principles/ssl_models.py) (`InfoNCELoss`, `PatchMasking`), covered by `tests/test_phase5_models.py`.
+The reusable, unit-tested reference implementations live in [`src/ml_first_principles/ssl_models.py`](https://github.com/hien078/Machine-Learning-from-scratch/blob/master/src/ml_first_principles/ssl_models.py) (`InfoNCELoss`, `PatchMasking`), covered by `tests/test_phase5_models.py`.
 
 ## Connections
 

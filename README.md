@@ -6,6 +6,9 @@
 [![Mathematics](https://img.shields.io/badge/math-first__principles-crimson.svg?style=flat-square)](https://en.wikipedia.org/wiki/First_principle)
 [![CI](https://github.com/hien078/Machine-Learning-from-scratch/actions/workflows/ci.yml/badge.svg)](https://github.com/hien078/Machine-Learning-from-scratch/actions/workflows/ci.yml)
 [![License](https://img.shields.io/badge/license-MIT-green.svg?style=flat-square)](LICENSE)
+[![Docs](https://img.shields.io/badge/docs-online-blue.svg?style=flat-square&logo=materialformkdocs)](https://hien078.github.io/Machine-Learning-from-scratch/)
+
+> 📖 **Browse this curriculum as a website:** [hien078.github.io/Machine-Learning-from-scratch](https://hien078.github.io/Machine-Learning-from-scratch/) — rendered theory, executed notebooks, and cross-topic maps.
 
 ---
 
