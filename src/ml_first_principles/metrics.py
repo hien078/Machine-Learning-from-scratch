@@ -16,26 +16,37 @@ def _paired_vectors(y_true: ArrayLike, y_pred: ArrayLike) -> tuple[NDArray, NDAr
     return true, pred
 
 
+def _paired_flat(y_true: ArrayLike, y_pred: ArrayLike) -> tuple[NDArray, NDArray]:
+    true = np.asarray(y_true)
+    pred = np.asarray(y_pred)
+    if true.ndim == 0 or true.shape != pred.shape or true.size == 0:
+        raise ValueError("y_true and y_pred must be non-empty arrays of equal shape")
+    return true.ravel(), pred.ravel()
+
+
 def mse(y_true: ArrayLike, y_pred: ArrayLike) -> float:
-    """Return mean squared error."""
-    true, pred = _paired_vectors(y_true, y_pred)
+    """Return mean squared error; N-D inputs of equal shape are flattened."""
+    true, pred = _paired_flat(y_true, y_pred)
     return float(np.mean((true - pred) ** 2))
 
 
 def rmse(y_true: ArrayLike, y_pred: ArrayLike) -> float:
-    """Return root mean squared error."""
+    """Return root mean squared error; N-D inputs of equal shape are flattened."""
     return float(np.sqrt(mse(y_true, y_pred)))
 
 
 def mae(y_true: ArrayLike, y_pred: ArrayLike) -> float:
-    """Return mean absolute error."""
-    true, pred = _paired_vectors(y_true, y_pred)
+    """Return mean absolute error; N-D inputs of equal shape are flattened."""
+    true, pred = _paired_flat(y_true, y_pred)
     return float(np.mean(np.abs(true - pred)))
 
 
 def r2_score(y_true: ArrayLike, y_pred: ArrayLike) -> float:
-    """Return the coefficient of determination with finite constant-target behavior."""
-    true, pred = _paired_vectors(y_true, y_pred)
+    """Return the coefficient of determination with finite constant-target behavior.
+
+    N-D inputs of equal shape are flattened before scoring.
+    """
+    true, pred = _paired_flat(y_true, y_pred)
     residual = float(np.sum((true - pred) ** 2))
     total = float(np.sum((true - np.mean(true)) ** 2))
     if np.isclose(total, 0.0):

@@ -1,4 +1,5 @@
 import numpy as np
+import pytest
 
 from ml_first_principles.data_utils import generate_classification_data, standardize
 from ml_first_principles.distance_models import KMeans, KNeighborsClassifier
@@ -21,6 +22,25 @@ def test_random_forest():
     model.fit(X, y)
     assert model.score(X, y) > 0.8
     assert all(tree.max_features == 1 for tree in model.trees_)
+
+
+def test_decision_tree_string_and_float_max_features_match_int():
+    X, y = generate_classification_data(n_samples=100, n_features=4, n_classes=2, random_state=0)
+    reference = DecisionTreeClassifier(max_depth=3, max_features=2, random_state=7).fit(X, y)
+    # On 4 features, "sqrt", "log2", and 0.5 all resolve to 2 candidate features.
+    for value in ("sqrt", "log2", 0.5):
+        model = DecisionTreeClassifier(max_depth=3, max_features=value, random_state=7).fit(X, y)
+        assert model.tree_ == reference.tree_
+        np.testing.assert_array_equal(model.predict(X), reference.predict(X))
+
+
+def test_decision_tree_rejects_invalid_max_features():
+    for bad in ("bad", 1.5, 0.0, True, 0):
+        with pytest.raises(ValueError, match="max_features"):
+            DecisionTreeClassifier(max_features=bad)
+    X, y = generate_classification_data(n_samples=20, n_features=2, n_classes=2, random_state=0)
+    with pytest.raises(ValueError, match="max_features"):
+        DecisionTreeClassifier(max_features=5).fit(X, y)
 
 
 def test_knn():

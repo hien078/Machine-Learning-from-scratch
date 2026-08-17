@@ -11,19 +11,30 @@ from ml_first_principles.metrics import accuracy
 
 
 class DecisionTreeClassifier:
-    """Binary-split classification tree using weighted Gini impurity."""
+    """Binary-split classification tree using weighted Gini impurity.
+
+    ``max_features`` accepts the same forms as ``RandomForestClassifier``:
+    ``None`` (all features), ``"sqrt"``, ``"log2"``, an integer count in
+    ``[1, n_features]``, or a fraction in ``(0, 1]`` of the feature count.
+    """
 
     def __init__(
         self,
         max_depth: int | None = None,
-        max_features: int | None = None,
+        max_features: int | float | str | None = None,
         min_samples_split: int = 2,
         random_state: int | None = None,
     ) -> None:
         if max_depth is not None and max_depth < 0:
             raise ValueError("max_depth must be non-negative or None")
-        if max_features is not None and max_features < 1:
+        if isinstance(max_features, bool) or (
+            isinstance(max_features, str) and max_features not in {"sqrt", "log2"}
+        ):
+            raise ValueError("max_features must be None, sqrt, log2, a valid count, or a fraction")
+        if isinstance(max_features, int) and max_features < 1:
             raise ValueError("max_features must be positive or None")
+        if isinstance(max_features, float) and not 0.0 < max_features <= 1.0:
+            raise ValueError("max_features must be None, sqrt, log2, a valid count, or a fraction")
         if min_samples_split < 2:
             raise ValueError("min_samples_split must be at least two")
         self.max_depth = max_depth
@@ -42,13 +53,32 @@ class DecisionTreeClassifier:
         probabilities = counts / total
         return float(1.0 - probabilities @ probabilities)
 
+    def _feature_count(self, n_features: int) -> int:
+        value = self.max_features
+        if value is None:
+            return n_features
+        if value == "sqrt":
+            return max(1, int(np.sqrt(n_features)))
+        if value == "log2":
+            return max(1, int(np.log2(n_features)))
+        if isinstance(value, bool):
+            raise ValueError("max_features must be None, sqrt, log2, a valid count, or a fraction")
+        if isinstance(value, int):
+            if 1 <= value <= n_features:
+                return value
+            raise ValueError(f"integer max_features must lie in [1, {n_features}]")
+        if isinstance(value, float) and 0.0 < value <= 1.0:
+            return max(1, int(np.ceil(value * n_features)))
+        raise ValueError("max_features must be None, sqrt, log2, a valid count, or a fraction")
+
     def _candidate_features(self, n_features: int) -> NDArray[np.int64]:
-        count = n_features if self.max_features is None else min(self.max_features, n_features)
+        count = self._feature_count(n_features)
         return np.sort(self._rng.choice(n_features, size=count, replace=False))
 
     def _best_split(
         self, X: NDArray[np.float64], y: NDArray[np.int64]
     ) -> tuple[int | None, float | None]:
+        assert self.classes_ is not None  # set by fit() before splitting begins
         n_samples, n_features = X.shape
         parent_counts = np.bincount(y, minlength=len(self.classes_))
         best_impurity = self._gini_from_counts(parent_counts)
@@ -59,7 +89,7 @@ class DecisionTreeClassifier:
             order = np.argsort(X[:, feature], kind="mergesort")
             values = X[order, feature]
             labels = y[order]
-            left = np.zeros(len(self.classes_), dtype=int)
+            left = np.zeros(len(self.classes_), dtype=np.int64)
             right = parent_counts.copy()
             for split in range(1, n_samples):
                 label = labels[split - 1]
@@ -78,6 +108,7 @@ class DecisionTreeClassifier:
         return best_feature, best_threshold
 
     def _build(self, X: NDArray[np.float64], y: NDArray[np.int64], depth: int) -> dict[str, Any]:
+        assert self.classes_ is not None  # set by fit() before building begins
         counts = np.bincount(y, minlength=len(self.classes_))
         node: dict[str, Any] = {"class_index": int(np.argmax(counts))}
         depth_limit = self.max_depth is not None and depth >= self.max_depth

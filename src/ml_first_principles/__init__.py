@@ -43,7 +43,13 @@ from ml_first_principles.metrics import (
     rmse,
 )
 from ml_first_principles.nn_core import Activation, Dense, Layer, ReLU, Sequential, Sigmoid
-from ml_first_principles.optimizers import adam, coordinate_descent_lasso, gradient_descent, sgd
+from ml_first_principles.optimizers import (
+    Adam,
+    adam,
+    coordinate_descent_lasso,
+    gradient_descent,
+    sgd,
+)
 from ml_first_principles.probabilistic_models import GaussianNB
 from ml_first_principles.rl_models import GridWorldEnv, QLearningAgent
 from ml_first_principles.ssl_models import InfoNCELoss, PatchMasking
@@ -57,11 +63,12 @@ from ml_first_principles.visualization import (
     plot_regularization_path,
 )
 
-__version__ = "0.1.0"  # keep in sync with pyproject.toml [project] version
+__version__ = "0.2.0"  # keep in sync with pyproject.toml [project] version
 
 __all__ = [
     "VAE",
     "Activation",
+    "Adam",
     "BPETokenizer",
     "DecisionTreeClassifier",
     "Dense",

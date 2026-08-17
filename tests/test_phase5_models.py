@@ -97,6 +97,73 @@ def test_qlearning_learns_gridworld_policy():
     assert done and reward == GOAL_REWARD
 
 
+def test_gridworld_dynamics_agrees_with_step_everywhere():
+    env = GridWorldEnv(grid_size=4, goal=(3, 3), trap=(1, 1))
+    p, r = env.dynamics()
+    assert p.shape == (16, 4) and r.shape == (16, 4)
+    assert p.dtype == np.int64
+    for row in range(env.grid_size):
+        for col in range(env.grid_size):
+            s = row * env.grid_size + col
+            if (row, col) in (env.goal, env.trap):
+                # Terminal rows are absorbing with zero reward.
+                assert np.all(p[s] == s) and np.all(r[s] == 0.0)
+                continue
+            for a in range(len(env.actions)):
+                env.reset()
+                env.state = (row, col)
+                next_state, reward, _, _ = env.step(a)
+                assert p[s, a] == next_state
+                assert r[s, a] == reward
+
+
+def test_gridworld_state_action_counts():
+    assert GridWorldEnv(grid_size=4).num_states == 16
+    assert GridWorldEnv(grid_size=5, goal=(4, 4)).num_states == 25
+    assert GridWorldEnv(grid_size=4).num_actions == 4
+
+
+def test_gridworld_max_steps_truncates():
+    env = GridWorldEnv(grid_size=4, max_steps=3)
+    env.reset()
+    # Step up against the wall: never reaches goal/trap, so only the cap ends it.
+    assert env.step(0)[2] is False
+    assert env.step(0)[2] is False
+    state, reward, done, _ = env.step(0)
+    assert (state, reward, done) == (0, STEP_REWARD, True)  # reward unchanged
+    with pytest.raises(RuntimeError):
+        env.step(0)
+    # reset() restores the budget.
+    env.reset()
+    assert env.step(0)[2] is False
+
+    with pytest.raises(ValueError):
+        GridWorldEnv(grid_size=4, max_steps=0)
+
+
+def test_gridworld_default_never_truncates():
+    env = GridWorldEnv(grid_size=4)
+    env.reset()
+    for _ in range(1000):
+        _, _, done, _ = env.step(0)  # Up against the wall forever
+        assert done is False
+
+
+def test_qlearning_greedy_action_matches_argmax_and_is_seeded():
+    agent = QLearningAgent(num_states=2, num_actions=4, random_state=0)
+    agent.q_table[0] = [0.0, 3.0, 1.0, 2.0]
+    assert agent.greedy_action(0) == int(np.argmax(agent.q_table[0]))
+    # Ties: uniform over the argmax set, deterministic under the seed.
+    agent.q_table[1] = [1.0, 1.0, 0.0, 1.0]
+    chosen = [agent.greedy_action(1) for _ in range(100)]
+    assert set(chosen) == {0, 1, 3}
+    replay = QLearningAgent(num_states=2, num_actions=4, random_state=0)
+    replay.q_table[0] = agent.q_table[0].copy()
+    replay.q_table[1] = agent.q_table[1].copy()
+    assert replay.greedy_action(0) == int(np.argmax(replay.q_table[0]))
+    assert [replay.greedy_action(1) for _ in range(100)] == chosen
+
+
 def test_vae_is_reproducible_with_valid_shapes():
     x = np.random.default_rng(0).random((4, 20))
     recon_a, mu_a, logvar_a = VAE(20, 8, 3, random_state=42).forward(x)

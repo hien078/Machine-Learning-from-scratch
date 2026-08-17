@@ -11,7 +11,7 @@ Per-topic maturity is tracked in [INDEX.md](INDEX.md); this file tracks phases a
 | 2 | Curriculum | Curriculum hardening | 🟡 Content done, CI streak pending |
 | 3 | Publishing | Docs site | ✅ Done |
 | 4 | Projects | Applied capstone projects | ✅ Done |
-| 5 | Library | v0.2.0 + release | ⚪ Planned |
+| 5 | Library | v0.2.0 + release | ✅ Done |
 
 ---
 
@@ -60,10 +60,10 @@ Each project follows the subproject layout (`README.md`, `requirements.txt`, `da
 
 ## Phase 5 — Library v0.2.0 + Release
 
-- [ ] mypy in CI (incremental ratchet), coverage floor from Phase 1 measurements (`--cov-fail-under`), expanded ruff rules (`B`, `UP`)
-- [ ] API fixes surfaced by Phase 4 projects
-- [ ] `CONTRIBUTING.md`; CHANGELOG `[0.2.0]`
-- [ ] Bump to 0.2.0, tag `v0.2.0`, GitHub Release with sdist/wheel; optional one-time TestPyPI upload as a learning exercise
+- [x] mypy in CI (incremental ratchet), coverage floor from Phase 1 measurements (`--cov-fail-under`), expanded ruff rules (`B`, `UP`)
+- [x] API fixes surfaced by Phase 4 projects
+- [x] `CONTRIBUTING.md`; CHANGELOG `[0.2.0]`
+- [x] Bump to 0.2.0, tag `v0.2.0`, GitHub Release with sdist/wheel; optional one-time TestPyPI upload as a learning exercise
 
 **Done when:** CI enforces types + coverage floor; release artifacts attached to the tag; CHANGELOG accurate.
 

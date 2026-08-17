@@ -93,7 +93,7 @@ def plot_confusion_matrix(
     if len(tick_labels) != values.shape[0]:
         raise ValueError("labels must match the matrix dimensions")
     figure, axis = plt.subplots(figsize=(6, 5))
-    image = axis.imshow(values, interpolation="nearest", cmap=plt.cm.Blues)
+    image = axis.imshow(values, interpolation="nearest", cmap=plt.get_cmap("Blues"))
     figure.colorbar(image, ax=axis)
     threshold = float(values.max(initial=0)) / 2.0
     for row in range(values.shape[0]):

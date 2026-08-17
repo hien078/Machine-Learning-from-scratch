@@ -190,14 +190,25 @@ class LassoRegression:
 
 
 class LogisticRegression:
-    """Binary logistic regression trained with full-batch gradient descent."""
+    r"""Binary logistic regression trained with full-batch gradient descent.
 
-    def __init__(self, lr: float = 0.1, max_iter: int = 1000, tol: float = 1e-6) -> None:
+    Minimizes the mean negative log-likelihood plus an optional L2 penalty on
+    the slopes, $\frac{1}{n}\sum_i \ell_i + \frac{l2}{2n}\|w\|^2$, where the
+    intercept is never penalized. The default ``l2=0.0`` reproduces the
+    unregularized behavior exactly.
+    """
+
+    def __init__(
+        self, lr: float = 0.1, max_iter: int = 1000, tol: float = 1e-6, l2: float = 0.0
+    ) -> None:
         if lr <= 0.0 or max_iter < 1 or tol <= 0.0:
             raise ValueError("lr, max_iter, and tol must be positive")
+        if l2 < 0.0:
+            raise ValueError("l2 must be non-negative")
         self.lr = lr
         self.max_iter = max_iter
         self.tol = tol
+        self.l2 = l2
         self.coef_: NDArray[np.float64] | None = None
         self.intercept_: float | None = None
         self.classes_: NDArray | None = None
@@ -220,7 +231,10 @@ class LogisticRegression:
         design = np.column_stack((np.ones(features.shape[0]), features))
 
         def gradient(theta: NDArray[np.float64]) -> NDArray[np.float64]:
-            return design.T @ (self._sigmoid(design @ theta) - encoded) / features.shape[0]
+            value = design.T @ (self._sigmoid(design @ theta) - encoded) / features.shape[0]
+            if self.l2 > 0.0:
+                value[1:] += self.l2 * theta[1:] / features.shape[0]
+            return value
 
         theta, _ = gradient_descent(
             gradient, np.zeros(design.shape[1]), lr=self.lr, max_iter=self.max_iter, tol=self.tol

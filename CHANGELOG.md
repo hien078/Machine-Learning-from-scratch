@@ -6,6 +6,37 @@ versions follow [SemVer](https://semver.org/).
 
 ## [Unreleased]
 
+Nothing yet.
+
+## [0.2.0] - 2026-08-17
+
+The ecosystem release: verification infrastructure, hardened curriculum, docs
+site, applied projects, and the library API fixes those projects surfaced.
+
+### Added (library API — all additive, driven by project friction)
+- `optimizers.Adam`: step-based optimizer class (`step(params, grads)` over
+  dicts of tensors) for external training loops; `adam(..., keep_history=False)`
+  to opt out of the full iterate history.
+- `nn_core` layers: `backward(grad, learning_rate=None)` computes and stores
+  gradients without updating parameters (gradient-collection mode).
+- `linear_models.LogisticRegression(l2=...)`: optional L2 penalty (intercept
+  never penalized; default 0.0 identical to previous behavior).
+- `tree_models.DecisionTreeClassifier.max_features` now accepts
+  `"sqrt"`/`"log2"`/float like `RandomForestClassifier` (int > n_features now
+  raises instead of silently clamping, matching the ensemble).
+- `data_utils.standardize(X, mean=..., std=...)`: apply train statistics to a
+  test fold.
+- `metrics.mse`/`rmse`/`mae`/`r2_score` accept same-shape N-D arrays
+  (reconstruction losses no longer need manual `.ravel()`).
+- `rl_models.GridWorldEnv`: `dynamics()` accessor sharing `step()`'s logic,
+  `num_states`/`num_actions` properties, optional `max_steps` truncation;
+  `QLearningAgent.greedy_action(state)` for evaluation.
+- `svm_models.LinearSVC` docstring documents that `C` scales the mean hinge
+  loss (vs sklearn's sum) with the conversion factor.
+- CI: mypy type checking and an enforced coverage floor (85%); ruff rule set
+  expanded with `B` (bugbear) and `UP` (pyupgrade).
+- `CONTRIBUTING.md` (setup, quality gates, release procedure).
+
 ### Added
 - Four applied capstone projects under `projects/` (standard subproject layout,
   <30s seeded training, bundled data only, committed generated reports, fast
@@ -44,21 +75,11 @@ versions follow [SemVer](https://semver.org/).
 - Rewrote the 6 stub synthesis docs (~2K each) into full documents (~8K each).
 - All 22 topics now carry the Verified maturity rung in INDEX.md.
 
-### Library API friction (v0.2.0 backlog, found by the projects)
-- `optimizers.adam`/`sgd` are whole-loop drivers (gradient_fn + x0 + internal
-  history) — no step-based `opt.step(params, grads)` interface for minibatch
-  training; `adam` keeps a mandatory full iterate history.
-- `nn_core` layers fuse the update into `backward(grad, lr)` (no
-  gradients/apply split), assume 2-D inputs, and the library has no attention,
-  LayerNorm, softmax, or embedding layer.
-- `data_utils.standardize` has no fit/transform split for train/test folds;
-  `metrics.mse` rejects 2-D arrays (reconstruction losses need `.ravel()`).
-- `LogisticRegression` lacks a regularization option; `LinearSVC`'s `C` scales
-  mean hinge loss vs sklearn's sum (not objective-equivalent at same `C`);
-  `DecisionTreeClassifier.max_features` (int only) is inconsistent with
-  `RandomForestClassifier` ("sqrt"/"log2"/float).
-- `GridWorldEnv` exposes no dynamics accessor, state indexing helper, or
-  truncation; `QLearningAgent` has no greedy/evaluation mode.
+### Deferred (known gaps, intentionally out of 0.2.0)
+- `nn_core` still assumes 2-D inputs and has no attention, LayerNorm, softmax,
+  or embedding layer (the char-transformer project implements these locally).
+- `optimizers.sgd` remains a whole-loop driver (only Adam gained a step-based
+  class).
 
 ### Fixed
 - Dead links in `topics/01_linear_regression/theory.md` to the removed local

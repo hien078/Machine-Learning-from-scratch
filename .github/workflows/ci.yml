@@ -32,8 +32,11 @@ jobs:
       - name: Notebook format gate
         run: python scripts/normalize_notebooks.py --check
 
-      - name: Run unit tests with coverage report
-        run: pytest --cov=ml_first_principles --cov-report=term
+      - name: Type check (mypy)
+        run: mypy
+
+      - name: Run unit tests with coverage floor
+        run: pytest --cov=ml_first_principles --cov-report=term --cov-fail-under=85
 
       - name: Run project tests
         run: pytest projects -q -p no:cacheprovider

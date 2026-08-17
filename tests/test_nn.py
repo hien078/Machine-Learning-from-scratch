@@ -51,3 +51,31 @@ def test_relu_forward_and_backward():
     np.testing.assert_allclose(layer.forward(x), [[0.0, 0.0, 2.0]])
     upstream = np.array([[1.0, 1.0, 1.0]])
     np.testing.assert_allclose(layer.backward(upstream, learning_rate=0.0), [[0.0, 0.0, 1.0]])
+
+
+def test_dense_backward_without_learning_rate_collects_gradients():
+    X = np.array([[0.2, -0.4], [1.0, 0.5]])
+    upstream = np.array([[0.3, -0.1], [-0.2, 0.4]])
+
+    reference = Dense(2, 2, random_state=7)
+    reference.forward(X)
+    reference.backward(upstream, learning_rate=0.1)
+
+    layer = Dense(2, 2, random_state=7)
+    weights_before = layer.weights.copy()
+    bias_before = layer.bias.copy()
+    layer.forward(X)
+    input_error = layer.backward(upstream)
+
+    # Parameters untouched, gradients identical to the update-mode computation.
+    np.testing.assert_array_equal(layer.weights, weights_before)
+    np.testing.assert_array_equal(layer.bias, bias_before)
+    np.testing.assert_allclose(layer.weights_gradient_, reference.weights_gradient_)
+    np.testing.assert_allclose(layer.bias_gradient_, reference.bias_gradient_)
+    np.testing.assert_allclose(input_error, upstream @ weights_before.T)
+
+
+def test_activation_backward_without_learning_rate():
+    layer = ReLU()
+    layer.forward(np.array([[-1.0, 2.0]]))
+    np.testing.assert_allclose(layer.backward(np.array([[1.0, 1.0]])), [[0.0, 1.0]])

@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "ml-first-principles"
-version = "0.1.0"
+version = "0.2.0"
 description = "Machine Learning from First Principles — from-scratch implementations with mathematical derivations"
 readme = "README.md"
 license = {text = "MIT"}
@@ -33,6 +33,7 @@ dev = [
     "pytest-cov>=4.0",
     "nbclient>=0.8",
     "ruff>=0.1",
+    "mypy>=1.8",
 ]
 deep-learning = [
     "torch>=2.0",
@@ -53,9 +54,23 @@ where = ["src"]
 [tool.setuptools.package-data]
 ml_first_principles = ["py.typed"]
 
+[tool.mypy]
+python_version = "3.12"
+files = ["src"]
+warn_unused_ignores = true
+warn_redundant_casts = true
+no_implicit_optional = true
+check_untyped_defs = true
+# Ratchet plan (ROADMAP Phase 5): enable disallow_untyped_defs, then strict,
+# module by module as the codebase is annotated.
+
+[[tool.mypy.overrides]]
+module = ["sklearn.*", "matplotlib.*", "scipy.*"]
+ignore_missing_imports = true
+
 [tool.ruff]
 line-length = 100
 target-version = "py312"
 
 [tool.ruff.lint]
-select = ["E", "F", "I", "W"]
+select = ["E", "F", "I", "W", "B", "UP"]

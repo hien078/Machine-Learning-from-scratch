@@ -73,15 +73,50 @@ def normalize(X: ArrayLike) -> NDArray[np.float64]:
 
 def standardize(
     X: ArrayLike,
+    mean: ArrayLike | None = None,
+    std: ArrayLike | None = None,
 ) -> tuple[NDArray[np.float64], NDArray[np.float64], NDArray[np.float64]]:
-    """Center features and scale them to unit population standard deviation."""
+    """Center features and scale them to unit population standard deviation.
+
+    Args:
+        X: Non-empty one- or two-dimensional array of samples.
+        mean: Optional precomputed mean (per feature for 2-D ``X``). Provide
+            together with ``std`` to apply training statistics to another
+            fold instead of computing them from ``X``.
+        std: Optional precomputed standard deviation matching ``mean``.
+            Entries equal to zero are treated as one, exactly as in the
+            computed case.
+
+    Returns:
+        ``(X_std, mean, std)`` where ``std`` has zero entries replaced by one.
+
+    Raises:
+        ValueError: If ``X`` is empty or not 1-D/2-D, if only one of ``mean``
+            and ``std`` is provided, or if provided statistics are non-finite,
+            negative (``std``), or shaped incompatibly with ``X``.
+    """
     values = np.asarray(X, dtype=float)
     if values.ndim not in (1, 2) or values.size == 0:
         raise ValueError("X must be a non-empty one- or two-dimensional array")
-    mean = np.mean(values, axis=0)
-    std = np.std(values, axis=0)
-    safe_std = np.where(std == 0.0, 1.0, std)
-    return (values - mean) / safe_std, np.asarray(mean), np.asarray(safe_std)
+    if (mean is None) != (std is None):
+        raise ValueError("mean and std must be provided together or both omitted")
+    if mean is None:
+        mean_value = np.mean(values, axis=0)
+        std_value = np.std(values, axis=0)
+    else:
+        mean_value = np.asarray(mean, dtype=float)
+        std_value = np.asarray(std, dtype=float)
+        expected_shape = values.shape[1:]
+        if mean_value.shape != expected_shape or std_value.shape != expected_shape:
+            raise ValueError("mean and std must match the feature shape of X")
+        if (
+            np.any(~np.isfinite(mean_value))
+            or np.any(~np.isfinite(std_value))
+            or np.any(std_value < 0.0)
+        ):
+            raise ValueError("mean and std must be finite and std must be non-negative")
+    safe_std = np.where(std_value == 0.0, 1.0, std_value)
+    return (values - mean_value) / safe_std, np.asarray(mean_value), np.asarray(safe_std)
 
 
 def generate_regression_data(

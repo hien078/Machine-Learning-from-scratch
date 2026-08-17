@@ -57,7 +57,7 @@ class BPETokenizer:
         self.merges = []
         corpus = [tuple(list(word) + [END_OF_WORD]) for word in words]
 
-        current_vocab = set()
+        current_vocab: set[str] = set()
         for word in corpus:
             current_vocab.update(word)
 

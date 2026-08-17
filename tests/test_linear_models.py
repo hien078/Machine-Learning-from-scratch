@@ -118,6 +118,29 @@ def test_logistic_regression_preserves_original_labels():
     np.testing.assert_array_equal(model.predict(X), y)
 
 
+def test_logistic_regression_l2_zero_matches_unregularized():
+    X, y = generate_classification_data(n_samples=100, n_features=3, n_classes=2, random_state=0)
+    X, _, _ = standardize(X)
+    base = LogisticRegression(lr=0.1, max_iter=500).fit(X, y)
+    explicit = LogisticRegression(lr=0.1, max_iter=500, l2=0.0).fit(X, y)
+    np.testing.assert_array_equal(base.coef_, explicit.coef_)
+    assert base.intercept_ == explicit.intercept_
+
+
+def test_logistic_regression_l2_shrinks_weights_and_still_fits():
+    X, y = generate_classification_data(n_samples=200, n_features=2, n_classes=2, random_state=42)
+    X, _, _ = standardize(X)
+    plain = LogisticRegression(lr=0.1, max_iter=1000).fit(X, y)
+    penalized = LogisticRegression(lr=0.1, max_iter=1000, l2=100.0).fit(X, y)
+    assert np.linalg.norm(penalized.coef_) < np.linalg.norm(plain.coef_)
+    assert penalized.score(X, y) > 0.8
+
+
+def test_logistic_regression_rejects_negative_l2():
+    with pytest.raises(ValueError, match="l2"):
+        LogisticRegression(l2=-0.1)
+
+
 def test_models_validate_solver_and_fitted_state():
     with pytest.raises(ValueError, match="solver"):
         RidgeRegression(solver="bad")

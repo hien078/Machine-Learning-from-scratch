@@ -92,3 +92,25 @@ def test_metrics_reject_incompatible_shapes():
 
     with pytest.raises(ValueError, match="equal shape"):
         mse(np.array([1.0]), np.array([1.0, 2.0]))
+
+
+def test_regression_metrics_accept_matching_nd_arrays():
+    rng = np.random.default_rng(1)
+    y_true = rng.standard_normal((4, 5))
+    y_pred = rng.standard_normal((4, 5))
+
+    assert np.isclose(mse(y_true, y_pred), mse(y_true.ravel(), y_pred.ravel()))
+    assert np.isclose(rmse(y_true, y_pred), rmse(y_true.ravel(), y_pred.ravel()))
+    assert np.isclose(mae(y_true, y_pred), mae(y_true.ravel(), y_pred.ravel()))
+    assert np.isclose(r2_score(y_true, y_pred), r2_score(y_true.ravel(), y_pred.ravel()))
+
+
+def test_regression_metrics_reject_mismatched_nd_shapes():
+    import pytest
+
+    with pytest.raises(ValueError, match="equal shape"):
+        mse(np.zeros((2, 3)), np.zeros((3, 2)))
+    with pytest.raises(ValueError, match="equal shape"):
+        mae(np.zeros((2, 3)), np.zeros(6))
+    with pytest.raises(ValueError, match="equal shape"):
+        r2_score(np.zeros(0), np.zeros(0))

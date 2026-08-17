@@ -3,9 +3,16 @@ Unit tests for optimizers (GD, SGD, Adam).
 """
 
 import numpy as np
+import pytest
 from sklearn.linear_model import Lasso
 
-from ml_first_principles.optimizers import adam, coordinate_descent_lasso, gradient_descent, sgd
+from ml_first_principles.optimizers import (
+    Adam,
+    adam,
+    coordinate_descent_lasso,
+    gradient_descent,
+    sgd,
+)
 
 
 def test_gradient_descent():
@@ -61,3 +68,80 @@ def test_coordinate_descent_lasso_matches_sklearn():
     weights = coordinate_descent_lasso(X, y, lam=lam, max_iter=2000, tol=1e-8)
     reference = Lasso(alpha=lam, fit_intercept=False, max_iter=50_000, tol=1e-10).fit(X, y)
     np.testing.assert_allclose(weights, reference.coef_, atol=1e-4)
+
+
+def test_adam_keep_history_false_returns_only_final_iterate():
+    def grad_fn(x):
+        return 2 * x
+
+    x0 = np.array([5.0, -3.0])
+    x_full, history_full = adam(grad_fn, x0, lr=0.1, max_iter=500)
+    x_final, history = adam(grad_fn, x0, lr=0.1, max_iter=500, keep_history=False)
+
+    np.testing.assert_array_equal(x_final, x_full)
+    assert len(history_full) > 1
+    assert len(history) == 1
+    np.testing.assert_array_equal(history[0], x_final)
+
+
+def test_adam_class_step_matches_char_transformer_reference():
+    # Reference math mirrors the local Adam in projects/char_transformer_tiny/src/ct_model.py:
+    # per-tensor first/second moments, one shared timestep, bias correction, in-place update.
+    def grads_of(params):
+        return {name: 2.0 * (p - 3.0) for name, p in params.items()}
+
+    rng = np.random.default_rng(0)
+    init = {"w": rng.standard_normal(4), "b": rng.standard_normal(2)}
+
+    params = {name: value.copy() for name, value in init.items()}
+    optimizer = Adam(learning_rate=0.05)
+    for _ in range(200):
+        optimizer.step(params, grads_of(params))
+
+    reference = {name: value.copy() for name, value in init.items()}
+    m = {name: np.zeros_like(value) for name, value in init.items()}
+    v = {name: np.zeros_like(value) for name, value in init.items()}
+    for t in range(1, 201):
+        grads = grads_of(reference)
+        for name, p in reference.items():
+            m[name] = 0.9 * m[name] + 0.1 * grads[name]
+            v[name] = 0.999 * v[name] + 0.001 * grads[name] ** 2
+            m_hat = m[name] / (1.0 - 0.9**t)
+            v_hat = v[name] / (1.0 - 0.999**t)
+            p -= 0.05 * m_hat / (np.sqrt(v_hat) + 1e-8)
+
+    for name in init:
+        np.testing.assert_allclose(params[name], reference[name])
+
+
+def test_adam_class_converges_and_updates_in_place():
+    params = {"w": np.array([5.0, -3.0])}
+    original = params["w"]
+    optimizer = Adam(learning_rate=0.1)
+    for _ in range(500):
+        optimizer.step(params, {"w": 2.0 * params["w"]})
+
+    assert params["w"] is original
+    assert optimizer.timestep == 500
+    np.testing.assert_allclose(params["w"], [0.0, 0.0], atol=1e-2)
+
+
+@pytest.mark.parametrize(
+    "kwargs",
+    [{"learning_rate": 0.0}, {"epsilon": 0.0}, {"beta1": 1.0}, {"beta2": -0.1}],
+)
+def test_adam_class_rejects_invalid_hyperparameters(kwargs):
+    with pytest.raises(ValueError):
+        Adam(**kwargs)
+
+
+def test_adam_class_step_rejects_invalid_inputs():
+    optimizer = Adam()
+    params = {"w": np.zeros(3)}
+    with pytest.raises(ValueError, match="missing"):
+        optimizer.step(params, {})
+    with pytest.raises(ValueError, match="shape"):
+        optimizer.step(params, {"w": np.zeros(4)})
+    optimizer.step(params, {"w": np.ones(3)})
+    with pytest.raises(ValueError, match="keys"):
+        optimizer.step({"v": np.zeros(3)}, {"v": np.ones(3)})

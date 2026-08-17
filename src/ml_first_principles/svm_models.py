@@ -10,7 +10,15 @@ from ml_first_principles.optimizers import sgd
 
 
 class LinearSVC:
-    r"""Linear soft-margin SVM minimizing $\frac12\|w\|^2+C\,\mathrm{mean}(\text{hinge})$."""
+    r"""Linear soft-margin SVM minimizing $\frac12\|w\|^2+C\,\mathrm{mean}(\text{hinge})$.
+
+    Note:
+        Here ``C`` scales the MEAN hinge loss, whereas sklearn's ``LinearSVC``
+        scales the SUM, so runs with the same ``C`` do not optimize equivalent
+        objectives. To match sklearn's objective at ``C_sklearn``, use
+        ``C = C_sklearn * n_samples`` here (and vice versa, divide by
+        ``n_samples`` to convert this model's ``C`` to sklearn's).
+    """
 
     def __init__(
         self,

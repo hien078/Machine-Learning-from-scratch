@@ -21,9 +21,16 @@ class Layer:
         raise NotImplementedError
 
     def backward(
-        self, output_error: NDArray[np.float64], learning_rate: float
+        self, output_error: NDArray[np.float64], learning_rate: float | None = None
     ) -> NDArray[np.float64]:
-        """Backpropagate an output gradient and update trainable parameters."""
+        """Backpropagate an output gradient and return the input gradient.
+
+        Args:
+            output_error: Upstream gradient with the layer's output shape.
+            learning_rate: Step size for the in-place parameter update. ``None``
+                (the default) computes and stores gradients without updating
+                any trainable parameters.
+        """
         raise NotImplementedError
 
 
@@ -49,21 +56,29 @@ class Dense(Layer):
         return values @ self.weights + self.bias
 
     def backward(
-        self, output_error: NDArray[np.float64], learning_rate: float
+        self, output_error: NDArray[np.float64], learning_rate: float | None = None
     ) -> NDArray[np.float64]:
-        """Return the input gradient after one gradient-descent update."""
+        """Return the input gradient, optionally applying a gradient-descent update.
+
+        Args:
+            output_error: Upstream gradient of shape ``(n_samples, output_size)``.
+            learning_rate: Step size for the in-place parameter update. ``None``
+                (the default) stores ``weights_gradient_`` and ``bias_gradient_``
+                without modifying ``weights`` or ``bias``.
+        """
         if self.input_ is None:
             raise RuntimeError("forward must be called before backward")
         gradient = np.asarray(output_error, dtype=float)
         if gradient.ndim != 2 or gradient.shape != (self.input_.shape[0], self.weights.shape[1]):
             raise ValueError("output_error has an incompatible shape")
-        if learning_rate < 0.0:
+        if learning_rate is not None and learning_rate < 0.0:
             raise ValueError("learning_rate cannot be negative")
         input_error = gradient @ self.weights.T
         self.weights_gradient_ = self.input_.T @ gradient
         self.bias_gradient_ = gradient.sum(axis=0, keepdims=True)
-        self.weights -= learning_rate * self.weights_gradient_
-        self.bias -= learning_rate * self.bias_gradient_
+        if learning_rate is not None:
+            self.weights -= learning_rate * self.weights_gradient_
+            self.bias -= learning_rate * self.bias_gradient_
         return input_error
 
 
@@ -85,9 +100,9 @@ class Activation(Layer):
         return self.activation(self.input_)
 
     def backward(
-        self, output_error: NDArray[np.float64], learning_rate: float
+        self, output_error: NDArray[np.float64], learning_rate: float | None = None
     ) -> NDArray[np.float64]:
-        """Multiply by the activation derivative."""
+        """Multiply by the activation derivative; ``learning_rate`` is unused."""
         del learning_rate
         if self.input_ is None:
             raise RuntimeError("forward must be called before backward")

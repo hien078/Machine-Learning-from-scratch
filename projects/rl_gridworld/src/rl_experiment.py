@@ -333,7 +333,7 @@ def plot_value_heatmaps(
     vmax = max(g.max() for g, _ in grids)
 
     fig, axes = plt.subplots(1, 2, figsize=(8.6, 4.0), facecolor=SURFACE)
-    for ax, (grid, title) in zip(axes, grids):
+    for ax, (grid, title) in zip(axes, grids, strict=True):
         _style_axes(ax)
         im = ax.imshow(grid, cmap=cmap, vmin=vmin, vmax=vmax)
         ax.set_title(title, color=INK)
@@ -432,7 +432,9 @@ def write_report(
         "Value iteration        Q-learning",
         *(
             f"{vi_row:<22} {ql_row}"
-            for vi_row, ql_row in zip(vi_policy_text.splitlines(), ql_policy_text.splitlines())
+            for vi_row, ql_row in zip(
+                vi_policy_text.splitlines(), ql_policy_text.splitlines(), strict=True
+            )
         ),
         "```",
         "",

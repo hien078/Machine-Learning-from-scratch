@@ -22,6 +22,41 @@ def test_classification_generator_preserves_requested_sample_count():
     assert sorted(np.bincount(y)) == [25, 25, 25, 26]
 
 
+def test_standardize_applies_provided_train_statistics():
+    rng = np.random.default_rng(3)
+    X_train = rng.standard_normal((20, 3)) * 4.0 + 1.0
+    X_test = rng.standard_normal((5, 3))
+    X_train_std, mean, std = standardize(X_train)
+
+    X_test_std, mean_out, std_out = standardize(X_test, mean=mean, std=std)
+    np.testing.assert_allclose(X_test_std, (X_test - mean) / std)
+    np.testing.assert_array_equal(mean_out, mean)
+    np.testing.assert_array_equal(std_out, std)
+
+    # Reusing the returned statistics reproduces the original standardization.
+    repeat, _, _ = standardize(X_train, mean=mean, std=std)
+    np.testing.assert_allclose(repeat, X_train_std)
+
+
+def test_standardize_guards_zero_provided_std():
+    X = np.array([[2.0, 4.0], [4.0, 8.0]])
+    scaled, _, safe = standardize(X, mean=np.array([1.0, 2.0]), std=np.array([2.0, 0.0]))
+    np.testing.assert_allclose(scaled, [[0.5, 2.0], [1.5, 6.0]])
+    np.testing.assert_array_equal(safe, [2.0, 1.0])
+
+
+def test_standardize_validates_provided_statistics():
+    X = np.ones((4, 2))
+    with pytest.raises(ValueError, match="together"):
+        standardize(X, mean=np.zeros(2))
+    with pytest.raises(ValueError, match="together"):
+        standardize(X, std=np.ones(2))
+    with pytest.raises(ValueError, match="shape"):
+        standardize(X, mean=np.zeros(3), std=np.ones(3))
+    with pytest.raises(ValueError, match="finite"):
+        standardize(X, mean=np.zeros(2), std=np.array([1.0, -1.0]))
+
+
 def test_standardize_supports_one_dimensional_input():
     scaled, mean, std = standardize(np.array([1.0, 2.0, 3.0]))
     assert np.isclose(mean, 2.0)
