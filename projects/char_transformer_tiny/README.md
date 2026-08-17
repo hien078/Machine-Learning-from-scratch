@@ -1,9 +1,13 @@
 # char_transformer_tiny
 
 Capstone integration project: a character-level mini-transformer language model in **pure
-NumPy**, trained end-to-end on an embedded public-domain corpus (Shakespeare sonnets). The
-repo library (`ml_first_principles`) has no attention layer, so the transformer block —
-forward **and manual backward** — lives in this project's `src/`.
+NumPy**, trained end-to-end on an embedded public-domain corpus (Shakespeare sonnets).
+Since library v0.3.0 the layer math — forward **and manual backward** — lives in
+`ml_first_principles.transformer_core` (`Embedding`, `CausalSelfAttention`,
+`TransformerBlock`, `softmax_cross_entropy`); this project assembles those layers and
+keeps only the project-specific glue in `src/ct_model.py`: weight tying, corpus handling,
+batching, and generation. (The original hand-derived implementation was written here
+first, then promoted into the library.)
 
 ## Architecture
 
@@ -31,8 +35,20 @@ logits = x2 Wteᵀ                                     (B, T, V)  tied projectio
 loss   = softmax cross-entropy vs next character
 ```
 
-No LayerNorm — a deliberate simplification that keeps the manual backward pass compact;
-at this scale the residual stream trains fine without it.
+No LayerNorm — a deliberate simplification that keeps the backward pass compact; at this
+scale the residual stream trains fine without it. The library `TransformerBlock` matches
+this choice (a standalone `LayerNorm` layer exists in `transformer_core` for models that
+want it).
+
+Layer-to-library mapping:
+
+| Piece | Implementation |
+|---|---|
+| Token + positional embeddings | `transformer_core.Embedding` (positions via a broadcast `(1, T)` id lookup) |
+| Attention + MLP with residuals | `transformer_core.TransformerBlock` (contains `CausalSelfAttention`) |
+| Loss | `transformer_core.softmax_cross_entropy` |
+| Tied output projection `x2 Wteᵀ` | **local** in `CharTransformer` — the library `Embedding` cannot share its weight with a projection, so the tied matmul and its extra gradient term stay in the project |
+| Optimizer | `optimizers.Adam` (step-based, dict of named tensors) |
 
 ## Math summary
 
@@ -48,13 +64,15 @@ Cross-entropy over $N = BT$ positions with targets $y$:
 $$\mathcal{L} = -\frac{1}{N}\sum_{n} \log p_{n,y_n}, \qquad
 \frac{\partial \mathcal{L}}{\partial z_n} = \frac{1}{N}(p_n - e_{y_n}).$$
 
-Key hand-derived backward steps (implemented in `src/ct_model.py::loss_and_grads`):
+Key hand-derived backward steps (now implemented in
+`ml_first_principles/transformer_core.py`, except the tied-projection term which lives in
+`src/ct_model.py::CharTransformer.loss_and_grads`):
 
 - Softmax rows: $dS = A \odot (dA - \langle dA, A\rangle)$ — masked entries have $A=0$,
   so their gradients vanish automatically.
 - Tied embedding $W_{te}$ accumulates **two** gradient contributions: the output
-  projection ($\sum_{b,t} d\ell_{bt}\, x2_{bt}^\top$) and the embedding scatter
-  (`np.add.at` over token ids).
+  projection ($\sum_{b,t} d\ell_{bt}\, x2_{bt}^\top$, local) and the embedding scatter
+  (`np.add.at` over token ids, library `Embedding.backward`).
 - Residuals split gradients additively: $dx_1 = dx_2 + W_1$-path, $dx_0 = dx_1 + QKV$-paths.
 
 Correctness gate: a central finite-difference gradient check of **every entry of every
@@ -89,18 +107,21 @@ and apostrophes — exactly what a 23 k-parameter character model should give.
 
 ## Library reuse and friction
 
+The v0.2.0 friction reports from this project (no attention layer, no `LayerNorm`, no
+step-based optimizer) drove the v0.3.0 `transformer_core` module and the step-based
+`optimizers.Adam`; the project now consumes both. Remaining friction:
+
 | Piece | Outcome |
 |---|---|
-| `optimizers.adam` | **Not reusable**: it drives its own full optimization loop over one flat vector (`gradient_fn`, `max_iter`, `tol`-based stopping, per-iterate history copies) — incompatible with minibatch training over a dict of parameter tensors. A local per-tensor `Adam` class (same update rule, bias-corrected) lives in `ct_model.py`. |
-| `nn_core` (Dense/ReLU/Sequential) | Not used: layers assume 2-D inputs and own their weights, which conflicts with the tied-embedding and (B, T, D) batched-sequence gradient flow. |
+| `transformer_core` (Embedding / CausalSelfAttention / TransformerBlock / softmax_cross_entropy) | **Used** — all layer forward/backward math comes from the library; the project only assembles and ties. |
+| `optimizers.Adam` (step-based) | **Used** — `optimizer.step(model.params, grads)` over the flat prefixed dict. |
+| Weight tying | **Still local** (v0.3.x friction): the library `Embedding` cannot share its weight matrix with an output projection, so `logits = x2 Wteᵀ` and the extra $W_{te}$ gradient term stay in `CharTransformer`. |
 | `llm_models.BPETokenizer` | Not needed: the model is character-level by design (vocab = corpus charset). |
-
-Missing library pieces worth adding later: an attention layer with backward, a
-`LayerNorm`, and a step-based optimizer interface (`opt.step(params, grads)`).
 
 ## Future work
 
 - `--full` mode: train on the complete Shakespeare corpus. Requires downloading external
   data, which is **out of scope** and needs explicit approval per repo policy
   (see [data/README.md](data/README.md)). Not implemented.
-- Multi-head attention, LayerNorm, and stacking blocks.
+- Multi-head attention, LayerNorm in the block, and stacking blocks.
+- Library support for weight tying (would remove the last local gradient term).

@@ -69,6 +69,16 @@ Each project follows the subproject layout (`README.md`, `requirements.txt`, `da
 
 ---
 
+## Post-Roadmap Releases
+
+- **v0.3.0** (2026-08): `transformer_core` module (Embedding, LayerNorm,
+  CausalSelfAttention, TransformerBlock, softmax_cross_entropy) promoted from
+  the char-transformer capstone; step-based `SGD`; project refactored onto the
+  library with a bit-identical training report. Remaining known gaps tracked in
+  CHANGELOG "Deferred".
+
+---
+
 ## Decisions Log
 
 - **Infra before content** (2026-08): the Verified gate was undefined while the standards demanded cleared outputs and the tree deliberately kept them; the expensive full re-execution sweep should happen exactly once, after the policy is settled.

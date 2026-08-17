@@ -7,6 +7,7 @@ import pytest
 from sklearn.linear_model import Lasso
 
 from ml_first_principles.optimizers import (
+    SGD,
     Adam,
     adam,
     coordinate_descent_lasso,
@@ -145,3 +146,118 @@ def test_adam_class_step_rejects_invalid_inputs():
     optimizer.step(params, {"w": np.ones(3)})
     with pytest.raises(ValueError, match="keys"):
         optimizer.step({"v": np.zeros(3)}, {"v": np.ones(3)})
+
+
+def test_sgd_class_no_momentum_matches_plain_gradient_step():
+    # With momentum=0 each step must be exactly param - lr * grad.
+    rng = np.random.default_rng(1)
+    init = {"w": rng.standard_normal(4), "b": rng.standard_normal(2)}
+    lr = 0.05
+
+    def grads_of(params):
+        return {name: 2.0 * (p - 3.0) for name, p in params.items()}
+
+    params = {name: value.copy() for name, value in init.items()}
+    optimizer = SGD(learning_rate=lr, momentum=0.0)
+    for _ in range(5):
+        optimizer.step(params, grads_of(params))
+
+    reference = {name: value.copy() for name, value in init.items()}
+    for _ in range(5):
+        grads = grads_of(reference)
+        for name in reference:
+            reference[name] = reference[name] - lr * grads[name]
+
+    for name in init:
+        np.testing.assert_allclose(params[name], reference[name], atol=1e-12)
+
+
+def test_sgd_class_momentum_matches_hand_unrolled_three_steps():
+    # Hand-unrolled classical momentum: v = mu * v - lr * g; p = p + v.
+    lr, mu = 0.1, 0.9
+    p0 = np.array([1.0, -2.0])
+
+    params = {"w": p0.copy()}
+    optimizer = SGD(learning_rate=lr, momentum=mu)
+    for _ in range(3):
+        optimizer.step(params, {"w": 2.0 * (params["w"] - 3.0)})
+
+    v1 = -lr * 2.0 * (p0 - 3.0)
+    p1 = p0 + v1
+    v2 = mu * v1 - lr * 2.0 * (p1 - 3.0)
+    p2 = p1 + v2
+    v3 = mu * v2 - lr * 2.0 * (p2 - 3.0)
+    p3 = p2 + v3
+
+    np.testing.assert_allclose(params["w"], p3, atol=1e-12)
+
+
+def test_sgd_class_converges_on_adam_reference_quadratic():
+    # Same quadratic as the Adam class equivalence test: f(p) = sum((p - 3)^2).
+    def grads_of(params):
+        return {name: 2.0 * (p - 3.0) for name, p in params.items()}
+
+    def loss_of(params):
+        return sum(float(np.sum((p - 3.0) ** 2)) for p in params.values())
+
+    rng = np.random.default_rng(0)
+    params = {"w": rng.standard_normal(4), "b": rng.standard_normal(2)}
+    original = params["w"]
+    optimizer = SGD(learning_rate=0.1, momentum=0.0)
+    losses = [loss_of(params)]
+    for _ in range(200):
+        optimizer.step(params, grads_of(params))
+        losses.append(loss_of(params))
+
+    assert params["w"] is original
+    # Strictly monotone until the loss bottoms out at floating-point resolution.
+    assert all(
+        later < earlier
+        for earlier, later in zip(losses, losses[1:], strict=False)
+        if earlier > 1e-15
+    )
+    for p in params.values():
+        np.testing.assert_allclose(p, np.full_like(p, 3.0), atol=1e-6)
+
+    momentum_params = {"w": rng.standard_normal(4)}
+    momentum_optimizer = SGD(learning_rate=0.05, momentum=0.9)
+    for _ in range(500):
+        momentum_optimizer.step(momentum_params, grads_of(momentum_params))
+    np.testing.assert_allclose(momentum_params["w"], np.full(4, 3.0), atol=1e-6)
+
+
+@pytest.mark.parametrize(
+    "kwargs",
+    [{"learning_rate": 0.0}, {"learning_rate": -0.1}, {"momentum": 1.0}, {"momentum": -0.1}],
+)
+def test_sgd_class_rejects_invalid_hyperparameters(kwargs):
+    with pytest.raises(ValueError):
+        SGD(**kwargs)
+
+
+def test_sgd_class_step_rejects_invalid_inputs():
+    # Same exception types and trigger conditions as the Adam class.
+    optimizer = SGD()
+    params = {"w": np.zeros(3)}
+    with pytest.raises(ValueError, match="missing"):
+        optimizer.step(params, {})
+    with pytest.raises(ValueError, match="shape"):
+        optimizer.step(params, {"w": np.zeros(4)})
+    with pytest.raises(ValueError, match="finite"):
+        optimizer.step(params, {"w": np.array([1.0, np.inf, 0.0])})
+    optimizer.step(params, {"w": np.ones(3)})
+    with pytest.raises(ValueError, match="keys"):
+        optimizer.step({"v": np.zeros(3)}, {"v": np.ones(3)})
+
+
+def test_sgd_class_is_deterministic():
+    def run():
+        params = {"w": np.array([1.0, -2.0]), "b": np.array([0.5])}
+        optimizer = SGD(learning_rate=0.1, momentum=0.9)
+        for _ in range(50):
+            optimizer.step(params, {name: 2.0 * (p - 3.0) for name, p in params.items()})
+        return params
+
+    first, second = run(), run()
+    for name in first:
+        np.testing.assert_array_equal(first[name], second[name])

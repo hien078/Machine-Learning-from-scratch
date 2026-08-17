@@ -14,7 +14,9 @@ import time
 from pathlib import Path
 
 import numpy as np
-from ct_model import Adam, CTConfig, generate, init_params, loss_and_grads
+from ct_model import CharTransformer, CTConfig, generate
+
+from ml_first_principles.optimizers import Adam
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 CORPUS_PATH = PROJECT_ROOT / "data" / "corpus.txt"
@@ -58,10 +60,10 @@ def main() -> None:
     rng = np.random.default_rng(SEED)
     data, stoi, itos = load_corpus()
     config = CTConfig(vocab_size=len(stoi), block_size=BLOCK_SIZE, d_model=D_MODEL, d_ff=D_FF)
-    params = init_params(config, rng)
-    optimizer = Adam(params, lr=LEARNING_RATE)
+    model = CharTransformer(config, rng)
+    optimizer = Adam(learning_rate=LEARNING_RATE)
 
-    n_params = sum(p.size for p in params.values())
+    n_params = sum(p.size for p in model.params.values())
     baseline = float(np.log(config.vocab_size))
     print(f"corpus: {len(data)} chars, vocab {config.vocab_size}, params {n_params}")
     print(f"uniform baseline loss ln(vocab) = {baseline:.4f}")
@@ -70,8 +72,8 @@ def main() -> None:
     start = time.perf_counter()
     for step in range(1, N_STEPS + 1):
         x, y = get_batch(data, rng, BATCH_SIZE, BLOCK_SIZE)
-        loss, grads = loss_and_grads(params, x, y, config)
-        optimizer.step(params, grads)
+        loss, grads = model.loss_and_grads(x, y)
+        optimizer.step(model.params, grads)
         if step == 1 or step % LOG_EVERY == 0:
             loss_trace.append((step, loss))
             print(f"step {step:4d}  loss {loss:.4f}")
@@ -82,14 +84,14 @@ def main() -> None:
     prompt_ids = [stoi[ch] for ch in prompt]
     gen_rng = np.random.default_rng(SEED)
     samples = [
-        ("greedy", decode(generate(params, config, prompt_ids, 120, gen_rng), itos)),
+        ("greedy", decode(generate(model, prompt_ids, 120, gen_rng), itos)),
         (
             "temperature 0.8",
-            decode(generate(params, config, prompt_ids, 120, gen_rng, temperature=0.8), itos),
+            decode(generate(model, prompt_ids, 120, gen_rng, temperature=0.8), itos),
         ),
         (
             "temperature 1.0",
-            decode(generate(params, config, prompt_ids, 120, gen_rng, temperature=1.0), itos),
+            decode(generate(model, prompt_ids, 120, gen_rng, temperature=1.0), itos),
         ),
     ]
     for name, text in samples:
@@ -122,7 +124,7 @@ def write_report(
         f"| d_ff | {config.d_ff} |",
         f"| batch_size | {BATCH_SIZE} |",
         f"| steps | {N_STEPS} |",
-        f"| optimizer | Adam (local), lr={LEARNING_RATE} |",
+        f"| optimizer | Adam (`ml_first_principles.optimizers`), lr={LEARNING_RATE} |",
         f"| parameters | {n_params} |",
         f"| uniform baseline $\\ln V$ | {baseline:.4f} |",
         f"| wall time | {wall_time:.1f} s |",

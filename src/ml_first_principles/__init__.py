@@ -44,6 +44,7 @@ from ml_first_principles.metrics import (
 )
 from ml_first_principles.nn_core import Activation, Dense, Layer, ReLU, Sequential, Sigmoid
 from ml_first_principles.optimizers import (
+    SGD,
     Adam,
     adam,
     coordinate_descent_lasso,
@@ -54,6 +55,13 @@ from ml_first_principles.probabilistic_models import GaussianNB
 from ml_first_principles.rl_models import GridWorldEnv, QLearningAgent
 from ml_first_principles.ssl_models import InfoNCELoss, PatchMasking
 from ml_first_principles.svm_models import LinearSVC
+from ml_first_principles.transformer_core import (
+    CausalSelfAttention,
+    Embedding,
+    LayerNorm,
+    TransformerBlock,
+    softmax_cross_entropy,
+)
 from ml_first_principles.tree_models import DecisionTreeClassifier
 from ml_first_principles.visualization import (
     plot_confusion_matrix,
@@ -63,15 +71,17 @@ from ml_first_principles.visualization import (
     plot_regularization_path,
 )
 
-__version__ = "0.2.0"  # keep in sync with pyproject.toml [project] version
+__version__ = "0.3.0"  # keep in sync with pyproject.toml [project] version
 
 __all__ = [
     "VAE",
     "Activation",
     "Adam",
     "BPETokenizer",
+    "CausalSelfAttention",
     "DecisionTreeClassifier",
     "Dense",
+    "Embedding",
     "GANDiscriminator",
     "GANGenerator",
     "GATLayer",
@@ -83,6 +93,7 @@ __all__ = [
     "KNeighborsClassifier",
     "LassoRegression",
     "Layer",
+    "LayerNorm",
     "LinearRegression",
     "LinearSVC",
     "LoRALinear",
@@ -93,8 +104,10 @@ __all__ = [
     "RandomForestClassifier",
     "ReLU",
     "RidgeRegression",
+    "SGD",
     "Sequential",
     "Sigmoid",
+    "TransformerBlock",
     "__version__",
     "accuracy",
     "adam",
@@ -123,6 +136,7 @@ __all__ = [
     "recall",
     "rmse",
     "sgd",
+    "softmax_cross_entropy",
     "standardize",
     "train_test_split",
     "vae_elbo_loss",

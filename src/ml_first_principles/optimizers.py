@@ -213,6 +213,81 @@ class Adam:
                 raise FloatingPointError("Adam produced a non-finite parameter")
 
 
+class SGD:
+    """Step-based SGD optimizer over dictionaries of named parameter arrays.
+
+    Unlike :func:`sgd`, which drives its own mini-batch optimization loop over
+    a single flat vector, this class applies one gradient update per ``step``
+    call, so it can be embedded in external (e.g. minibatch) training loops.
+    With ``momentum == 0.0`` each step is plain gradient descent,
+    ``param -= learning_rate * grad``. With ``momentum > 0`` the classical
+    (heavy-ball) momentum formulation is used, with one velocity per tensor::
+
+        velocity = momentum * velocity - learning_rate * grad
+        param += velocity
+
+    ``step`` updates the parameter arrays **in place** and returns ``None``,
+    so callers keep using the same ``params`` dictionary across steps.
+
+    Example:
+        >>> optimizer = SGD(learning_rate=0.1, momentum=0.9)
+        >>> params = {"w": np.array([5.0])}
+        >>> for _ in range(100):
+        ...     optimizer.step(params, {"w": 2.0 * params["w"]})
+    """
+
+    def __init__(self, learning_rate: float = 0.01, momentum: float = 0.0) -> None:
+        """Configure the optimizer hyperparameters.
+
+        Args:
+            learning_rate: Positive step size applied to each update.
+            momentum: Velocity decay rate, in ``[0, 1)``. Zero disables
+                momentum and recovers plain gradient descent.
+
+        Raises:
+            ValueError: If any hyperparameter lies outside its valid range.
+        """
+        if learning_rate <= 0.0:
+            raise ValueError("learning_rate must be positive")
+        if not 0.0 <= momentum < 1.0:
+            raise ValueError("momentum must lie in [0, 1)")
+        self.learning_rate = learning_rate
+        self.momentum = momentum
+        self._velocity: ParamDict = {}
+
+    def step(self, params: ParamDict, grads: ParamDict) -> None:
+        """Apply one (momentum) SGD update to every parameter in place.
+
+        Args:
+            params: Mapping from parameter name to a float array. The arrays
+                are mutated in place; the key set must stay identical across
+                calls. Extra keys in ``grads`` are ignored.
+            grads: Mapping from parameter name to a gradient array with the
+                same shape as the matching parameter.
+
+        Raises:
+            ValueError: If a gradient is missing, non-finite, or has a shape
+                different from its parameter, or if the parameter key set
+                changed between calls.
+            FloatingPointError: If an update produces a non-finite parameter.
+        """
+        missing = sorted(set(params) - set(grads))
+        if missing:
+            raise ValueError(f"grads is missing entries for parameters: {missing}")
+        checked = {name: _checked_gradient(grads[name], p.shape) for name, p in params.items()}
+        if not self._velocity:
+            self._velocity = {name: np.zeros_like(p, dtype=float) for name, p in params.items()}
+        elif set(params) != set(self._velocity):
+            raise ValueError("params must keep the same keys across step calls")
+        for name, parameter in params.items():
+            self._velocity[name] = (
+                self.momentum * self._velocity[name] - self.learning_rate * checked[name]
+            )
+            parameter += self._velocity[name]
+            if np.any(~np.isfinite(parameter)):
+                raise FloatingPointError("SGD produced a non-finite parameter")
+
+
 def coordinate_descent_lasso(
     X: ArrayLike,
     y: ArrayLike,

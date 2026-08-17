@@ -8,6 +8,32 @@ versions follow [SemVer](https://semver.org/).
 
 Nothing yet.
 
+## [0.3.0] - 2026-08-17
+
+Sequence-model building blocks — the layers `projects/char_transformer_tiny`
+had to implement locally are now first-class library citizens.
+
+### Added
+- `transformer_core` module: `Embedding`, `LayerNorm`, `CausalSelfAttention`
+  (single-head, causal, max-shifted softmax), `TransformerBlock` (residual
+  attention + residual ReLU MLP), and `softmax_cross_entropy` (log-space, mean
+  loss + gradient). Uniform layer interface — `params`/`grads` dicts,
+  `forward`/`backward` — with flat prefixed keys that drive the step-based
+  optimizers directly. Every parameter of every layer is covered by a central
+  finite-difference gradient check in the test suite.
+- `optimizers.SGD`: step-based SGD class with optional classical momentum,
+  mirroring `Adam`'s interface and validation.
+
+### Changed
+- `projects/char_transformer_tiny` refactored to consume the library layers
+  (dogfooding); its regenerated training report is bit-identical to the
+  v0.2.0 report — same loss trace and generations — confirming a faithful port.
+
+### Deferred
+- Weight tying: `Embedding` cannot share its matrix with an output projection,
+  so the tied-embedding logits path stays local to the project.
+- `nn_core` remains 2-D by design; sequence layers live in `transformer_core`.
+
 ## [0.2.0] - 2026-08-17
 
 The ecosystem release: verification infrastructure, hardened curriculum, docs
