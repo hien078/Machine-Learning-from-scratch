@@ -40,6 +40,7 @@ Machine-Learning-from-scratch/
 ├── tests/                     # Unit tests & numerical regression suites
 ├── scripts/                   # Notebook validation & normalization tooling
 ├── INDEX.md                   # Full curriculum index & prerequisite DAG
+├── ROADMAP.md                 # Ecosystem phases, milestones & decisions log
 ├── NOTEBOOK_STANDARDS.md      # Writing & coding standards
 ├── pyproject.toml             # Package metadata, dev extras, lint & test config
 └── README.md
@@ -144,8 +145,9 @@ All algorithm implementations inside `src/ml_first_principles/` are paired with 
 - Gradient checks, numerical stability checks, and package-export consistency
 
 Notebook health is validated separately: `python scripts/execute_all_notebooks.py` executes
-every notebook top-to-bottom on a fresh kernel (in-memory, without writing outputs), and
-`python scripts/normalize_notebooks.py` verifies cleared outputs and canonical metadata.
+every notebook top-to-bottom on a fresh kernel (add `--write` to refresh the committed
+outputs — the only sanctioned way to produce them), and
+`python scripts/normalize_notebooks.py` verifies canonical format and metadata.
 
 ---
 

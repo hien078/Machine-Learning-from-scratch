@@ -1,12 +1,16 @@
-"""Validate that notebooks execute cleanly without touching the source files.
+"""Validate that notebooks execute cleanly, optionally persisting fresh outputs.
 
-Runs every notebook (or the paths given on the command line) top-to-bottom on a
-fresh kernel against an in-memory copy, per NOTEBOOK_STANDARDS.md §11: source
-notebooks are never overwritten with generated outputs.
+Runs every notebook (or the paths given via positionals / --only) top-to-bottom
+on a fresh kernel against an in-memory copy. By default source notebooks are
+never overwritten (NOTEBOOK_STANDARDS.md §11). With --write, the freshly
+executed notebook is written back to disk: this script is the only legitimate
+producer of committed outputs (NOTEBOOK_STANDARDS.md §8), using the Agg
+matplotlib backend for headless determinism.
 """
 
 from __future__ import annotations
 
+import argparse
 import glob
 import os
 import sys
@@ -31,7 +35,7 @@ def find_notebooks() -> list[str]:
     return sorted(set(notebooks))
 
 
-def run_notebook(path: str) -> tuple[bool, str]:
+def run_notebook(path: str, write: bool) -> tuple[bool, str]:
     print(f"Executing: {path}...", end="", flush=True)
     start_time = time.time()
     try:
@@ -42,8 +46,10 @@ def run_notebook(path: str) -> tuple[bool, str]:
         src_path = str(Path("src").resolve())
         env = os.environ.copy()
         env["PYTHONPATH"] = src_path + ":" + env.get("PYTHONPATH", "")
+        if write:
+            env["MPLBACKEND"] = "Agg"
 
-        # Execute the in-memory copy only; errors must fail the run.
+        # Execute the in-memory copy; errors must fail the run.
         client = NotebookClient(
             nb,
             timeout=180,
@@ -51,6 +57,10 @@ def run_notebook(path: str) -> tuple[bool, str]:
             kernel_name="python3",
         )
         client.execute(env=env)
+
+        if write:
+            with open(path, "w", encoding="utf-8") as f:
+                nbformat.write(nb, f)
 
         elapsed = time.time() - start_time
         print(f" OK ({elapsed:.2f}s)")
@@ -65,13 +75,45 @@ def run_notebook(path: str) -> tuple[bool, str]:
         return False, f"Error: {e}"
 
 
+def select_notebooks(selections: list[str]) -> list[str]:
+    """Expand paths, directories, or globs into a sorted notebook list."""
+    notebooks: set[str] = set()
+    for item in selections:
+        if os.path.isdir(item):
+            notebooks.update(glob.glob(os.path.join(item, "**", "*.ipynb"), recursive=True))
+        else:
+            notebooks.update(glob.glob(item, recursive=True) or [item])
+    return sorted(notebooks)
+
+
 def main() -> None:
-    notebooks = sys.argv[1:] or find_notebooks()
+    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    parser.add_argument(
+        "paths",
+        nargs="*",
+        help="Optional notebook files. Defaults to topics/ plus the template.",
+    )
+    parser.add_argument(
+        "--only",
+        action="append",
+        default=[],
+        metavar="PATH_OR_GLOB",
+        help="Restrict to notebooks under a path, directory, or glob (repeatable).",
+    )
+    parser.add_argument(
+        "--write",
+        action="store_true",
+        help="Persist the freshly executed notebooks (outputs included) back to disk.",
+    )
+    args = parser.parse_args()
+
+    selections = list(args.paths) + list(args.only)
+    notebooks = select_notebooks(selections) if selections else find_notebooks()
     print(f"Found {len(notebooks)} notebooks to validate.")
 
     failures = []
     for path in notebooks:
-        ok, err = run_notebook(path)
+        ok, err = run_notebook(path, args.write)
         if not ok:
             failures.append((path, err))
 
@@ -84,7 +126,10 @@ def main() -> None:
         for path, err in failures:
             print(f"  - {path}: {err}")
         sys.exit(1)
-    print("\nAll notebooks executed cleanly; source files left untouched.")
+    if args.write:
+        print("\nAll notebooks executed cleanly; fresh outputs written back to disk.")
+    else:
+        print("\nAll notebooks executed cleanly; source files left untouched.")
 
 
 if __name__ == "__main__":

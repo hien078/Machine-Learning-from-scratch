@@ -199,7 +199,9 @@ Every notebook must have:
 - UTF-8 encoding without BOM and LF line endings;
 - notebook format 4 with `nbformat_minor >= 5`;
 - a unique cell ID on every cell;
-- `outputs: []` and `execution_count: null` on every code cell in source control;
+- outputs in source control produced exclusively by
+  `python scripts/execute_all_notebooks.py --write` (fresh kernel, seeded, Agg
+  backend) — never committed from a hand-run interactive kernel;
 - canonical `python3` kernelspec and `language_info.name = python`;
 - no host-specific paths or volatile editor metadata;
 - no static Python errors or invalid escape warnings;
@@ -211,7 +213,8 @@ Run the dry-run validator before any notebook commit:
 python scripts/normalize_notebooks.py
 ```
 
-Use `--write` only for a controlled normalization change.
+Use `--write` only for a controlled normalization change, and `--clear-outputs`
+only when outputs must be deliberately stripped (they are kept by default).
 
 ## 8. Exercise Standard
 
@@ -252,11 +255,14 @@ A topic may be marked Verified only when:
 - edge and failure cases are demonstrated;
 - the notebook passes schema, static, link, and fresh-kernel checks;
 - scratch and reference results agree within stated tolerances;
-- source outputs remain cleared after validation;
+- committed outputs are fresh, i.e. produced by the latest
+  `execute_all_notebooks.py --write` run of the current source;
 - all synthesis, topic, and prerequisite-graph links resolve.
 
 ## 11. Safe Execution Protocol
 
-Notebook validation must execute an in-memory copy or a temporary output path. Never
-overwrite source notebooks with generated outputs. Redirect Jupyter and Matplotlib
-runtime files to a temporary directory in restricted environments.
+Notebook validation executes an in-memory copy and leaves source files untouched.
+The only sanctioned way to write generated outputs into source notebooks is
+`python scripts/execute_all_notebooks.py --write`; interactive kernels and other
+tools must never overwrite them. Redirect Jupyter and Matplotlib runtime files
+to a temporary directory in restricted environments.

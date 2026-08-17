@@ -45,13 +45,17 @@ def _notebook_paths(root: Path) -> list[Path]:
     )
 
 
-def normalize_notebook(path: Path, root: Path, write: bool) -> Counter[str]:
+def normalize_notebook(path: Path, root: Path, write: bool, clear_outputs: bool) -> Counter[str]:
     """Normalize one notebook while preserving all academic content.
 
     Args:
         path: Notebook path.
         root: Repository root used to derive deterministic cell IDs.
         write: Whether to persist the normalized bytes.
+        clear_outputs: Whether stored outputs/execution counts are cleared.
+            By default they are kept: committed outputs are legitimate as long
+            as they come from ``execute_all_notebooks.py --write`` (fresh
+            kernel), per NOTEBOOK_STANDARDS.md §8.
 
     Returns:
         Counts of defects found and changes proposed for this notebook.
@@ -79,13 +83,14 @@ def normalize_notebook(path: Path, root: Path, write: bool) -> Counter[str]:
             if "execution_count" not in cell:
                 cell["execution_count"] = None
                 counts["missing_execution_counts_added"] += 1
-            outputs = cell.get("outputs", [])
-            if outputs:
-                counts["outputs_cleared"] += len(outputs)
-                cell["outputs"] = []
-            if cell.get("execution_count") is not None:
-                counts["execution_counts_cleared"] += 1
-                cell["execution_count"] = None
+            if clear_outputs:
+                outputs = cell.get("outputs", [])
+                if outputs:
+                    counts["outputs_cleared"] += len(outputs)
+                    cell["outputs"] = []
+                if cell.get("execution_count") is not None:
+                    counts["execution_counts_cleared"] += 1
+                    cell["execution_count"] = None
 
     if notebook.get("nbformat_minor") != 5:
         notebook["nbformat_minor"] = 5
@@ -139,6 +144,19 @@ def main() -> None:
         help="Persist changes. Without this flag the command is a dry run.",
     )
     parser.add_argument(
+        "--clear-outputs",
+        action="store_true",
+        help=(
+            "Also clear stored outputs and execution counts. By default outputs "
+            "are kept; execute_all_notebooks.py --write is their canonical producer."
+        ),
+    )
+    parser.add_argument(
+        "--check",
+        action="store_true",
+        help="Exit with status 1 if any notebook would change (CI gate).",
+    )
+    parser.add_argument(
         "paths",
         nargs="*",
         type=Path,
@@ -161,7 +179,7 @@ def main() -> None:
     else:
         paths = _notebook_paths(root)
     for path in paths:
-        counts = normalize_notebook(path, root, args.write)
+        counts = normalize_notebook(path, root, args.write, args.clear_outputs)
         totals.update(counts)
         if counts["files_changed"]:
             changed_paths.append(path.relative_to(root))
@@ -174,6 +192,8 @@ def main() -> None:
     print("changed_paths:")
     for path in changed_paths:
         print(path)
+    if args.check and changed_paths:
+        raise SystemExit(1)
 
 
 if __name__ == "__main__":

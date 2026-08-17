@@ -57,6 +57,8 @@ from ml_first_principles.visualization import (
     plot_regularization_path,
 )
 
+__version__ = "0.1.0"  # keep in sync with pyproject.toml [project] version
+
 __all__ = [
     "VAE",
     "Activation",
@@ -86,6 +88,7 @@ __all__ = [
     "RidgeRegression",
     "Sequential",
     "Sigmoid",
+    "__version__",
     "accuracy",
     "adam",
     "confusion_matrix",

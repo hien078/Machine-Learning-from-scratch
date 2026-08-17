@@ -33,6 +33,8 @@ Each topic tells a complete reasoning story: **WHY → WHAT → HOW → BUILD �
 stricter *Verified* gate (clean top-to-bottom execution plus resolved links) is defined in
 [NOTEBOOK_STANDARDS.md](../NOTEBOOK_STANDARDS.md) §9–§10 and checked with
 `python scripts/execute_all_notebooks.py` / `python scripts/normalize_notebooks.py`.
+Per-topic **maturity (Complete vs Verified)** is tracked in the
+[INDEX.md topic matrix](../INDEX.md#topic-matrix) — the single source of truth.
 
 ## Phases
 
