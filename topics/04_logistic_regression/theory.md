@@ -10,7 +10,7 @@ All symbols used below — defined once.
 | $p$ | scalar | number of features (including bias if used) |
 | $x_i$ | vector of length $p$ | feature vector of the $i$-th example (a column of $X^T$) |
 | $X$ | matrix of size $n \times p$ | design matrix; row $i$ is $x_i^T$ |
-| $y_i$ | scalar in $\{0, 1\}$ | binary label of the $i$-th example |
+| $y_i$ | scalar in $\lbrace0, 1\rbrace$ | binary label of the $i$-th example |
 | $y$ | vector of length $n$ | stacked labels |
 | $\theta$ | vector of length $p$ | model parameters |
 | $z_i$ | scalar | linear score for example $i$: $z_i := x_i^T \theta$ |
@@ -28,14 +28,14 @@ absorbed into $\theta_0$. Penalties (when added in §10) act on $\theta_1, \dots
 only, not on the intercept.
 
 **Vector convention.** All vectors are column vectors. Lowercase Latin / Greek = vector;
-uppercase = matrix. Norms carry explicit subscripts: $\|\theta\|_1$, $\|\theta\|_2^2$.
+uppercase = matrix. Norms carry explicit subscripts: $\Vert\theta\Vert_1$, $\Vert\theta\Vert_2^2$.
 
 ---
 
 ## 1. WHY — From Linear Scores to Probabilities
 
 A linear score $z = \theta^T x$ takes values on $(-\infty, +\infty)$. When the target is
-a binary label $y \in \{0, 1\}$, using $z$ directly as a prediction fails:
+a binary label $y \in \lbrace0, 1\rbrace$, using $z$ directly as a prediction fails:
 
 - **Out-of-range predictions.** A prediction of $\hat{y} = 1.4$ has no meaning as a
   probability — there is no "140 percent chance."
@@ -52,7 +52,7 @@ $(-\infty, +\infty) \to (0, 1)$. That function is the sigmoid.
 
 ## 1.1 Assumptions
 
-1. **Bernoulli response.** Each $y_i \in \{0, 1\}$ is Bernoulli with success probability $p_i = \sigma(x_i^T \theta)$.
+1. **Bernoulli response.** Each $y_i \in \lbrace0, 1\rbrace$ is Bernoulli with success probability $p_i = \sigma(x_i^T \theta)$.
 2. **Conditional independence.** Given the features and $\theta$, the labels $y_1, \dots, y_n$ are independent (equivalently: the pairs $(x_i, y_i)$ are i.i.d.).
 3. **Linear log-odds.** The log-odds $\log(p_i / (1 - p_i)) = x_i^T \theta$ is a linear function of features.
 4. **No perfect multicollinearity.** $X$ has full column rank (needed for the MLE — when it exists — to be unique, and for finite standard errors).
@@ -141,7 +141,9 @@ $$L(\theta) = -\frac{1}{n} \sum_{i=1}^n \Big[ y_i \log \sigma(z_i) + (1 - y_i) \
 Use the identity $\log \sigma(z) = -\log(1 + e^{-z})$. The single-example loss simplifies
 into a clean unified form:
 
-$$\ell_i(\theta) = \log(1 + e^{-y_i' z_i}) \quad \text{where } y_i' := 2 y_i - 1 \in \{-1, +1\}. \qquad (3.2)$$
+```math
+\ell_i(\theta) = \log(1 + e^{-y_i' z_i}) \quad \text{where } y_i' := 2 y_i - 1 \in \{-1, +1\}. \qquad (3.2)
+```
 
 **Proof.** For $y_i = 1$: $-\log \sigma(z_i) = \log(1 + e^{-z_i}) = \log(1 + e^{-y_i' z_i})$
 with $y_i' = +1$. For $y_i = 0$: $-\log \sigma(-z_i) = \log(1 + e^{z_i}) = \log(1 + e^{-y_i' z_i})$
@@ -160,7 +162,9 @@ with the smooth log-loss instead of the kinked hinge loss.
 
 > **Theorem 4.1.** The gradient of the cross-entropy loss (3.1) is
 >
-> $$\nabla L(\theta) = \frac{1}{n} \sum_{i=1}^n (p_i - y_i) \, x_i = \frac{1}{n} X^T (p - y), \qquad (4.1)$$
+> ```math
+> \nabla L(\theta) = \frac{1}{n} \sum_{i=1}^n (p_i - y_i) \, x_i = \frac{1}{n} X^T (p - y), \qquad (4.1)
+> ```
 >
 > where $p \in \mathbb{R}^n$ is the vector with entries $p_i = \sigma(x_i^T \theta)$.
 
@@ -189,8 +193,8 @@ change is that the residual is now $p_i - y_i$ (predicted probability minus labe
 is why every linear-regression algorithm (GD, SGD, coordinate descent) generalises straight
 to logistic regression with almost no change.
 
-*Convention note.* The linear-regression row uses the loss $\frac{1}{2n}\|X\theta - y\|_2^2$; with the
-plain MSE $\frac{1}{n}\|X\theta - y\|_2^2$ the gradient is $(2/n) X^T r$ instead — a cosmetic constant
+*Convention note.* The linear-regression row uses the loss $\frac{1}{2n}\Vert X\theta - y\Vert_2^2$; with the
+plain MSE $\frac{1}{n}\Vert X\theta - y\Vert_2^2$ the gradient is $(2/n) X^T r$ instead — a cosmetic constant
 that does not change the minimiser.
 
 ### 4.3 First-order condition
@@ -251,15 +255,15 @@ minimiser exists (§5.3).
 ### 5.3 Failure case — perfect separability
 
 If the two classes are *perfectly linearly separable*, then $L(\theta)$ has *no finite
-minimiser*: shrinking the loss toward zero requires $\|\theta\| \to \infty$ to push the
+minimiser*: shrinking the loss toward zero requires $\Vert\theta\Vert \to \infty$ to push the
 sigmoid to 0/1 saturation on every example. The MLE does not exist.
 
 The same failure occurs under *quasi-complete* separation (a separating hyperplane with some
 points lying exactly on it); Albert & Anderson (1984) show the MLE exists **iff** neither
 kind of separation is present.
 
-**Cure:** Add a *coercive* penalty such as the ridge term $\lambda \|\theta\|_2^2$ (§10). The
-penalised loss then tends to $+\infty$ as $\|\theta\|_2 \to \infty$, so a finite minimiser exists
+**Cure:** Add a *coercive* penalty such as the ridge term $\lambda \Vert\theta\Vert_2^2$ (§10). The
+penalised loss then tends to $+\infty$ as $\Vert\theta\Vert_2 \to \infty$, so a finite minimiser exists
 even on perfectly separable data — and it is unique, since the ridge term is strictly convex.
 (Strict convexity alone would *not* be enough: it guarantees uniqueness, not existence;
 coercivity is what restores existence.)
@@ -305,9 +309,9 @@ What varies across space is how *confident* the model is — not the *shape* of 
 - Far from the hyperplane, on the "0" side, probability tends to 0.
 - Right *on* the hyperplane, probability is 0.5.
 - The transition band where the probability swings from 0.1 to 0.9 has a width
-  proportional to $1 / \|w\|_2$, where $w := (\theta_1, \dots, \theta_d)$ is the weight part of
+  proportional to $1 / \Vert w\Vert_2$, where $w := (\theta_1, \dots, \theta_d)$ is the weight part of
   $\theta$ (the intercept $\theta_0$ shifts the boundary but not its sharpness) — a larger
-  $\|w\|_2$ means a sharper transition.
+  $\Vert w\Vert_2$ means a sharper transition.
 
 **Practical consequence.** Logistic regression cannot separate XOR-shaped data with a
 single boundary. When a non-linear classifier is needed, either engineer non-linear
@@ -358,13 +362,17 @@ $\nabla L(\theta_k) = (1/n) X^T(p_k - y)$.
 
 **Step size.** The Lipschitz constant of $\nabla L$ is bounded by
 
-$$L_{\text{smooth}} \le \frac{1}{4 n} \, \lambda_{\max}(X^T X),$$
+```math
+L_{\text{smooth}} \le \frac{1}{4 n} \, \lambda_{\max}(X^T X),
+```
 
 because $W_{ii} = p_i (1 - p_i) \le 1/4$ for every $p_i \in (0, 1)$ (maximum at
 $p_i = 1/2$). With step $\eta = 1 / L_{\text{smooth}}$ (and assuming a minimiser $\theta^\ast$ exists — no
 separation, §5.3), convergence is
 
-$$L(\theta_k) - L(\theta^\ast) \le \frac{\|\theta_0 - \theta^\ast\|_2^2}{2 \eta \cdot k} = O(1 / k).$$
+```math
+L(\theta_k) - L(\theta^\ast) \le \frac{\|\theta_0 - \theta^\ast\|_2^2}{2 \eta \cdot k} = O(1 / k).
+```
 
 **Result:** Sub-linear convergence — simple but slow.
 
@@ -385,7 +393,7 @@ weights depend on $\theta_k$, so we *re-weight* and re-solve at every iteration 
 **iteratively reweighted least squares** (IRLS).
 
 **Convergence.** *Locally* quadratic — once $\theta_k$ is close enough to $\theta^\ast$:
-$\|\theta_{k+1} - \theta^\ast\|_2 \le C \cdot \|\theta_k - \theta^\ast\|_2^2$, so the number of
+$\Vert\theta_{k+1} - \theta^\ast\Vert_2 \le C \cdot \Vert\theta_k - \theta^\ast\Vert_2^2$, so the number of
 correct digits roughly *doubles* per iteration. (Far from the optimum, a damped / line-search
 Newton step is used to guarantee progress.) 5–15 iterations reach machine precision on
 typical problems.
@@ -408,7 +416,7 @@ in a stream), or deep learning (logistic regression is the smallest such network
 ### 9.4 L-BFGS — the practical default
 
 **L-BFGS** (Limited-memory BFGS) is a quasi-Newton method that *approximates* the inverse
-Hessian using only the last $m$ gradient differences (typically $m = 10$–$20$). It gets:
+Hessian using only the last $m$ gradient differences (typically $m = 10\text{–}20$). It gets:
 
 - Fast convergence in practice (full-memory BFGS is provably super-linear; L-BFGS itself is
   guaranteed only linear, yet is typically far faster than GD).
@@ -429,7 +437,9 @@ L-BFGS.
 Same recipe as Ridge/Lasso for regression: add a penalty on $\theta$ (excluding the
 intercept):
 
-$$L_{\text{ridge}}(\theta) := L(\theta) + \lambda \|\theta\|_2^2, \qquad L_{\text{lasso}}(\theta) := L(\theta) + \lambda \|\theta\|_1. \qquad (10.1)$$
+```math
+L_{\text{ridge}}(\theta) := L(\theta) + \lambda \|\theta\|_2^2, \qquad L_{\text{lasso}}(\theta) := L(\theta) + \lambda \|\theta\|_1. \qquad (10.1)
+```
 
 (Per §0, the norms in (10.1) run over $\theta_1, \dots, \theta_{p-1}$ only — the intercept
 $\theta_0$ is never penalised.)
@@ -449,14 +459,14 @@ data — the regulariser fixes the failure case of §5.3.
 
 **Proof sketch.** Bayes' rule: $\log p(\theta \mid y, X) = \log \mathcal{L}(\theta) + \log p(\theta) + \text{const}$.
 Negate and divide by $n$ — the data term is $L(\theta)$, and the prior adds
-$\frac{1}{2 n \tau^2} \|\theta\|_2^2$ (Normal) or $\frac{1}{n b} \|\theta\|_1$ (Laplace).
+$\frac{1}{2 n \tau^2} \Vert\theta\Vert_2^2$ (Normal) or $\frac{1}{n b} \Vert\theta\Vert_1$ (Laplace).
 Identifying the multiplier with $\lambda$ gives the claim. $\blacksquare$
 
 ### 10.3 Gradient of the regularised loss
 
 - **L2.** $\nabla L_{\text{ridge}}(\theta) = \frac{1}{n} X^T (p - y) + 2 \lambda \theta$.
 - **L1.** $L_{\text{lasso}}$ is not differentiable where any $\theta_j = 0$; work with the *subdifferential*
-  $\partial L_{\text{lasso}}(\theta) = \big\{ \frac{1}{n} X^T (p - y) + \lambda s \,:\, s \in \partial \|\theta\|_1 \big\}$,
+  $\partial L_{\text{lasso}}(\theta) = \big\lbrace \frac{1}{n} X^T (p - y) + \lambda s \thinspace:\thinspace s \in \partial \Vert\theta\Vert_1 \big\rbrace$,
   where $s_j = \operatorname{sign}(\theta_j)$ if $\theta_j \ne 0$ and $s_j \in [-1, 1]$ if $\theta_j = 0$.
 
 ### 10.4 Algorithmic changes
@@ -476,7 +486,7 @@ applies unchanged.
 classification). L2 logistic regression shrinks coefficients smoothly and is the default
 in most software. In scikit-learn's `LogisticRegression`, `C` is the *inverse* regularisation
 strength (larger `C` = weaker penalty); it minimises
-$\frac{1}{2}\|w\|_2^2 + C \sum_i \log(1 + e^{-y_i' z_i})$, so under the conventions of (10.1)
+$\frac{1}{2}\Vert w\Vert_2^2 + C \sum_i \log(1 + e^{-y_i' z_i})$, so under the conventions of (10.1)
 the exact correspondence is $C = 1/(2 n \lambda)$.
 
 ---
@@ -503,7 +513,7 @@ $$P(y_i = k \mid x_i, \Theta) = \text{softmax}(\Theta x_i)_k = \frac{e^{\theta_k
 
 ### 11.3 Loss
 
-Encode each label as a one-hot vector $y_i \in \{0, 1\}^K$. The **multinomial
+Encode each label as a one-hot vector $y_i \in \lbrace0, 1\rbrace^K$. The **multinomial
 cross-entropy** loss is:
 
 $$L(\Theta) = -\frac{1}{n} \sum_{i=1}^n \sum_{k=1}^K y_{ik} \log P(y_i = k \mid x_i, \Theta). \qquad (11.1)$$
@@ -512,7 +522,9 @@ $$L(\Theta) = -\frac{1}{n} \sum_{i=1}^n \sum_{k=1}^K y_{ik} \log P(y_i = k \mid 
 
 Same shape as Theorem 4.1, per class:
 
-$$\frac{\partial L}{\partial \theta_k} = \frac{1}{n} \sum_{i=1}^n (P(y_i = k \mid x_i, \Theta) - y_{ik}) \, x_i. \qquad (11.2)$$
+```math
+\frac{\partial L}{\partial \theta_k} = \frac{1}{n} \sum_{i=1}^n (P(y_i = k \mid x_i, \Theta) - y_{ik}) \, x_i. \qquad (11.2)
+```
 
 **Result:** The multinomial gradient has exactly the binary structure $(1/n) X^T(P - Y)$,
 repeated per class.
@@ -531,7 +543,7 @@ by either (i) setting one class as reference ($\theta_K = 0$), or (ii) adding an
 
 Everything in §12.1–12.3 assumes the model is **correctly specified**: there exists a true
 $\theta^\ast$ with $P(y = 1 \mid x) = \sigma(x^T \theta^\ast)$. Under this and mild regularity
-($X$ full rank with high probability, $E[\|x_i\|^4] < \infty$), the MLE is **consistent**:
+($X$ full rank with high probability, $E[\Vert x_i\Vert^4] < \infty$), the MLE is **consistent**:
 $\hat{\theta}_n \to \theta^\ast$ in probability as $n \to \infty$.
 
 ### 12.2 Asymptotic normality
@@ -540,7 +552,9 @@ $$\sqrt{n} (\hat{\theta}_n - \theta^\ast) \xrightarrow{d} \text{Normal}(0, \math
 
 where $\mathcal{I}(\theta^\ast)$ is the **Fisher information matrix**:
 
-$$\mathcal{I}(\theta^\ast) := \mathbb{E}_x [\sigma(x^T \theta^\ast) (1 - \sigma(x^T \theta^\ast)) \, x x^T].$$
+```math
+\mathcal{I}(\theta^\ast) := \mathbb{E}_x [\sigma(x^T \theta^\ast) (1 - \sigma(x^T \theta^\ast)) \, x x^T].
+```
 
 The empirical analogue is $(1/n) X^T W X$ — the Hessian from Theorem 5.1.
 

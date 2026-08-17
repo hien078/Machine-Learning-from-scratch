@@ -7,7 +7,7 @@ estimators.
 
 ## From Likelihood to Loss
 
-Given independent observations $\{(x_i,y_i)\}_{i=1}^n$ and parameters $\theta$,
+Given independent observations $\lbrace(x_i,y_i)\rbrace_{i=1}^n$ and parameters $\theta$,
 maximum likelihood solves
 
 $$

@@ -39,11 +39,17 @@ RL mathematically formalizes these concepts, providing algorithms to solve them 
 ## 2. WHAT: Markov Decision Processes
 
 The environment in RL is typically formulated as a **Markov Decision Process (MDP)**, which is defined by a 5-tuple:
-$$ \mathcal{M} = (\mathcal{S}, \mathcal{A}, P, R, \gamma) $$
+
+```math
+\mathcal{M} = (\mathcal{S}, \mathcal{A}, P, R, \gamma)
+```
 
 **The Markov Property:**
 An environment satisfies the Markov property if the future state depends only on the current state and action, not on the sequence of events that preceded it.
-$$ \mathbb{P}(S_{t+1} = s', R_{t+1} = r \mid S_t = s, A_t = a, S_{t-1}, A_{t-1}, \dots, S_0, A_0) = \mathbb{P}(S_{t+1} = s', R_{t+1} = r \mid S_t = s, A_t = a) $$
+
+```math
+\mathbb{P}(S_{t+1} = s', R_{t+1} = r \mid S_t = s, A_t = a, S_{t-1}, A_{t-1}, \dots, S_0, A_0) = \mathbb{P}(S_{t+1} = s', R_{t+1} = r \mid S_t = s, A_t = a)
+```
 
 **Policy Definition:**
 A policy defines the agent's behavior. 
@@ -62,11 +68,17 @@ The simplest setting of RL removes states entirely, focusing purely on actions a
 
 **Regret:**
 We define the optimal mean reward as $\mu^\ast = \max_a \mu_a$. The performance is measured by **Regret** $R_T$, the expected loss from not picking the optimal action every time:
-$$ R_T = T \cdot \mu^\ast - \sum_{t=1}^T \mu_{a_t} $$
+
+```math
+R_T = T \cdot \mu^\ast - \sum_{t=1}^T \mu_{a_t}
+```
 
 **Action-Value Estimation:**
 The agent estimates the value of each action using the sample average of observed rewards:
-$$ Q_t(a) = \frac{\sum_{i=1}^{t-1} R_i \cdot \mathbb{I}(A_i = a)}{\sum_{i=1}^{t-1} \mathbb{I}(A_i = a)} $$
+
+```math
+Q_t(a) = \frac{\sum_{i=1}^{t-1} R_i \cdot \mathbb{I}(A_i = a)}{\sum_{i=1}^{t-1} \mathbb{I}(A_i = a)}
+```
 
 ## 2.6 Exploration Strategies
 
@@ -79,37 +91,59 @@ While simple, $\epsilon$-greedy yields linear regret in the limit because it nev
 
 **Upper Confidence Bound (UCB1):**
 Instead of random exploration, UCB uses optimism in the face of uncertainty. It relies on the **Hoeffding Inequality**, which bounds the probability that the sample mean $Q(a)$ deviates from the true mean $\mu_a$ by more than $U$:
-$$ \mathbb{P}(\mu_a > Q(a) + U) \leq e^{-2 N(a) U^2} $$
+
+```math
+\mathbb{P}(\mu_a > Q(a) + U) \leq e^{-2 N(a) U^2}
+```
+
 Setting this probability to $p = t^{-4}$ and solving for $U$ yields $U = \sqrt{\frac{2 \ln t}{N(a)}}$. 
 **Result (UCB1 Rule):**
-$$ a_t = \text{argmax}_a \left[ Q_t(a) + c \sqrt{\frac{\ln t}{N_t(a)}} \right] $$
+
+```math
+a_t = \text{argmax}_a \left[ Q_t(a) + c \sqrt{\frac{\ln t}{N_t(a)}} \right]
+```
+
 where $c$ controls the degree of exploration. UCB achieves logarithmic regret.
 
 **Thompson Sampling:**
-A Bayesian approach. For Bernoulli bandits (rewards $\in \{0, 1\}$), we model the probability of success for each arm $a$ as a Beta distribution: $\theta_a \sim \text{Beta}(\alpha_a, \beta_a)$.
+A Bayesian approach. For Bernoulli bandits (rewards $\in \lbrace0, 1\rbrace$), we model the probability of success for each arm $a$ as a Beta distribution: $\theta_a \sim \text{Beta}(\alpha_a, \beta_a)$.
 1. Sample $\hat{\theta}_a \sim \text{Beta}(\alpha_a, \beta_a)$ for all $a$.
 2. Choose $a_t = \text{argmax}_a \hat{\theta}_a$.
 3. Update posterior: if reward is 1, $\alpha_a \gets \alpha_a + 1$; if 0, $\beta_a \gets \beta_a + 1$.
 
 **Boltzmann (Softmax) Exploration:**
 Select actions with probability proportional to exponentiated values:
-$$ \mathbb{P}(a_t = a) = \frac{e^{Q(a)/\tau}}{\sum_{a'} e^{Q(a')/\tau}} $$
+
+```math
+\mathbb{P}(a_t = a) = \frac{e^{Q(a)/\tau}}{\sum_{a'} e^{Q(a')/\tau}}
+```
+
 where $\tau$ is a temperature parameter controlling randomness.
 
 ## 3. HOW: Returns and Value Functions
 
 **The Return ($G_t$):**
 The total discounted reward from time step $t$ is:
-$$ G_t = R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + \dots = \sum_{k=0}^{\infty} \gamma^k R_{t+k+1} $$
+
+```math
+G_t = R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + \dots = \sum_{k=0}^{\infty} \gamma^k R_{t+k+1}
+```
+
 The discount factor $\gamma$ ensures the sum is finite and weights near-term rewards higher than distant ones.
 
-**State-Value Function ($V^\pi(s)$):**
+**State-Value Function $(V^\pi(s))$:**
 The expected return starting from state $s$ and following policy $\pi$:
-$$ V^\pi(s) = \mathbb{E}_\pi [ G_t \mid S_t = s ] $$
 
-**Action-Value Function ($Q^\pi(s, a)$):**
+```math
+V^\pi(s) = \mathbb{E}_\pi [ G_t \mid S_t = s ]
+```
+
+**Action-Value Function $(Q^\pi(s, a))$:**
 The expected return starting from state $s$, taking action $a$, and then following policy $\pi$:
-$$ Q^\pi(s, a) = \mathbb{E}_\pi [ G_t \mid S_t = s, A_t = a ] $$
+
+```math
+Q^\pi(s, a) = \mathbb{E}_\pi [ G_t \mid S_t = s, A_t = a ]
+```
 
 ## 4. HOW: Bellman Equations
 
@@ -118,28 +152,47 @@ The Bellman equations express the recursive relationship between the value of a 
 ### Derivation of the Bellman Expectation Equation for $V^\pi(s)$
 
 1. **Definition:**
-   $$ V^\pi(s) = \mathbb{E}_\pi [ G_t \mid S_t = s ] $$
+
+   $$V^\pi(s) = \mathbb{E}_ \pi [ G_t \mid S_t = s ]$$
+
 2. **Expand the Return (Recursive substitution):**
-   $$ V^\pi(s) = \mathbb{E}_\pi [ R_{t+1} + \gamma G_{t+1} \mid S_t = s ] $$
+
+   $$V^\pi(s) = \mathbb{E}_ \pi [ R_{t+1} + \gamma G_{t+1} \mid S_t = s ]$$
+
 3. **Linearity of Expectation:**
-   $$ V^\pi(s) = \mathbb{E}_\pi [ R_{t+1} \mid S_t = s ] + \gamma \mathbb{E}_\pi [ G_{t+1} \mid S_t = s ] $$
+
+   $$V^\pi(s) = \mathbb{E}_ \pi [ R_{t+1} \mid S_t = s ] + \gamma \mathbb{E}_ \pi [ G_{t+1} \mid S_t = s ]$$
+
 4. **Law of Total Expectation (condition on $A_t$ and $S_{t+1}$):**
-   $$ V^\pi(s) = \sum_{a \in \mathcal{A}} \pi(a \mid s) \sum_{s' \in \mathcal{S}} P(s' \mid s, a) \left[ R(s, a, s') + \gamma \mathbb{E}_\pi [ G_{t+1} \mid S_{t+1} = s' ] \right] $$
-5. **Substitute Definition (Definition of $V^\pi(s')$):**
-   $$ V^\pi(s) = \sum_{a \in \mathcal{A}} \pi(a \mid s) \sum_{s' \in \mathcal{S}} P(s' \mid s, a) \left[ R(s, a, s') + \gamma V^\pi(s') \right] $$
+
+   $$V^\pi(s) = \sum_{a \in \mathcal{A}} \pi(a \mid s) \sum_{s' \in \mathcal{S}} P(s' \mid s, a) \left[ R(s, a, s') + \gamma \mathbb{E}_ \pi [ G_{t+1} \mid S_{t+1} = s' ] \right]$$
+
+5. **Substitute the definition of $V^\pi(s')$:**
+
+   $$V^\pi(s) = \sum_{a \in \mathcal{A}} \pi(a \mid s) \sum_{s' \in \mathcal{S}} P(s' \mid s, a) \left[ R(s, a, s') + \gamma V^\pi(s') \right]$$
 
 **Result (Bellman Expectation Equation):**
-$$ V^\pi(s) = \sum_{a \in \mathcal{A}} \pi(a \mid s) Q^\pi(s, a) $$
+
+```math
+V^\pi(s) = \sum_{a \in \mathcal{A}} \pi(a \mid s) Q^\pi(s, a)
+```
+
 where $Q^\pi(s, a) = \sum_{s' \in \mathcal{S}} P(s' \mid s, a) [ R(s, a, s') + \gamma V^\pi(s') ]$.
 
 ### Bellman Optimality Equations
 
 For the optimal policy $\pi^\ast$, the value functions satisfy:
-$$ V^\ast(s) = \max_{a} Q^\ast(s, a) = \max_{a} \sum_{s'} P(s' \mid s, a) [ R(s, a, s') + \gamma V^\ast(s') ] $$
-$$ Q^\ast(s, a) = \sum_{s'} P(s' \mid s, a) \left[ R(s, a, s') + \gamma \max_{a'} Q^\ast(s', a') \right] $$
+
+```math
+V^\ast(s) = \max_{a} Q^\ast(s, a) = \max_{a} \sum_{s'} P(s' \mid s, a) [ R(s, a, s') + \gamma V^\ast(s') ]
+```
+
+```math
+Q^\ast(s, a) = \sum_{s'} P(s' \mid s, a) \left[ R(s, a, s') + \gamma \max_{a'} Q^\ast(s', a') \right]
+```
 
 **Convergence (Contraction Mapping Theorem):**
-The Bellman optimality operator $B$ applied to a value function $V$ is defined as $(BV)(s) = \max_a \sum_{s'} P(s' \mid s, a) [R + \gamma V(s')]$. It can be shown that $B$ is a $\gamma$-contraction in the max norm: $||BV_1 - BV_2||_\infty \leq \gamma ||V_1 - V_2||_\infty$. By the Banach fixed-point theorem, repeated application of $B$ converges to a unique fixed point $V^\ast$.
+The Bellman optimality operator $B$ applied to a value function $V$ is defined as $(BV)(s) = \max_a \sum_{s'} P(s' \mid s, a) [R + \gamma V(s')]$. It can be shown that $B$ is a $\gamma$-contraction in the max norm: $\Vert BV_1 - BV_2\Vert_\infty \leq \gamma \Vert V_1 - V_2\Vert_\infty$. By the Banach fixed-point theorem, repeated application of $B$ converges to a unique fixed point $V^\ast$.
 
 ## 5. HOW: Dynamic Programming
 
@@ -150,7 +203,7 @@ Repeatedly apply the Bellman optimality operator to find $V^\ast$.
 1. Initialize $V_0(s) = 0$ for all $s$.
 2. Update: $V_{k+1}(s) = \max_{a} \sum_{s'} P(s' \mid s, a) [ R(s, a, s') + \gamma V_k(s') ]$
 3. Stop when $\max_s |V_{k+1}(s) - V_k(s)| < \theta$.
-4. Extract deterministic policy: $\pi^\ast(s) = \text{argmax}_a \sum_{s'} P(s' \mid s, a) [ R(s, a, s') + \gamma V^\ast(s') ]$.
+4. Extract deterministic policy: $\pi^\ast(s) = \text{argmax}_ a \sum_{s'} P(s' \mid s, a) [ R(s, a, s') + \gamma V^\ast(s') ]$.
 
 **Policy Iteration:**
 Alternates between Policy Evaluation (finding $V^\pi$ for a fixed $\pi$) and Policy Improvement (updating $\pi$ greedily with respect to $V^\pi$). Guaranteed to converge in finite steps for finite MDPs.
@@ -173,7 +226,11 @@ MC can optimize a policy using Generalized Policy Iteration. Since we lack the t
 
 **Off-Policy MC via Importance Sampling:**
 To learn a target policy $\pi$ from behavior policy $b$, we weight returns by the importance sampling ratio (the relative probability of the trajectory):
-$$ \rho_{t:T-1} = \prod_{k=t}^{T-1} \frac{\pi(A_k \mid S_k)}{b(A_k \mid S_k)} $$
+
+```math
+\rho_{t:T-1} = \prod_{k=t}^{T-1} \frac{\pi(A_k \mid S_k)}{b(A_k \mid S_k)}
+```
+
 The value update becomes $V(S_t) \gets V(S_t) + \alpha (\rho_{t:T-1} G_t - V(S_t))$.
 
 ## 5.6 n-step TD & TD($\lambda$)
@@ -181,18 +238,32 @@ The value update becomes $V(S_t) \gets V(S_t) + \alpha (\rho_{t:T-1} G_t - V(S_t
 TD (1-step) and MC (infinite-step) are endpoints of a spectrum. **$n$-step TD** bridges the gap.
 
 **$n$-step Return:**
-$$ G_t^{(n)} = \sum_{k=0}^{n-1} \gamma^k R_{t+k+1} + \gamma^n V(S_{t+n}) $$
+
+```math
+G_t^{(n)} = \sum_{k=0}^{n-1} \gamma^k R_{t+k+1} + \gamma^n V(S_{t+n})
+```
+
 The update rule is $V(S_t) \gets V(S_t) + \alpha (G_t^{(n)} - V(S_t))$.
 
 **TD($\lambda$) and Eligibility Traces:**
 Instead of a single $n$-step return, TD($\lambda$) uses an exponentially weighted average of all $n$-step returns, called the **$\lambda$-return** (the forward view):
-$$ G_t^\lambda = (1 - \lambda) \sum_{n=1}^\infty \lambda^{n-1} G_t^{(n)} $$
+
+```math
+G_t^\lambda = (1 - \lambda) \sum_{n=1}^\infty \lambda^{n-1} G_t^{(n)}
+```
 
 The **backward view** provides an online, incremental mechanism to achieve the same result using **eligibility traces** $E(s)$. 
 When a state is visited, its trace is incremented; otherwise, it decays by $\gamma \lambda$:
-$$ E_t(s) = \gamma \lambda E_{t-1}(s) + \mathbb{I}(S_t = s) $$
+
+```math
+E_t(s) = \gamma \lambda E_{t-1}(s) + \mathbb{I}(S_t = s)
+```
+
 On each step, all states are updated by the TD error $\delta_t$ scaled by their trace:
-$$ V(s) \gets V(s) + \alpha \delta_t E_t(s) $$
+
+```math
+V(s) \gets V(s) + \alpha \delta_t E_t(s)
+```
 
 **Unifying Spectrum:**
 - $\lambda = 0$: TD(0), purely bootstraps.
@@ -208,12 +279,18 @@ TD methods bootstrap: they update estimates based on other learned estimates, wi
 **SARSA (On-Policy TD Control):**
 Learns the value of the policy being followed. The agent experiences $(S_t, A_t, R_{t+1}, S_{t+1}, A_{t+1})$.
 Update rule:
-$$ Q(S_t, A_t) \leftarrow Q(S_t, A_t) + \alpha \left[ \underbrace{R_{t+1} + \gamma Q(S_{t+1}, A_{t+1})}_{\text{TD Target}} - Q(S_t, A_t) \right] $$
+
+```math
+Q(S_t, A_t) \leftarrow Q(S_t, A_t) + \alpha \left[ \underbrace{R_{t+1} + \gamma Q(S_{t+1}, A_{t+1})}_{\text{TD Target}} - Q(S_t, A_t) \right]
+```
 
 **Q-Learning (Off-Policy TD Control):**
 Learns the optimal policy regardless of the agent's actual exploratory actions.
 Update rule:
-$$ Q(S_t, A_t) \leftarrow Q(S_t, A_t) + \alpha \left[ \underbrace{R_{t+1} + \gamma \max_{a} Q(S_{t+1}, a)}_{\text{TD Target}} - Q(S_t, A_t) \right] $$
+
+```math
+Q(S_t, A_t) \leftarrow Q(S_t, A_t) + \alpha \left[ \underbrace{R_{t+1} + \gamma \max_{a} Q(S_{t+1}, a)}_{\text{TD Target}} - Q(S_t, A_t) \right]
+```
 
 **Exploration-Exploitation ($\epsilon$-greedy):**
 To ensure all state-action pairs are visited infinitely often (a requirement for convergence), Q-learning typically uses an $\epsilon$-greedy policy during training:
@@ -224,18 +301,22 @@ To ensure all state-action pairs are visited infinitely often (a requirement for
 
 ## 7. HOW: Policy Gradients
 
-Instead of learning value functions and deriving a policy, Policy Gradient methods parameterize the policy $\pi_\theta(a \mid s)$ directly and optimize the parameters $\theta$ via gradient ascent on the expected return $J(\theta) = \mathbb{E}_{\pi_\theta}[G_0]$.
+Instead of learning value functions and deriving a policy, Policy Gradient methods parameterize the policy $\pi_\theta(a \mid s)$ directly and optimize the parameters $\theta$ via gradient ascent on the expected return $J(\theta) = \mathbb E_{\pi_\theta}[G_0]$.
 
 ### Derivation of the Policy Gradient Theorem
-1. **Objective:** $\nabla_\theta J(\theta) = \nabla_\theta \mathbb{E}_{\tau \sim \pi_\theta}[R(\tau)] = \nabla_\theta \int P(\tau; \theta) R(\tau) d\tau$
+1. **Objective:** $\nabla_\theta J(\theta) = \nabla_\theta \mathbb E_{\tau \sim \pi_\theta}[R(\tau)] = \nabla_\theta \int P(\tau; \theta) R(\tau) d\tau$
 2. **Log-Derivative Trick:** $\nabla_\theta P(\tau; \theta) = P(\tau; \theta) \nabla_\theta \log P(\tau; \theta)$
-3. **Substitute:** $\nabla_\theta J(\theta) = \int P(\tau; \theta) \nabla_\theta \log P(\tau; \theta) R(\tau) d\tau = \mathbb{E}_{\tau \sim \pi_\theta} [ \nabla_\theta \log P(\tau; \theta) R(\tau) ]$
+3. **Substitute:** $\nabla_\theta J(\theta) = \int P(\tau; \theta) \nabla_\theta \log P(\tau; \theta) R(\tau) d\tau = \mathbb E_{\tau \sim \pi_\theta} [ \nabla_\theta \log P(\tau; \theta) R(\tau) ]$
 4. **Trajectory Probability Expansion:** $P(\tau; \theta) = P(s_0) \prod_{t=0}^T \pi_\theta(a_t \mid s_t) P(s_{t+1} \mid s_t, a_t)$
 5. **Log and Derivative:** The dynamics $P$ do not depend on $\theta$, so their gradients are zero.
-   $$ \nabla_\theta \log P(\tau; \theta) = \sum_{t=0}^T \nabla_\theta \log \pi_\theta(a_t \mid s_t) $$
+
+   $$\nabla_\theta \log P(\tau; \theta) = \sum_{t=0}^T \nabla_\theta \log \pi_\theta(a_t \mid s_t)$$
 
 **Result (Policy Gradient Theorem):**
-$$ \nabla_\theta J(\theta) = \mathbb{E}_{\pi_\theta} \left[ \sum_{t=0}^T \nabla_\theta \log \pi_\theta(a_t \mid s_t) G_t \right] $$
+
+```math
+\nabla_\theta J(\theta) = \mathbb{E}_{\pi_\theta} \left[ \sum_{t=0}^T \nabla_\theta \log \pi_\theta(a_t \mid s_t) G_t \right]
+```
 
 **REINFORCE Algorithm:** A Monte Carlo policy gradient algorithm that samples trajectories and updates $\theta \leftarrow \theta + \alpha G_t \nabla_\theta \log \pi_\theta(a_t \mid s_t)$.
 
@@ -250,18 +331,28 @@ Standard policy gradients suffer from unstable training: a large update to $\the
 
 **TRPO (Trust Region Policy Optimization):**
 TRPO constrains the policy update so the new policy doesn't deviate too far from the old one, measured by KL divergence:
-$$ \max_\theta \mathbb{E} \left[ \frac{\pi_\theta(a|s)}{\pi_{\theta_{old}}(a|s)} A(s,a) \right] \quad \text{s.t.} \quad \text{KL}(\pi_{\theta_{old}} || \pi_\theta) \leq \delta $$
+
+```math
+\max_\theta \mathbb{E} \left[ \frac{\pi_\theta(a|s)}{\pi_{\theta_{old}}(a|s)} A(s,a) \right] \quad \text{s.t.} \quad \text{KL}(\pi_{\theta_{old}} || \pi_\theta) \leq \delta
+```
 
 **PPO (Proximal Policy Optimization):**
 PPO approximates TRPO's constraint using a clipped surrogate objective, making it simpler and faster.
 Let $r_t(\theta) = \frac{\pi_\theta(a|s)}{\pi_{\theta_{old}}(a|s)}$ be the probability ratio.
 **Result (PPO Clipped Objective):**
-$$ L^{CLIP}(\theta) = \mathbb{E} \left[ \min(r_t(\theta)A_t, \text{clip}(r_t(\theta), 1-\epsilon, 1+\epsilon)A_t) \right] $$
+
+```math
+L^{CLIP}(\theta) = \mathbb{E} \left[ \min(r_t(\theta)A_t, \text{clip}(r_t(\theta), 1-\epsilon, 1+\epsilon)A_t) \right]
+```
+
 This penalizes changes to the policy that move $r_t(\theta)$ away from 1 if that change improves the objective, preventing excessively large updates.
 
 **Generalized Advantage Estimation (GAE):**
 To compute the advantage $A_t$ with a good bias-variance tradeoff, GAE uses an exponentially-weighted sum of TD errors $\delta_t = R_{t+1} + \gamma V(S_{t+1}) - V(S_t)$:
-$$ A_t^{GAE(\gamma,\lambda)} = \sum_{l=0}^\infty (\gamma\lambda)^l \delta_{t+l} $$
+
+```math
+A_t^{GAE(\gamma,\lambda)} = \sum_{l=0}^\infty (\gamma\lambda)^l \delta_{t+l}
+```
 
 ## 7.6 Actor-Critic Architecture
 
@@ -294,11 +385,18 @@ To stabilize and improve deep Q-learning, several extensions were developed on t
 
 **Double DQN:**
 Fixes the overestimation bias of standard DQN. It decouples action selection from action evaluation by using the online network to select the action and the target network to evaluate it:
-$$ Y_t = R_{t+1} + \gamma Q_{target}(S_{t+1}, \text{argmax}_a Q_{online}(S_{t+1}, a)) $$
+
+```math
+Y_t = R_{t+1} + \gamma Q_{target}(S_{t+1}, \text{argmax}_a Q_{online}(S_{t+1}, a))
+```
 
 **Dueling DQN:**
 Splits the Q-network into two streams: one estimates state-value $V(s)$ and the other estimates advantage $A(s,a)$. They are combined at the final layer:
-$$ Q(s,a) = V(s) + A(s,a) - \frac{1}{|\mathcal{A}|} \sum_{a'} A(s,a') $$
+
+```math
+Q(s,a) = V(s) + A(s,a) - \frac{1}{|\mathcal{A}|} \sum_{a'} A(s,a')
+```
+
 Subtracting the mean advantage ensures identifiability of $V(s)$.
 
 **Prioritized Experience Replay (PER):**
@@ -312,19 +410,29 @@ For continuous control (e.g., robotics), discrete action spaces are impractical.
 
 **Gaussian Policy Parameterization:**
 Instead of outputting probabilities for discrete actions, the neural network outputs the parameters of a continuous distribution (typically Gaussian) from which actions are sampled:
-$$ \pi_\theta(a \mid s) = \mathcal{N}(\mu_\theta(s), \sigma_\theta(s)) $$
+
+```math
+\pi_\theta(a \mid s) = \mathcal{N}(\mu_\theta(s), \sigma_\theta(s))
+```
 
 **Deterministic Policy Gradient (DPG):**
 Instead of a stochastic policy, DPG optimizes a deterministic policy $\mu_\theta(s)$. 
 **Result (DPG Theorem):** (Silver, 2014)
-$$ \nabla_\theta J(\theta) = \mathbb{E}_{s \sim \rho^\mu} [ \nabla_\theta \mu_\theta(s) \nabla_a Q^\mu(s, a) |_{a=\mu_\theta(s)} ] $$
+
+```math
+\nabla_\theta J(\theta) = \mathbb{E}_{s \sim \rho^\mu} [ \nabla_\theta \mu_\theta(s) \nabla_a Q^\mu(s, a) |_{a=\mu_\theta(s)} ]
+```
 
 **DDPG (Deep Deterministic Policy Gradient):**
 An off-policy actor-critic algorithm for continuous spaces that uses the DPG theorem. It uses target networks (for both actor and critic) and adds exploratory noise (e.g., Ornstein-Uhlenbeck noise) to the deterministic action.
 
 **Soft Actor-Critic (SAC):**
 An off-policy maximum entropy RL algorithm. It augments the standard RL objective to maximize both expected return and policy entropy:
-$$ J(\pi) = \mathbb{E}_{\pi} \left[ \sum_{t} \gamma^t \left( R_t + \alpha \mathcal{H}(\pi(\cdot \mid S_t)) \right) \right] $$
+
+```math
+J(\pi) = \mathbb{E}_{\pi} \left[ \sum_{t} \gamma^t \left( R_t + \alpha \mathcal{H}(\pi(\cdot \mid S_t)) \right) \right]
+```
+
 where $\alpha$ is a temperature parameter. SAC is highly sample-efficient and robust due to its entropy maximization, which encourages exploration.
 
 ## 11. Model-Based RL
@@ -352,11 +460,15 @@ When the desired reward function is too complex to specify mathematically (e.g.,
 1. Collect pairs of agent trajectories (or text completions) $(y_1, y_2)$ given context $x$.
 2. Humans label which one is preferred: $y_1 \succ y_2$.
 3. Train a reward model $r_\phi(x, y)$ using the **Bradley-Terry preference model**:
-   $$ P(y_1 \succ y_2) = \frac{\exp(r_\phi(x, y_1))}{\exp(r_\phi(x, y_1)) + \exp(r_\phi(x, y_2))} $$
+
+   $$P(y_1 \succ y_2) = \frac{\exp(r_\phi(x, y_1))}{\exp(r_\phi(x, y_1)) + \exp(r_\phi(x, y_2))}$$
 
 **KL-Constrained Policy Optimization:**
 Once $r_\phi$ is trained, use PPO to optimize the policy $\pi_\theta$, adding a KL divergence penalty to prevent the policy from diverging too far from the original reference model $\pi_{ref}$ (which prevents "reward hacking" the learned model):
-$$ \max_\theta \mathbb{E}_{x, y \sim \pi_\theta} \left[ r_\phi(x, y) \right] - \beta \cdot \text{KL}(\pi_\theta(\cdot|x) || \pi_{ref}(\cdot|x)) $$
+
+```math
+\max_\theta \mathbb{E}_{x, y \sim \pi_\theta} \left[ r_\phi(x, y) \right] - \beta \cdot \text{KL}(\pi_\theta(\cdot|x) || \pi_{ref}(\cdot|x))
+```
 
 *(Note: See [Module 21](../21_llm_engineering/theory.md) for Direct Preference Optimization (DPO), which bypasses the explicit reward modeling step.)*
 

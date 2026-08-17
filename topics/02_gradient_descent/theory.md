@@ -35,7 +35,7 @@
 
 - All vectors are column vectors.
 - Subscripts $t$ or $k$ index iterations; subscripts $i$ index data points.
-- $\|\cdot\|$ denotes the Euclidean ($\ell^2$) norm unless stated otherwise.
+- $\Vert\cdot\Vert$ denotes the Euclidean ($\ell^2$) norm unless stated otherwise.
 
 ---
 
@@ -77,21 +77,29 @@ Moving along $-\nabla L(\theta_t)$ decreases this linear approximation the faste
 
 > **Definition.** $L$ is **$M$-smooth** if $\nabla L$ is $M$-Lipschitz continuous:
 >
-> $$\|\nabla L(\theta) - \nabla L(\phi)\| \le M \|\theta - \phi\| \quad \forall\, \theta, \phi$$
+> ```math
+> \|\nabla L(\theta) - \nabla L(\phi)\| \le M \|\theta - \phi\| \quad \forall\, \theta, \phi
+> ```
 
-Equivalently, for twice-differentiable $L$: $\|\nabla^2 L(\theta)\| \le M$ for all $\theta$ (the largest eigenvalue of the Hessian is at most $M$).
+Equivalently, for twice-differentiable $L$: $\Vert\nabla^2 L(\theta)\Vert \le M$ for all $\theta$ (the largest eigenvalue of the Hessian is at most $M$).
 
 ### 3.2 Descent lemma
 
 > **Lemma.** If $L$ is $M$-smooth, then for any $\theta, \phi$:
 >
-> $$L(\phi) \le L(\theta) + \nabla L(\theta)^\top (\phi - \theta) + \frac{M}{2}\|\phi - \theta\|^2$$
+> ```math
+> L(\phi) \le L(\theta) + \nabla L(\theta)^\top (\phi - \theta) + \frac{M}{2}\|\phi - \theta\|^2
+> ```
 
 Setting $\phi = \theta - \alpha \nabla L(\theta)$ (the GD step):
 
-$$L(\theta_{t+1}) \le L(\theta_t) - \alpha\|\nabla L(\theta_t)\|^2 + \frac{M\alpha^2}{2}\|\nabla L(\theta_t)\|^2$$
+```math
+L(\theta_{t+1}) \le L(\theta_t) - \alpha\|\nabla L(\theta_t)\|^2 + \frac{M\alpha^2}{2}\|\nabla L(\theta_t)\|^2
+```
 
-$$= L(\theta_t) - \alpha\left(1 - \frac{M\alpha}{2}\right)\|\nabla L(\theta_t)\|^2$$
+```math
+= L(\theta_t) - \alpha\left(1 - \frac{M\alpha}{2}\right)\|\nabla L(\theta_t)\|^2
+```
 
 For guaranteed decrease we need $1 - \frac{M\alpha}{2} > 0$, i.e.:
 
@@ -103,9 +111,11 @@ $$\boxed{\alpha < \frac{2}{M}}$$
 
 > **Theorem (sublinear rate).** If $L$ is convex and $M$-smooth, and $\alpha = 1/M$, then after $T$ steps:
 >
-> $$L(\theta_T) - L(\theta^\ast) \le \frac{M\|\theta_0 - \theta^\ast\|^2}{2T}$$
+> ```math
+> L(\theta_T) - L(\theta^\ast) \le \frac{M\|\theta_0 - \theta^\ast\|^2}{2T}
+> ```
 
-**Proof sketch.** From the descent lemma with $\alpha = 1/M$: each step gives $L(\theta_{t+1}) \le L(\theta_t) - \frac{1}{2M}\|\nabla L(\theta_t)\|^2$. Summing telescopically and using convexity ($L(\theta_t) - L(\theta^\ast) \le \nabla L(\theta_t)^\top(\theta_t - \theta^\ast)$), the bound follows by averaging.
+**Proof sketch.** From the descent lemma with $\alpha = 1/M$: each step gives $L(\theta_{t+1}) \le L(\theta_t) - \frac{1}{2M}\Vert\nabla L(\theta_t)\Vert^2$. Summing telescopically and using convexity $(L(\theta_t) - L(\theta^\ast) \le \nabla L(\theta_t)^\top(\theta_t - \theta^\ast))$, the bound follows by averaging.
 
 **Result:** Convex, smooth GD converges at rate $O(1/T)$. To halve the error, double the iterations.
 
@@ -113,11 +123,15 @@ $$\boxed{\alpha < \frac{2}{M}}$$
 
 > **Definition.** $L$ is **$\mu$-strongly convex** ($\mu > 0$) if:
 >
-> $$L(\phi) \ge L(\theta) + \nabla L(\theta)^\top(\phi - \theta) + \frac{\mu}{2}\|\phi - \theta\|^2 \quad \forall\, \theta, \phi$$
+> ```math
+> L(\phi) \ge L(\theta) + \nabla L(\theta)^\top(\phi - \theta) + \frac{\mu}{2}\|\phi - \theta\|^2 \quad \forall\, \theta, \phi
+> ```
 
 > **Theorem (linear rate).** If $L$ is $\mu$-strongly convex and $M$-smooth, with $\alpha = 1/M$:
 >
-> $$\|\theta_T - \theta^\ast\|^2 \le \left(1 - \frac{\mu}{M}\right)^T \|\theta_0 - \theta^\ast\|^2$$
+> ```math
+> \|\theta_T - \theta^\ast\|^2 \le \left(1 - \frac{\mu}{M}\right)^T \|\theta_0 - \theta^\ast\|^2
+> ```
 
 **Result:** Strong convexity yields a **linear (exponential) convergence rate**. The convergence factor is $1 - 1/\kappa$ where $\kappa = M/\mu$ is the condition number. Ill-conditioned problems ($\kappa \gg 1$) converge slowly.
 
@@ -146,7 +160,9 @@ For the quadratic $L(\theta) = \frac{1}{2}\theta^\top A\theta - b^\top\theta$ wi
 
 For convex $L$ with bounded gradient variance $\sigma^2$, SGD with $\alpha_t = c/\sqrt{t}$ achieves:
 
-$$\mathbb{E}[L(\bar{\theta}_T)] - L(\theta^\ast) = O\!\left(\frac{1}{\sqrt{T}}\right)$$
+```math
+\mathbb{E}[L(\bar{\theta}_T)] - L(\theta^\ast) = O\!\left(\frac{1}{\sqrt{T}}\right)
+```
 
 This is slower than full-batch $O(1/T)$, but each iteration costs $O(d)$ instead of $O(nd)$. For large $n$, SGD reaches a given accuracy faster in wall-clock time.
 
@@ -158,8 +174,13 @@ This is slower than full-batch $O(1/T)$, but each iteration costs $O(d)$ instead
 
 Standard GD zig-zags on elongated loss surfaces (high condition number). Momentum adds an exponentially weighted memory of past gradients:
 
-$$v_{t+1} = \beta v_t - \alpha \nabla L(\theta_t)$$
-$$\theta_{t+1} = \theta_t + v_{t+1}$$
+```math
+v_{t+1} = \beta v_t - \alpha \nabla L(\theta_t)
+```
+
+```math
+\theta_{t+1} = \theta_t + v_{t+1}
+```
 
 where $\beta \in [0, 1)$ is the momentum coefficient (typically $\beta = 0.9$).
 
@@ -171,12 +192,19 @@ where $\beta \in [0, 1)$ is the momentum coefficient (typically $\beta = 0.9$).
 
 Nesterov's key insight: compute the gradient at the **lookahead** point $\theta_t + \beta v_t$ instead of $\theta_t$:
 
-$$v_{t+1} = \beta v_t - \alpha \nabla L(\theta_t + \beta v_t)$$
-$$\theta_{t+1} = \theta_t + v_{t+1}$$
+```math
+v_{t+1} = \beta v_t - \alpha \nabla L(\theta_t + \beta v_t)
+```
+
+```math
+\theta_{t+1} = \theta_t + v_{t+1}
+```
 
 > **Theorem (Nesterov).** For convex, $M$-smooth $L$, NAG achieves:
 >
-> $$L(\theta_T) - L(\theta^\ast) = O\!\left(\frac{1}{T^2}\right)$$
+> ```math
+> L(\theta_T) - L(\theta^\ast) = O\!\left(\frac{1}{T^2}\right)
+> ```
 
 This $O(1/T^2)$ rate is provably optimal among first-order methods with access only to gradients (Nemirovski & Yudin, 1983).
 
@@ -190,8 +218,13 @@ This $O(1/T^2)$ rate is provably optimal among first-order methods with access o
 
 AdaGrad adapts the learning rate per-parameter based on the history of squared gradients:
 
-$$s_t = s_{t-1} + (\nabla L(\theta_t))^2 \quad \text{(element-wise square)}$$
-$$\theta_{t+1} = \theta_t - \frac{\alpha}{\sqrt{s_t} + \epsilon} \odot \nabla L(\theta_t)$$
+```math
+s_t = s_{t-1} + (\nabla L(\theta_t))^2 \quad \text{(element-wise square)}
+```
+
+```math
+\theta_{t+1} = \theta_t - \frac{\alpha}{\sqrt{s_t} + \epsilon} \odot \nabla L(\theta_t)
+```
 
 - **Strength:** Automatically reduces the step for frequently updated parameters. Excellent for sparse features.
 - **Weakness:** $s_t$ grows monotonically, so the effective learning rate decays to zero, potentially stopping learning prematurely.
@@ -200,8 +233,13 @@ $$\theta_{t+1} = \theta_t - \frac{\alpha}{\sqrt{s_t} + \epsilon} \odot \nabla L(
 
 RMSProp fixes AdaGrad's monotonic decay by using an exponential moving average:
 
-$$s_t = \beta_2 \, s_{t-1} + (1 - \beta_2)(\nabla L(\theta_t))^2$$
-$$\theta_{t+1} = \theta_t - \frac{\alpha}{\sqrt{s_t} + \epsilon} \odot \nabla L(\theta_t)$$
+```math
+s_t = \beta_2 \, s_{t-1} + (1 - \beta_2)(\nabla L(\theta_t))^2
+```
+
+```math
+\theta_{t+1} = \theta_t - \frac{\alpha}{\sqrt{s_t} + \epsilon} \odot \nabla L(\theta_t)
+```
 
 This keeps a sliding window of recent gradient magnitudes instead of accumulating all history.
 
@@ -209,8 +247,13 @@ This keeps a sliding window of recent gradient magnitudes instead of accumulatin
 
 Adam combines momentum (first moment) with RMSProp (second moment), adding **bias correction**:
 
-$$m_t = \beta_1 m_{t-1} + (1 - \beta_1) \nabla L(\theta_t) \quad \text{(first moment)}$$
-$$s_t = \beta_2 s_{t-1} + (1 - \beta_2) (\nabla L(\theta_t))^2 \quad \text{(second moment)}$$
+```math
+m_t = \beta_1 m_{t-1} + (1 - \beta_1) \nabla L(\theta_t) \quad \text{(first moment)}
+```
+
+```math
+s_t = \beta_2 s_{t-1} + (1 - \beta_2) (\nabla L(\theta_t))^2 \quad \text{(second moment)}
+```
 
 $$\hat{m}_t = \frac{m_t}{1 - \beta_1^t}, \quad \hat{s}_t = \frac{s_t}{1 - \beta_2^t} \quad \text{(bias correction)}$$
 
@@ -238,7 +281,9 @@ $$\alpha_t = \alpha_0 \cdot \gamma^{\lfloor t/k \rfloor}$$
 
 Smoothly decrease the learning rate following a cosine curve:
 
-$$\alpha_t = \alpha_{\min} + \frac{1}{2}(\alpha_0 - \alpha_{\min})\left(1 + \cos\!\left(\frac{\pi t}{T}\right)\right)$$
+```math
+\alpha_t = \alpha_{\min} + \frac{1}{2}(\alpha_0 - \alpha_{\min})\left(1 + \cos\!\left(\frac{\pi t}{T}\right)\right)
+```
 
 This allows the optimizer to explore early (large $\alpha$) and converge later (small $\alpha$).
 
@@ -278,7 +323,7 @@ Adam does not converge on all convex problems. Reddi et al. (2018) showed a simp
 
 ### 8.6 Small gradient ≠ small loss gap
 
-A small $\|\nabla L(\theta)\|$ does not guarantee that $L(\theta)$ is close to $L(\theta^\ast)$. On flat plateaus, the gradient is small but the function value may be far from optimal.
+A small $\Vert\nabla L(\theta)\Vert$ does not guarantee that $L(\theta)$ is close to $L(\theta^\ast)$. On flat plateaus, the gradient is small but the function value may be far from optimal.
 
 ---
 

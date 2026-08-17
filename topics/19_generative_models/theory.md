@@ -20,7 +20,7 @@
 ## 1. WHY: The Generative Modeling Problem
 
 The core objective of generative modeling is density estimation and sampling. 
-Given a dataset $\mathcal{D} = \{x^{(1)}, \ldots, x^{(N)}\}$ drawn from an unknown true distribution $p_{\text{data}}(x)$, we seek to learn a model $p_\theta(x)$ that accurately approximates $p_{\text{data}}(x)$.
+Given a dataset $\mathcal{D} = \lbrace x^{(1)}, \ldots, x^{(N)}\rbrace$ drawn from an unknown true distribution $p_{\text{data}}(x)$, we seek to learn a model $p_\theta(x)$ that accurately approximates $p_{\text{data}}(x)$.
 
 Generative models solve fundamental problems:
 1. **Unsupervised Representation Learning:** Discovering meaningful latent factors without labels.
@@ -53,10 +53,16 @@ Building on Topic 17, which covers the standard Evidence Lower Bound (ELBO), we 
 ### $\beta$-VAE and Disentanglement
 
 The standard ELBO is:
-$$ \mathcal{L}_{\text{ELBO}} = \mathbb{E}_{q_\phi(z \mid x)}[\log p_\theta(x \mid z)] - D_{\text{KL}}(q_\phi(z \mid x) \| p(z)) $$
+
+```math
+\mathcal{L}_{\text{ELBO}} = \mathbb{E}_{q_\phi(z \mid x)}[\log p_\theta(x \mid z)] - D_{\text{KL}}(q_\phi(z \mid x) \| p(z))
+```
 
 $\beta$-VAE modifies this by explicitly weighting the KL divergence term:
-$$ \mathcal{L}_{\beta} = \mathbb{E}_{q_\phi(z \mid x)}[\log p_\theta(x \mid z)] - \beta D_{\text{KL}}(q_\phi(z \mid x) \| p(z)) $$
+
+```math
+\mathcal{L}_{\beta} = \mathbb{E}_{q_\phi(z \mid x)}[\log p_\theta(x \mid z)] - \beta D_{\text{KL}}(q_\phi(z \mid x) \| p(z))
+```
 
 **Rule (Information Bottleneck):** $\beta > 1$ heavily penalizes the capacity of the latent channel. It forces the encoder to be extremely efficient, encouraging *disentangled representations* where individual dimensions of $z$ correspond to independent, interpretable factors of variation (like color, size, rotation).
 
@@ -74,7 +80,9 @@ When the decoder is powerful, the model prefers to model local statistics with t
 
 To generate specific classes or conditions, we condition both the encoder and decoder on a label $y$:
 
-$$ \mathcal{L}_{\text{CVAE}} = \mathbb{E}_{q_\phi(z \mid x, y)}[\log p_\theta(x \mid z, y)] - D_{\text{KL}}(q_\phi(z \mid x, y) \| p(z \mid y)) $$
+```math
+\mathcal{L}_{\text{CVAE}} = \mathbb{E}_{q_\phi(z \mid x, y)}[\log p_\theta(x \mid z, y)] - D_{\text{KL}}(q_\phi(z \mid x, y) \| p(z \mid y))
+```
 
 **Result:** This allows controlled generation. We sample $z \sim p(z)$ and generate $x \sim p_\theta(x \mid z, y)$.
 
@@ -100,7 +108,10 @@ $$ V(G, D) = \int \left[ p_{\text{data}}(x) \log D(x) + p_g(x) \log(1 - D(x)) \r
 We maximize $f(y) = a \log(y) + b \log(1 - y)$ with respect to $y$.
 
 **Step 3 (Derivative):** Set derivative to zero:
-$$ \frac{df}{dy} = \frac{a}{y} - \frac{b}{1 - y} = 0 \implies a(1 - y) = by \implies y = \frac{a}{a+b} $$
+
+```math
+\frac{df}{dy} = \frac{a}{y} - \frac{b}{1 - y} = 0 \implies a(1 - y) = by \implies y = \frac{a}{a+b}
+```
 
 **Result:** The optimal discriminator is $D^\ast(x) = \frac{p_{\text{data}}(x)}{p_{\text{data}}(x) + p_g(x)}$.
 
@@ -116,9 +127,11 @@ $$ = \mathbb{E}_{x \sim p_{\text{data}}}\left[ \log \left( \frac{1}{2} \frac{p_{
 
 Extract $\log \frac{1}{2} = -\log 2$:
 
-$$ = -2 \log 2 + D_{\text{KL}}\left(p_{\text{data}} \Big\| \frac{p_{\text{data}} + p_g}{2}\right) + D_{\text{KL}}\left(p_g \Big\| \frac{p_{\text{data}} + p_g}{2}\right) $$
+```math
+= -2 \log 2 + D_{\text{KL}}\left(p_{\text{data}} \Big\| \frac{p_{\text{data}} + p_g}{2}\right) + D_{\text{KL}}\left(p_g \Big\| \frac{p_{\text{data}} + p_g}{2}\right)
+```
 
-**Result:** $V(G, D^\ast) = -\log 4 + 2 \cdot JSD(p_{\text{data}} \| p_g)$.
+**Result:** $V(G, D^\ast) = -\log 4 + 2 \cdot JSD(p_{\text{data}} \Vert p_g)$.
 
 ### Training Instabilities
 
@@ -130,14 +143,20 @@ $$ = -2 \log 2 + D_{\text{KL}}\left(p_{\text{data}} \Big\| \frac{p_{\text{data}}
 **Problem:** When supports of $p_{\text{data}}$ and $p_g$ are disjoint (common in high dimensions), JSD is constant ($\log 2$), giving 0 gradients.
 
 **Solution:** Use Earth Mover's (Wasserstein-1) Distance:
-$$ W(p_{\text{data}}, p_g) = \inf_{\gamma \in \Pi(p_{\text{data}}, p_g)} \mathbb{E}_{(x,y) \sim \gamma}[\| x - y \|] $$
+
+```math
+W(p_{\text{data}}, p_g) = \inf_{\gamma \in \Pi(p_{\text{data}}, p_g)} \mathbb{E}_{(x,y) \sim \gamma}[\| x - y \|]
+```
 
 **Kantorovich-Rubinstein Duality:** 
 This primal form is intractable. We use the dual form:
-$$ W(p_{\text{data}}, p_g) = \sup_{\|f\|_L \le 1} \mathbb{E}_{x \sim p_{\text{data}}}[f(x)] - \mathbb{E}_{x \sim p_g}[f(x)] $$
+
+```math
+W(p_{\text{data}}, p_g) = \sup_{\|f\|_L \le 1} \mathbb{E}_{x \sim p_{\text{data}}}[f(x)] - \mathbb{E}_{x \sim p_g}[f(x)]
+```
 
 **Result (WGAN Objective):** Replace $D$ with a Critic $f$ constrained to be 1-Lipschitz. 
-The gradient penalty $\lambda \mathbb{E}[(\|\nabla_x f(x)\|_2 - 1)^2]$ is typically used to enforce the 1-Lipschitz constraint.
+The gradient penalty $\lambda \mathbb{E}[(\Vert\nabla_x f(x)\Vert_2 - 1)^2]$ is typically used to enforce the 1-Lipschitz constraint.
 
 ## 5. HOW: Diffusion Models
 
@@ -146,31 +165,46 @@ Diffusion models learn to reverse a gradual noising process over $T$ steps.
 ### Forward Process
 
 A Markov chain adding Gaussian noise with variance schedule $\beta_1, \ldots, \beta_T$:
-$$ q(x_t \mid x_{t-1}) = \mathcal{N}(x_t; \sqrt{1 - \beta_t} x_{t-1}, \beta_t I) $$
+
+```math
+q(x_t \mid x_{t-1}) = \mathcal{N}(x_t; \sqrt{1 - \beta_t} x_{t-1}, \beta_t I)
+```
 
 **Closed-form $q(x_t \mid x_0)$ derivation:**
-Let $\alpha_t = 1 - \beta_t$ and $\bar{\alpha}_t = \prod_{s=1}^t \alpha_s$. Using properties of sums of independent Gaussians:
+Let $\alpha_t = 1 - \beta_t$ and $\bar\alpha_t = \prod_{s=1}^t \alpha_s$. Using properties of sums of independent Gaussians:
 **Step 1:** $x_t = \sqrt{\alpha_t} x_{t-1} + \sqrt{1 - \alpha_t}\epsilon_{t-1}$
 **Step 2:** $x_{t-1} = \sqrt{\alpha_{t-1}} x_{t-2} + \sqrt{1 - \alpha_{t-1}}\epsilon_{t-2}$
 **Step 3:** Substitute Step 2 into Step 1:
-$$ x_t = \sqrt{\alpha_t \alpha_{t-1}} x_{t-2} + \sqrt{\alpha_t(1 - \alpha_{t-1})}\epsilon_{t-2} + \sqrt{1 - \alpha_t}\epsilon_{t-1} $$
+
+```math
+x_t = \sqrt{\alpha_t \alpha_{t-1}} x_{t-2} + \sqrt{\alpha_t(1 - \alpha_{t-1})}\epsilon_{t-2} + \sqrt{1 - \alpha_t}\epsilon_{t-1}
+```
+
 Since $\epsilon_i \sim \mathcal{N}(0, I)$, the sum of the noise terms is distributed as $\mathcal{N}(0, (\alpha_t(1 - \alpha_{t-1}) + 1 - \alpha_t)I) = \mathcal{N}(0, (1 - \alpha_t \alpha_{t-1})I)$.
 **Step 4:** By induction, extending this to $t$ steps gives:
-$$ x_t = \sqrt{\bar{\alpha}_t}x_0 + \sqrt{1 - \bar{\alpha}_t}\epsilon $$
+
+```math
+x_t = \sqrt{\bar{\alpha}_t}x_0 + \sqrt{1 - \bar{\alpha}_t}\epsilon
+```
 
 **Result:** $q(x_t \mid x_0) = \mathcal{N}(x_t; \sqrt{\bar{\alpha}_t} x_0, (1 - \bar{\alpha}_t) I)$.
 
 ### Reverse Process
 
 We approximate the true reverse process $q(x_{t-1} \mid x_t)$ with a neural network $p_\theta$:
-$$ p_\theta(x_{t-1} \mid x_t) = \mathcal{N}(x_{t-1}; \mu_\theta(x_t, t), \Sigma_\theta(x_t, t)) $$
+
+```math
+p_\theta(x_{t-1} \mid x_t) = \mathcal{N}(x_{t-1}; \mu_\theta(x_t, t), \Sigma_\theta(x_t, t))
+```
 
 ### Simplified Noise Prediction Objective
 
 The variational bound on $\log p(x_0)$ yields a loss that matches $\mu_\theta$ to the true posterior mean. 
 However, Ho et al. showed it is empirically better to parameterize the network to predict the noise $\epsilon$ added at step $t$:
 
-$$ \mathcal{L}_{\text{simple}} = \mathbb{E}_{t, x_0, \epsilon} \left[ \| \epsilon - \epsilon_\theta(x_t, t) \|^2 \right] $$
+```math
+\mathcal{L}_{\text{simple}} = \mathbb{E}_{t, x_0, \epsilon} \left[ \| \epsilon - \epsilon_\theta(x_t, t) \|^2 \right]
+```
 
 **Connection to Score Matching:**
 Predicting the noise $\epsilon$ is mathematically equivalent to predicting the score function $\nabla_x \log p_t(x)$. 

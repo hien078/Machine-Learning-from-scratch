@@ -77,7 +77,9 @@ to the output of token $i$.
 
 Given queries $Q$, keys $K$, and values $V$:
 
-$$\text{Attention}(Q, K, V) = \text{softmax}\!\left(\frac{Q K^\top}{\sqrt{d_k}}\right) V. \qquad (2.1)$$
+```math
+\text{Attention}(Q, K, V) = \text{softmax}\!\left(\frac{Q K^\top}{\sqrt{d_k}}\right) V. \qquad (2.1)
+```
 
 Step by step:
 
@@ -117,7 +119,9 @@ or 1 — the saturated regime where $\partial \text{softmax} / \partial z \appro
 
 Dividing by $\sqrt{d_k}$ restores unit variance:
 
-$$\text{Var}\!\left(\frac{q_i^\top k_j}{\sqrt{d_k}}\right) = \frac{d_k}{d_k} = 1.$$
+```math
+\text{Var}\!\left(\frac{q_i^\top k_j}{\sqrt{d_k}}\right) = \frac{d_k}{d_k} = 1.
+```
 
 **Result:** Scaling by $\sqrt{d_k}$ keeps the softmax input in a moderate range where
 gradients are informative, regardless of the dimension $d_k$.
@@ -135,7 +139,7 @@ each with its own learned projections.
 
 ### 3.2 Formulation
 
-For head $i \in \{1, \dots, h\}$:
+For head $i \in \lbrace1, \dots, h\rbrace$:
 
 $$Q_i = X W_i^Q, \quad K_i = X W_i^K, \quad V_i = X W_i^V,$$
 
@@ -143,7 +147,9 @@ $$\text{head}_i = \text{Attention}(Q_i, K_i, V_i).$$
 
 Concatenate and project:
 
-$$\text{MultiHead}(X) = \text{Concat}(\text{head}_1, \dots, \text{head}_h) \, W^O. \qquad (3.1)$$
+```math
+\text{MultiHead}(X) = \text{Concat}(\text{head}_1, \dots, \text{head}_h) \, W^O. \qquad (3.1)
+```
 
 where $W_i^Q, W_i^K \in \mathbb{R}^{d \times d_k}$, $W_i^V \in \mathbb{R}^{d \times d_v}$,
 and $W^O \in \mathbb{R}^{h d_v \times d}$.
@@ -174,8 +180,10 @@ the output is reordered in exactly the same way. The operation treats the input 
 
 The original Transformer uses fixed sinusoidal functions:
 
-$$\text{PE}(\text{pos}, 2i) = \sin\!\left(\frac{\text{pos}}{10000^{2i/d}}\right), \qquad
-\text{PE}(\text{pos}, 2i+1) = \cos\!\left(\frac{\text{pos}}{10000^{2i/d}}\right), \qquad (4.1)$$
+```math
+\text{PE}(\text{pos}, 2i) = \sin\!\left(\frac{\text{pos}}{10000^{2i/d}}\right), \qquad
+\text{PE}(\text{pos}, 2i+1) = \cos\!\left(\frac{\text{pos}}{10000^{2i/d}}\right), \qquad (4.1)
+```
 
 for position $\text{pos} = 0, 1, \dots, n-1$ and dimension index $i = 0, 1, \dots, d/2 - 1$.
 
@@ -235,15 +243,21 @@ Input X
 
 In equations (Post-LN, original Transformer):
 
-$$Z_1 = \text{LayerNorm}\!\big(X + \text{MultiHead}(X, X, X)\big), \qquad (5.1)$$
+```math
+Z_1 = \text{LayerNorm}\!\big(X + \text{MultiHead}(X, X, X)\big), \qquad (5.1)
+```
 
-$$Z_2 = \text{LayerNorm}\!\big(Z_1 + \text{FFN}(Z_1)\big). \qquad (5.2)$$
+```math
+Z_2 = \text{LayerNorm}\!\big(Z_1 + \text{FFN}(Z_1)\big). \qquad (5.2)
+```
 
 ### 5.2 Feed-forward network (FFN)
 
 A two-layer MLP applied independently to each position:
 
-$$\text{FFN}(x) = W_2 \, \text{ReLU}(W_1 x + b_1) + b_2, \qquad (5.3)$$
+```math
+\text{FFN}(x) = W_2 \, \text{ReLU}(W_1 x + b_1) + b_2, \qquad (5.3)
+```
 
 where $W_1 \in \mathbb{R}^{d \times d_{\text{ff}}}$, $W_2 \in \mathbb{R}^{d_{\text{ff}} \times d}$,
 and typically $d_{\text{ff}} = 4d$.
@@ -277,7 +291,9 @@ The decoder has three sub-layers:
 At training time, the decoder processes the entire target sequence in parallel. To prevent
 token $t$ from attending to future tokens $t+1, t+2, \dots$, a **causal mask** is applied:
 
-$$M_{ij} = \begin{cases} 0 & \text{if } j \le i \\ -\infty & \text{if } j > i \end{cases}$$
+```math
+M_{ij} = \begin{cases} 0 & \text{if } j \le i \\ -\infty & \text{if } j > i \end{cases}
+```
 
 This upper-triangular mask sets future attention weights to zero after softmax, preserving
 the autoregressive property: the prediction for position $t$ depends only on positions
@@ -294,11 +310,17 @@ This allows each decoder position to "read" the entire source sequence.
 
 ### 6.3 Full decoder block
 
-$$Z_1 = \text{LayerNorm}\!\big(X + \text{MaskedMultiHead}(X, X, X)\big),$$
+```math
+Z_1 = \text{LayerNorm}\!\big(X + \text{MaskedMultiHead}(X, X, X)\big),
+```
 
-$$Z_2 = \text{LayerNorm}\!\big(Z_1 + \text{MultiHead}(Z_1, E, E)\big),$$
+```math
+Z_2 = \text{LayerNorm}\!\big(Z_1 + \text{MultiHead}(Z_1, E, E)\big),
+```
 
-$$Z_3 = \text{LayerNorm}\!\big(Z_2 + \text{FFN}(Z_2)\big).$$
+```math
+Z_3 = \text{LayerNorm}\!\big(Z_2 + \text{FFN}(Z_2)\big).
+```
 
 ---
 
@@ -348,8 +370,8 @@ Training uses **teacher forcing**: the decoder receives the ground-truth target 
    *current* query happened to align with that key. Attention patterns can be misleading
    for interpretability.
 
-6. **Large parameter count.** A single encoder block with $d = 512$ has $\sim 2.4$M
-   parameters. Stacking $N = 6$ gives $\sim 14$M for the encoder alone. Transformers are
+6. **Large parameter count.** A single encoder block with $d = 512$ has $\sim 2.4\text{M}$
+   parameters. Stacking $N = 6$ gives $\sim 14\text{M}$ for the encoder alone. Transformers are
    parameter-hungry and require large datasets to generalise.
 
 ---

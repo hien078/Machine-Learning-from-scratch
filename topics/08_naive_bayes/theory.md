@@ -8,7 +8,7 @@
 | $d$ | scalar | number of features |
 | $x_i$ | vector of length $d$ | feature vector of example $i$ |
 | $x_{ij}$ | scalar | $j$-th feature of example $i$ |
-| $y_i$ | scalar | class label of example $i$, $y_i \in \{1, \dots, K\}$ |
+| $y_i$ | scalar | class label of example $i$, $y_i \in \lbrace1, \dots, K\rbrace$ |
 | $K$ | scalar | number of classes |
 | $n_k$ | scalar | number of training examples in class $k$ |
 | $\pi_k$ | scalar in $(0, 1)$ | prior probability $P(y = k)$ |
@@ -51,7 +51,9 @@ dependent — yet Naive Bayes works surprisingly well because:
 
 For a class label $y$ and feature vector $x = (x_1, \dots, x_d)$:
 
-$$P(y = k \mid x) = \frac{P(x \mid y = k) \, P(y = k)}{P(x)}. \qquad (2.1)$$
+```math
+P(y = k \mid x) = \frac{P(x \mid y = k) \, P(y = k)}{P(x)}. \qquad (2.1)
+```
 
 - **Posterior** $P(y = k \mid x)$: what we want — the probability of class $k$ given the observed features.
 - **Likelihood** $P(x \mid y = k)$: how likely these features are if the example belongs to class $k$.
@@ -60,7 +62,9 @@ $$P(y = k \mid x) = \frac{P(x \mid y = k) \, P(y = k)}{P(x)}. \qquad (2.1)$$
 
 Since $P(x)$ is the same for all classes, the classification rule only needs:
 
-$$\hat{y} = \arg\max_k \; P(x \mid y = k) \, P(y = k). \qquad (2.2)$$
+```math
+\hat{y} = \arg\max_k \; P(x \mid y = k) \, P(y = k). \qquad (2.2)
+```
 
 ### 2.2 The Naive Conditional Independence Assumption
 
@@ -122,7 +126,9 @@ where $a_{\max} = \max_j a_j$. Subtracting $a_{\max}$ before exponentiation prev
 For continuous features, assume each $P(x_j \mid y = k)$ is a **univariate Gaussian**
 with class-specific mean $\mu_{kj}$ and variance $\sigma^2_{kj}$:
 
-$$P(x_j \mid y = k) = \frac{1}{\sqrt{2\pi \sigma^2_{kj}}} \exp\!\left( -\frac{(x_j - \mu_{kj})^2}{2\sigma^2_{kj}} \right). \qquad (4.1)$$
+```math
+P(x_j \mid y = k) = \frac{1}{\sqrt{2\pi \sigma^2_{kj}}} \exp\!\left( -\frac{(x_j - \mu_{kj})^2}{2\sigma^2_{kj}} \right). \qquad (4.1)
+```
 
 ### 4.2 Log-Likelihood Contribution
 
@@ -130,7 +136,7 @@ $$\log P(x_j \mid y = k) = -\frac{1}{2} \log(2\pi \sigma^2_{kj}) - \frac{(x_j - 
 
 ### 4.3 Parameter Estimation (MAP)
 
-Given training data $\{(x_i, y_i)\}_{i=1}^{n}$, estimate parameters by maximum
+Given training data $\lbrace(x_i, y_i)\rbrace_{i=1}^{n}$, estimate parameters by maximum
 likelihood (which coincides with MAP under a flat prior):
 
 $$\hat{\pi}_k = \frac{n_k}{n}, \qquad \hat{\mu}_{kj} = \frac{1}{n_k} \sum_{i: y_i = k} x_{ij}, \qquad \hat{\sigma}^2_{kj} = \frac{1}{n_k} \sum_{i: y_i = k} (x_{ij} - \hat{\mu}_{kj})^2. \qquad (4.3)$$
@@ -157,18 +163,18 @@ where $\theta_{kj} = P(\text{feature } j \mid y = k)$ and $\sum_j \theta_{kj} = 
 
 ### 5.2 Parameter Estimation with Laplace Smoothing
 
-The MLE is $\hat{\theta}_{kj} = N_{kj} / N_k$ where $N_{kj} = \sum_{i: y_i = k} x_{ij}$
+The MLE is $\hat\theta_{kj} = N_{kj} / N_k$ where $N_{kj} = \sum_{i: y_i = k} x_{ij}$
 is the total count of feature $j$ in class $k$, and $N_k = \sum_j N_{kj}$.
 
 **The zero-frequency problem.** If feature $j$ never appears in class $k$, then
 $\hat{\theta}_{kj} = 0$, and any test example with $x_j > 0$ gets
 $P(x \mid y = k) = 0$ — one missing word kills the entire class probability.
 
-**Laplace (add-$\alpha$) smoothing:**
+**Laplace ($\text{add-}\alpha$) smoothing:**
 
 $$\hat{\theta}_{kj} = \frac{N_{kj} + \alpha}{N_k + \alpha \cdot d}, \qquad \alpha > 0. \qquad (5.2)$$
 
-**Why $\alpha \cdot d$ in the denominator?** Adding $\alpha$ pseudo-counts to each of the $d$ feature categories increases the total count in class $k$ by $\sum_{j=1}^d \alpha = \alpha \cdot d$. This exact normalization guarantees that the parameters form a valid probability distribution summing to 1: $\sum_{j=1}^d \hat{\theta}_{kj} = \frac{\sum_{j=1}^d (N_{kj} + \alpha)}{N_k + \alpha d} = \frac{N_k + \alpha d}{N_k + \alpha d} = 1$.
+**Why $\alpha \cdot d$ in the denominator?** Adding $\alpha$ pseudo-counts to each of the $d$ feature categories increases the total count in class $k$ by $\sum_{j=1}^d \alpha = \alpha \cdot d$. This exact normalization guarantees that the parameters form a valid probability distribution summing to 1: $\sum_{j=1}^d \hat\theta_{kj} = \frac{\sum_{j=1}^d (N_{kj} + \alpha)}{N_k + \alpha d} = \frac{N_k + \alpha d}{N_k + \alpha d} = 1$.
 
 With $\alpha = 1$ (Laplace smoothing), this is equivalent to placing a symmetric Dirichlet prior $\text{Dir}(\alpha, \dots, \alpha)$ on $\theta_k$ and computing the MAP estimate.
 
@@ -180,7 +186,7 @@ With $\alpha = 1$ (Laplace smoothing), this is equivalent to placing a symmetric
 
 ### 6.1 Model
 
-For binary features $x_j \in \{0, 1\}$:
+For binary features $x_j \in \lbrace0, 1\rbrace$:
 
 $$P(x_j \mid y = k) = \theta_{kj}^{x_j} (1 - \theta_{kj})^{1 - x_j}. \qquad (6.1)$$
 
@@ -199,8 +205,8 @@ The denominator uses $2\alpha$ because each binary feature has exactly 2 possibl
 | Variant | Feature type | Likelihood model | Smoothing | Use case |
 |---|---|---|---|---|
 | **Gaussian** | Continuous | Univariate Normal | Variance floor $\epsilon$ | Sensor readings, measurements |
-| **Multinomial** | Counts / frequencies | Multinomial | Add-$\alpha$ | Text classification (bag of words) |
-| **Bernoulli** | Binary (0/1) | Bernoulli | Add-$\alpha$ | Binary text features, presence/absence |
+| **Multinomial** | Counts / frequencies | Multinomial | $\text{Add-}\alpha$ | Text classification (bag of words) |
+| **Bernoulli** | Binary (0/1) | Bernoulli | $\text{Add-}\alpha$ | Binary text features, presence/absence |
 
 ---
 

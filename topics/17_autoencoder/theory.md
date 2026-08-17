@@ -66,18 +66,18 @@ $$\min_{W_e, W_d, b_e, b_d} \frac{1}{n}\sum_{i=1}^{n}\lVert x_i - W_d(W_e x_i + 
 
 **Theorem (Baldi & Hornik, 1989).** For mean-centered data, the optimal
 linear autoencoder with $k$-dimensional bottleneck spans the same subspace as
-the top-$k$ principal components.
+the $\text{top-}k$ principal components.
 
 **Derivation sketch.** With centered data ($\bar{x} = 0$), set $b_e = 0$,
 $b_d = 0$. The objective is:
 
 $$\min_{W_e, W_d} \frac{1}{n}\lVert X - XW_e^T W_d^T\rVert_F^2$$
 
-Let $M = W_d W_e$. This is a rank-$k$ approximation problem. By the
-Eckart–Young theorem, the optimal rank-$k$ approximation of $X$ in Frobenius
-norm uses the top-$k$ singular vectors. Therefore $M$ projects onto the
-subspace spanned by the top-$k$ right singular vectors of $X$, which equals
-the top-$k$ eigenvectors of the covariance matrix $\frac{1}{n}X^T X$.
+Let $M = W_d W_e$. This is a $\text{rank-}k$ approximation problem. By the
+Eckart–Young theorem, the optimal $\text{rank-}k$ approximation of $X$ in Frobenius
+norm uses the $\text{top-}k$ singular vectors. Therefore $M$ projects onto the
+subspace spanned by the $\text{top-}k$ right singular vectors of $X$, which equals
+the $\text{top-}k$ eigenvectors of the covariance matrix $\frac{1}{n}X^T X$.
 
 **Result:** A linear autoencoder with $k$ latent dimensions recovers the PCA
 subspace. However, the individual encoder/decoder weight matrices are not
@@ -115,7 +115,9 @@ to be inactive for any given input, resulting in a sparse distributed code.
 Alternatively, a KL-divergence penalty targets a desired activation probability
 $\rho$ (typically $\rho \approx 0.05$):
 
-$$\Omega_{\text{KL}} = \sum_{j=1}^{k} \text{KL}(\rho \,\|\, \hat{\rho}_j) = \sum_{j=1}^{k}\left[\rho\log\frac{\rho}{\hat{\rho}_j} + (1-\rho)\log\frac{1-\rho}{1-\hat{\rho}_j}\right]$$
+```math
+\Omega_{\text{KL}} = \sum_{j=1}^{k} \text{KL}(\rho \,\|\, \hat{\rho}_j) = \sum_{j=1}^{k}\left[\rho\log\frac{\rho}{\hat{\rho}_j} + (1-\rho)\log\frac{1-\rho}{1-\hat{\rho}_j}\right]
+```
 
 ## 6. Variational Autoencoder (VAE)
 
@@ -127,7 +129,9 @@ $$z \sim p(z) = \mathcal{N}(0, I), \qquad x \mid z \sim p_\phi(x \mid z)$$
 
 The goal is to maximize the marginal log-likelihood:
 
-$$\log p_\phi(x) = \log \int p_\phi(x \mid z)\, p(z)\, dz$$
+```math
+\log p_\phi(x) = \log \int p_\phi(x \mid z)\, p(z)\, dz
+```
 
 This integral is intractable because it requires integrating over all
 possible latent codes.
@@ -139,35 +143,49 @@ derive a tractable lower bound.
 
 **ELBO derivation.** Start from the log-likelihood and apply Jensen's inequality:
 
-$$\log p_\phi(x) = \log \int p_\phi(x \mid z)\,p(z)\,dz$$
+```math
+\log p_\phi(x) = \log \int p_\phi(x \mid z)\,p(z)\,dz
+```
 
 Multiply and divide by $q_\theta(z \mid x)$:
 
-$$= \log \int q_\theta(z \mid x)\,\frac{p_\phi(x \mid z)\,p(z)}{q_\theta(z \mid x)}\,dz$$
+```math
+= \log \int q_\theta(z \mid x)\,\frac{p_\phi(x \mid z)\,p(z)}{q_\theta(z \mid x)}\,dz
+```
 
-$$= \log\, \mathbb{E}_{q_\theta(z|x)}\left[\frac{p_\phi(x \mid z)\,p(z)}{q_\theta(z \mid x)}\right]$$
+```math
+= \log\, \mathbb{E}_{q_\theta(z|x)}\left[\frac{p_\phi(x \mid z)\,p(z)}{q_\theta(z \mid x)}\right]
+```
 
 By Jensen's inequality ($\log$ is concave):
 
-$$\geq \mathbb{E}_{q_\theta(z|x)}\left[\log\frac{p_\phi(x \mid z)\,p(z)}{q_\theta(z \mid x)}\right]$$
+```math
+\geq \mathbb{E}_{q_\theta(z|x)}\left[\log\frac{p_\phi(x \mid z)\,p(z)}{q_\theta(z \mid x)}\right]
+```
 
 Split the log:
 
-$$= \underbrace{\mathbb{E}_{q_\theta(z|x)}[\log p_\phi(x \mid z)]}_{\text{reconstruction}} - \underbrace{D_{\text{KL}}\bigl(q_\theta(z \mid x) \,\|\, p(z)\bigr)}_{\text{regularization}}$$
+```math
+= \underbrace{\mathbb{E}_{q_\theta(z|x)}[\log p_\phi(x \mid z)]}_{\text{reconstruction}} - \underbrace{D_{\text{KL}}\bigl(q_\theta(z \mid x) \,\|\, p(z)\bigr)}_{\text{regularization}}
+```
 
 **Result:** The Evidence Lower Bound (ELBO) is:
 
-$$\text{ELBO}(x; \theta, \phi) = \mathbb{E}_{q_\theta(z|x)}[\log p_\phi(x \mid z)] - D_{\text{KL}}\bigl(q_\theta(z \mid x) \,\|\, p(z)\bigr)$$
+```math
+\text{ELBO}(x; \theta, \phi) = \mathbb{E}_{q_\theta(z|x)}[\log p_\phi(x \mid z)] - D_{\text{KL}}\bigl(q_\theta(z \mid x) \,\|\, p(z)\bigr)
+```
 
 The gap between $\log p_\phi(x)$ and the ELBO equals
-$D_{\text{KL}}(q_\theta(z|x) \,\|\, p_\phi(z|x)) \geq 0$, so maximizing the ELBO
+$D_{\text{KL}}(q_\theta(z|x) \thinspace\Vert\thinspace p_\phi(z|x)) \geq 0$, so maximizing the ELBO
 simultaneously improves the generative model and tightens the approximation.
 
 ### 6.3 Gaussian encoder
 
 Choose the encoder to output a diagonal Gaussian:
 
-$$q_\theta(z \mid x) = \mathcal{N}\bigl(\mu_\theta(x),\; \text{diag}(\sigma_\theta^2(x))\bigr)$$
+```math
+q_\theta(z \mid x) = \mathcal{N}\bigl(\mu_\theta(x),\; \text{diag}(\sigma_\theta^2(x))\bigr)
+```
 
 where $\mu_\theta(x)$ and $\log\sigma_\theta^2(x)$ are outputs of the encoder network.
 We parameterize $\log\sigma^2$ instead of $\sigma$ for numerical stability.
@@ -176,15 +194,19 @@ We parameterize $\log\sigma^2$ instead of $\sigma$ for numerical stability.
 
 For $q = \mathcal{N}(\mu, \text{diag}(\sigma^2))$ and $p = \mathcal{N}(0, I)$, both $k$-dimensional:
 
-$$D_{\text{KL}}(q \,\|\, p) = \frac{1}{2}\sum_{j=1}^{k}\left[\mu_j^2 + \sigma_j^2 - \log\sigma_j^2 - 1\right]$$
+```math
+D_{\text{KL}}(q \,\|\, p) = \frac{1}{2}\sum_{j=1}^{k}\left[\mu_j^2 + \sigma_j^2 - \log\sigma_j^2 - 1\right]
+```
 
 **Derivation.** Using the general formula for KL between two Gaussians:
 
-$$D_{\text{KL}}(\mathcal{N}_1 \,\|\, \mathcal{N}_0) = \frac{1}{2}\left[\text{tr}(\Sigma_0^{-1}\Sigma_1) + (\mu_0 - \mu_1)^T\Sigma_0^{-1}(\mu_0 - \mu_1) - k + \log\frac{|\Sigma_0|}{|\Sigma_1|}\right]$$
+```math
+D_{\text{KL}}(\mathcal{N}_1 \,\|\, \mathcal{N}_0) = \frac{1}{2}\left[\text{tr}(\Sigma_0^{-1}\Sigma_1) + (\mu_0 - \mu_1)^T\Sigma_0^{-1}(\mu_0 - \mu_1) - k + \log\frac{|\Sigma_0|}{|\Sigma_1|}\right]
+```
 
 Substitute $\mu_0 = 0$, $\Sigma_0 = I$, $\mu_1 = \mu$, $\Sigma_1 = \text{diag}(\sigma^2)$:
 
-- $\text{tr}(I^{-1}\,\text{diag}(\sigma^2)) = \sum_j \sigma_j^2$
+- $\text{tr}(I^{-1}\thinspace\text{diag}(\sigma^2)) = \sum_j \sigma_j^2$
 - $\mu^T I^{-1} \mu = \sum_j \mu_j^2$
 - $\log\frac{|I|}{|\text{diag}(\sigma^2)|} = -\sum_j \log\sigma_j^2$
 
@@ -200,14 +222,16 @@ $$z = \mu_\theta(x) + \sigma_\theta(x) \odot \varepsilon, \qquad \varepsilon \si
 This moves the stochasticity to $\varepsilon$, which does not depend on $\theta$,
 allowing gradients to flow through $\mu$ and $\sigma$ via standard backpropagation.
 
-Without this trick, computing $\nabla_\theta \mathbb{E}_{q_\theta}[\cdot]$ would
+Without this trick, computing $\nabla_\theta \mathbb E_{q_\theta}[\cdot]$ would
 require high-variance score function estimators (REINFORCE).
 
 ### 6.6 Full VAE loss
 
 For a single sample, using one Monte Carlo sample of $\varepsilon$:
 
-$$\mathcal{L}_{\text{VAE}}(x) = \lVert x - g_\phi(\mu + \sigma \odot \varepsilon)\rVert_2^2 + D_{\text{KL}}\bigl(q_\theta(z \mid x) \,\|\, p(z)\bigr)$$
+```math
+\mathcal{L}_{\text{VAE}}(x) = \lVert x - g_\phi(\mu + \sigma \odot \varepsilon)\rVert_2^2 + D_{\text{KL}}\bigl(q_\theta(z \mid x) \,\|\, p(z)\bigr)
+```
 
 Over the dataset:
 

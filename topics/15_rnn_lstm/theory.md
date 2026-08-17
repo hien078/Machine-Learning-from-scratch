@@ -35,11 +35,15 @@ information, and (3) shares parameters across time steps.
 
 **Hidden state update:**
 
-$$h_t = \tanh(W_{xh}\, x_t + W_{hh}\, h_{t-1} + b_h)$$
+```math
+h_t = \tanh(W_{xh}\, x_t + W_{hh}\, h_{t-1} + b_h)
+```
 
 **Output:**
 
-$$\hat{y}_t = W_{hy}\, h_t + b_y$$
+```math
+\hat{y}_t = W_{hy}\, h_t + b_y
+```
 
 The initial hidden state $h_0$ is typically set to zero. The same parameters
 $(W_{xh}, W_{hh}, W_{hy}, b_h, b_y)$ are reused at every time step — this is
@@ -77,19 +81,23 @@ x_1 → [RNN] → h_1 → [RNN] → h_2 → ... → [RNN] → h_T
 
 ### 3.2 BPTT gradient derivation
 
-Define $z_t = W_{xh}\, x_t + W_{hh}\, h_{t-1} + b_h$ so that $h_t = \tanh(z_t)$.
+Define $z_t = W_{xh}\thinspace x_t + W_{hh}\thinspace h_{t-1} + b_h$ so that $h_t = \tanh(z_t)$.
 
 The gradient of the total loss w.r.t. $h_t$ has two sources:
 (1) the direct loss at step $t$, and (2) the influence on future steps through $h_{t+1}$:
 
-$$\frac{\partial \mathcal{L}}{\partial h_t}
+```math
+\frac{\partial \mathcal{L}}{\partial h_t}
 = \frac{\partial \ell_t}{\partial h_t}
-+ \frac{\partial h_{t+1}}{\partial h_t}^\top \frac{\partial \mathcal{L}}{\partial h_{t+1}}$$
++ \frac{\partial h_{t+1}}{\partial h_t}^\top \frac{\partial \mathcal{L}}{\partial h_{t+1}}
+```
 
 The Jacobian of $h_{t+1}$ w.r.t. $h_t$ is:
 
-$$\frac{\partial h_{t+1}}{\partial h_t}
-= \text{diag}\!\bigl(\tanh'(z_{t+1})\bigr)\, W_{hh}$$
+```math
+\frac{\partial h_{t+1}}{\partial h_t}
+= \text{diag}\!\bigl(\tanh'(z_{t+1})\bigr)\, W_{hh}
+```
 
 where $\tanh'(z) = 1 - \tanh^2(z)$ is applied element-wise.
 
@@ -98,9 +106,11 @@ where $\tanh'(z) = 1 - \tanh^2(z)$ is applied element-wise.
 The gradient contribution from step $T$ to an earlier step $t$ involves a product
 of Jacobians:
 
-$$\frac{\partial h_T}{\partial h_t}
+```math
+\frac{\partial h_T}{\partial h_t}
 = \prod_{s=t+1}^{T} \frac{\partial h_s}{\partial h_{s-1}}
-= \prod_{s=t+1}^{T} \text{diag}\!\bigl(\tanh'(z_s)\bigr)\, W_{hh}$$
+= \prod_{s=t+1}^{T} \text{diag}\!\bigl(\tanh'(z_s)\bigr)\, W_{hh}
+```
 
 The weight gradient w.r.t. $W_{hh}$ accumulates contributions from all time steps:
 
@@ -118,7 +128,9 @@ and memory.
 
 The product of Jacobians from §3.3 determines how gradients flow across time:
 
-$$\prod_{s=t+1}^{T} \text{diag}\!\bigl(\tanh'(z_s)\bigr)\, W_{hh}$$
+```math
+\prod_{s=t+1}^{T} \text{diag}\!\bigl(\tanh'(z_s)\bigr)\, W_{hh}
+```
 
 Each factor has two components:
 - $\text{diag}(\tanh'(z_s))$: diagonal with entries in $(0, 1]$ (since $\max \tanh'(z) = 1$).
@@ -129,8 +141,10 @@ Each factor has two components:
 Let $\lambda_{\max}$ be the largest singular value of $W_{hh}$. The norm of the
 Jacobian product satisfies approximately:
 
-$$\left\|\prod_{s=t+1}^{T} \text{diag}\!\bigl(\tanh'(z_s)\bigr)\, W_{hh}\right\|
-\lesssim \left(\gamma \cdot \lambda_{\max}\right)^{T-t}$$
+```math
+\left\|\prod_{s=t+1}^{T} \text{diag}\!\bigl(\tanh'(z_s)\bigr)\, W_{hh}\right\|
+\lesssim \left(\gamma \cdot \lambda_{\max}\right)^{T-t}
+```
 
 where $\gamma \leq 1$ accounts for the $\tanh'$ saturation.
 
@@ -172,15 +186,23 @@ multiplication by the recurrent weight matrix.
 
 ### 5.3 LSTM equations
 
-$$f_t = \sigma(W_f\, [h_{t-1},\, x_t] + b_f) \quad \text{(forget gate)}$$
+```math
+f_t = \sigma(W_f\, [h_{t-1},\, x_t] + b_f) \quad \text{(forget gate)}
+```
 
-$$i_t = \sigma(W_i\, [h_{t-1},\, x_t] + b_i) \quad \text{(input gate)}$$
+```math
+i_t = \sigma(W_i\, [h_{t-1},\, x_t] + b_i) \quad \text{(input gate)}
+```
 
-$$\tilde{c}_t = \tanh(W_c\, [h_{t-1},\, x_t] + b_c) \quad \text{(candidate)}$$
+```math
+\tilde{c}_t = \tanh(W_c\, [h_{t-1},\, x_t] + b_c) \quad \text{(candidate)}
+```
 
 $$c_t = f_t \odot c_{t-1} + i_t \odot \tilde{c}_t \quad \text{(cell update)}$$
 
-$$o_t = \sigma(W_o\, [h_{t-1},\, x_t] + b_o) \quad \text{(output gate)}$$
+```math
+o_t = \sigma(W_o\, [h_{t-1},\, x_t] + b_o) \quad \text{(output gate)}
+```
 
 $$h_t = o_t \odot \tanh(c_t) \quad \text{(hidden state)}$$
 
@@ -224,11 +246,17 @@ of training (Jozefowicz et al., 2015).
 GRU (Cho et al., 2014) simplifies the LSTM by merging the cell and hidden state
 and using only two gates:
 
-$$z_t = \sigma(W_z\, [h_{t-1},\, x_t] + b_z) \quad \text{(update gate)}$$
+```math
+z_t = \sigma(W_z\, [h_{t-1},\, x_t] + b_z) \quad \text{(update gate)}
+```
 
-$$r_t = \sigma(W_r\, [h_{t-1},\, x_t] + b_r) \quad \text{(reset gate)}$$
+```math
+r_t = \sigma(W_r\, [h_{t-1},\, x_t] + b_r) \quad \text{(reset gate)}
+```
 
-$$\tilde{h}_t = \tanh(W_h\, [r_t \odot h_{t-1},\, x_t] + b_h) \quad \text{(candidate)}$$
+```math
+\tilde{h}_t = \tanh(W_h\, [r_t \odot h_{t-1},\, x_t] + b_h) \quad \text{(candidate)}
+```
 
 $$h_t = (1 - z_t) \odot h_{t-1} + z_t \odot \tilde{h}_t \quad \text{(interpolation)}$$
 

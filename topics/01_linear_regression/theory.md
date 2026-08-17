@@ -26,23 +26,23 @@ Every symbol used later, defined once.
 | $\hat{y}_i$ | scalar | model prediction for example $i$; $\hat{y}_i = x_i^\top \theta$ |
 | $\hat{y}$ | vector $\in \mathbb{R}^n$ | prediction vector; $\hat{y} = X \theta$ |
 | $r_i$ | scalar | residual for example $i$; $r_i = \hat{y}_i - y_i$ |
-| $r^*$ | vector $\in \mathbb{R}^n$ | residual vector at the optimum; $r^* = \hat{y}^* - y$ |
+| $r^\ast$ | vector $\in \mathbb{R}^n$ | residual vector at the optimum; $r^\ast = \hat{y}^\ast - y$ |
 | $L(\theta)$ | scalar function | the MSE loss; $L : \mathbb{R}^p \to \mathbb{R}^+$ |
 | $\nabla L(\theta)$ | vector $\in \mathbb{R}^p$ | gradient of $L$ at $\theta$ |
 | $\nabla^2 L(\theta)$ | matrix $\in \mathbb{R}^{p \times p}$ | Hessian of $L$ at $\theta$ |
-| $\theta^*$ | vector $\in \mathbb{R}^p$ | a minimiser of $L$ |
+| $\theta^\ast$ | vector $\in \mathbb{R}^p$ | a minimiser of $L$ |
 | $H$ | matrix $\in \mathbb{R}^{n \times n}$ | hat matrix; $H := X (X^\top X)^{-1} X^\top$ |
 | $X^+$ | matrix $\in \mathbb{R}^{p \times n}$ | Moore–Penrose pseudoinverse of $X$ |
 | $\varepsilon_i$ | scalar (random) | noise term in the probabilistic model |
 | $\sigma^2$ | scalar $> 0$ | noise variance |
-| $\|\cdot\|$ | scalar | Euclidean ($\ell^2$) norm |
+| $\Vert\cdot\Vert$ | scalar | Euclidean ($\ell^2$) norm |
 | $\langle \cdot, \cdot \rangle$ | scalar | Euclidean inner product; $\langle a, b \rangle = a^\top b$ |
 | $\text{Col}(X)$ | subspace $\subseteq \mathbb{R}^n$ | column space of $X$ (span of its columns) |
-| $\text{Null}(X)$ | subspace $\subseteq \mathbb{R}^p$ | null space of $X$; $\{ v : Xv = 0 \}$ |
+| $\text{Null}(X)$ | subspace $\subseteq \mathbb{R}^p$ | null space of $X$; $\lbrace v : Xv = 0 \rbrace$ |
 | $\text{rank}(X)$ | scalar $\in \mathbb{N}$ | $\dim \text{Col}(X)$; for $X \in \mathbb{R}^{n \times p}$, $\text{rank}(X) \le \min(n, p)$ |
-| $\text{RSS}$ | scalar $\ge 0$ | residual sum of squares; $\text{RSS} := \|r^*\|^2 = n \, L(\theta^*)$ |
+| $\text{RSS}$ | scalar $\ge 0$ | residual sum of squares; $\text{RSS} := \Vert r^\ast\Vert^2 = n \thinspace L(\theta^\ast)$ |
 | $\hat{\sigma}^2$ | scalar $> 0$ | unbiased estimate of $\sigma^2$; $\hat{\sigma}^2 := \text{RSS}/(n-p)$ |
-| $\text{SE}(\hat{\theta}_j)$ | scalar | standard error of $\hat{\theta}_j$; $\text{SE}(\hat{\theta}_j) := \hat{\sigma} \sqrt{[(X^\top X)^{-1}]_{jj}}$ |
+| $\text{SE}(\hat\theta_j)$ | scalar | standard error of $\hat\theta_j$; $\text{SE}(\hat\theta_j) := \hat{\sigma} \sqrt{[(X^\top X)^{-1}]_{jj}}$ |
 | $h_{ii}$ | scalar $\in [0, 1]$ | leverage of example $i$; the $i$-th diagonal entry of $H$ |
 | $x_0$ | vector $\in \mathbb{R}^p$ | feature vector of a new (unseen) point, leading $1$ included |
 
@@ -72,7 +72,7 @@ Why start with a linear function?
 
 ### 2.1 Definition (linear model)
 
-A **linear model** assumes the prediction is a linear combination of features. For each example $i \in \{1, \dots, n\}$ and an unknown parameter vector $\theta \in \mathbb{R}^p$:
+A **linear model** assumes the prediction is a linear combination of features. For each example $i \in \lbrace1, \dots, n\rbrace$ and an unknown parameter vector $\theta \in \mathbb{R}^p$:
 
 $$\hat{y}_i = x_{i1} \theta_1 + x_{i2} \theta_2 + \dots + x_{ip} \theta_p = x_i^\top \theta$$
 
@@ -137,19 +137,23 @@ The **residual** for example $i$ is
 
 $$r_i(\theta) := \hat{y}_i - y_i = x_i^\top \theta - y_i$$
 
-*(Sign convention: many texts define the residual with the opposite sign, $e_i := y_i - \hat{y}_i = -r_i$ — see the convention note in §0. All squared quantities are unaffected.)*
+(Sign convention: many texts define the residual with the opposite sign, $e_i := y_i - \hat y_i = -r_i$ — see the convention note in §0. All squared quantities are unaffected.)
 
 The **mean squared error** is:
 
-$$\begin{aligned}
+```math
+\begin{aligned}
 L(\theta) &= \frac{1}{n} \sum_i r_i(\theta)^2 & \text{(scalar form)} \\
 &= \frac{1}{n} \cdot \|X\theta - y\|^2 & \text{(vector form)} \\
 &= \frac{1}{n} \cdot \bigl(\theta^\top X^\top X \theta - 2\, y^\top X \theta + y^\top y\bigr) & \text{(expanded quadratic)}
-\end{aligned}$$
+\end{aligned}
+```
 
 **Ordinary least squares (OLS)** is the optimisation problem
 
-$$\theta^* \in \arg\min_{\theta \in \mathbb{R}^p} L(\theta)$$
+```math
+\theta^* \in \arg\min_{\theta \in \mathbb{R}^p} L(\theta)
+```
 
 ### 4.2 Theorem (MSE is the Gaussian negative log-likelihood)
 
@@ -161,7 +165,9 @@ $$\theta^* \in \arg\min_{\theta \in \mathbb{R}^p} L(\theta)$$
 
 **Proof.** Conditional on $X$, the noise terms $\varepsilon_i = y_i - x_i^\top \theta$ are i.i.d. $\mathcal{N}(0, \sigma^2)$, so the joint density factorises:
 
-$$p(y \mid X, \theta) = \prod_i (2\pi \sigma^2)^{-1/2} \cdot \exp\!\left( -\frac{(y_i - x_i^\top \theta)^2}{2\sigma^2} \right)$$
+```math
+p(y \mid X, \theta) = \prod_i (2\pi \sigma^2)^{-1/2} \cdot \exp\!\left( -\frac{(y_i - x_i^\top \theta)^2}{2\sigma^2} \right)
+```
 
 Take logarithms:
 
@@ -207,7 +213,7 @@ $$\nabla_\theta (\theta^\top A \theta) = (A + A^\top) \theta$$
 **Proof.** Start from the expanded quadratic form of $L(\theta)$ and differentiate term by term:
 
 - *Quadratic term.* Apply Identity (ii) with $A = X^\top X$. Since $X^\top X$ is symmetric, the gradient is $2 X^\top X \theta$.
-- *Linear term.* Rewrite $-2\, y^\top X \theta = -2 (X^\top y)^\top \theta$ and apply Identity (i) with $b = X^\top y$, yielding $-2 X^\top y$.
+- *Linear term.* Rewrite $-2\thinspace y^\top X \theta = -2 (X^\top y)^\top \theta$ and apply Identity (i) with $b = X^\top y$, yielding $-2 X^\top y$.
 - *Constant term.* $y^\top y$ does not depend on $\theta$, so its gradient is $0$.
 
 Combining:
@@ -233,13 +239,15 @@ $$\nabla L(\theta) = \frac{1}{n} \cdot \bigl( 2 X^\top X \theta - 2 X^\top y \bi
 
 **Proof.** A twice-differentiable function on $\mathbb{R}^p$ is convex when its Hessian is PSD everywhere.
 
-*(1) $X^\top X$ is PSD.* For any $v \in \mathbb{R}^p$,
+*(1)* $X^\top X$ is PSD. For any $v \in \mathbb{R}^p$,
 
-$$v^\top (X^\top X) v = (Xv)^\top (Xv) = \|Xv\|^2 \ge 0$$
+```math
+v^\top (X^\top X) v = (Xv)^\top (Xv) = \|Xv\|^2 \ge 0
+```
 
 Hence $X^\top X$ is PSD, $\nabla^2 L$ is PSD, and $L$ is convex.
 
-*(2) PD ⟺ full column rank.* $X^\top X$ is PD iff $\|Xv\|^2 > 0$ for every $v \neq 0$, iff $Xv = 0$ implies $v = 0$, iff $\text{Null}(X) = \{0\}$, iff $\text{rank}(X) = p$. $\blacksquare$
+*(2) PD ⟺ full column rank.* $X^\top X$ is PD iff $\Vert Xv\Vert^2 > 0$ for every $v \neq 0$, iff $Xv = 0$ implies $v = 0$, iff $\text{Null}(X) = \lbrace0\rbrace$, iff $\text{rank}(X) = p$. $\blacksquare$
 
 **Result:** $L$ is a convex quadratic; strictly convex iff $X$ has full column rank.
 
@@ -257,23 +265,25 @@ This is the system of **normal equations** for OLS.
 
 ### 6.2 Existence and uniqueness
 
-> **Theorem.** Let $X \in \mathbb{R}^{n \times p}$, $y \in \mathbb{R}^n$, and $L(\theta) = \frac{1}{n} \|X\theta - y\|^2$. Define $\Theta^* := \arg\min_\theta L(\theta)$. Then
+> **Theorem.** Let $X \in \mathbb{R}^{n \times p}$, $y \in \mathbb{R}^n$, and $L(\theta) = \frac{1}{n} \Vert X\theta - y\Vert^2$. Define $\Theta^\ast := \arg\min_\theta L(\theta)$. Then
 >
-> 1. **(Existence.)** $\Theta^*$ is non-empty.
-> 2. **(Uniqueness.)** $|\Theta^*| = 1$ $\iff$ $\text{rank}(X) = p$ $\iff$ $X^\top X$ is invertible.
+> 1. **(Existence.)** $\Theta^\ast$ is non-empty.
+> 2. **(Uniqueness.)** $|\Theta^\ast| = 1$ $\iff$ $\text{rank}(X) = p$ $\iff$ $X^\top X$ is invertible.
 > 3. **(Closed form.)** When $\text{rank}(X) = p$, the unique minimiser is
 >
-> $$\theta^* = (X^\top X)^{-1} X^\top y$$
+> ```math
+> \theta^* = (X^\top X)^{-1} X^\top y
+> ```
 >
-> When $\text{rank}(X) < p$, $\Theta^*$ is an affine subspace of $\mathbb{R}^p$ of dimension $p - \text{rank}(X)$. §8 selects its unique minimum-norm element via the pseudoinverse.
+> When $\text{rank}(X) < p$, $\Theta^\ast$ is an affine subspace of $\mathbb{R}^p$ of dimension $p - \text{rank}(X)$. §8 selects its unique minimum-norm element via the pseudoinverse.
 
 **Proof.**
 
-*(1) Existence.* First, $\text{Null}(X^\top X) = \text{Null}(X)$: if $X^\top X v = 0$ then $\|Xv\|^2 = v^\top X^\top X v = 0$, so $Xv = 0$; the converse is immediate. Hence $\text{rank}(X^\top X) = \text{rank}(X) = \text{rank}(X^\top)$, and since $\text{Col}(X^\top X) \subseteq \text{Col}(X^\top)$ with equal dimensions, $\text{Col}(X^\top X) = \text{Col}(X^\top)$. As $X^\top y \in \text{Col}(X^\top)$, the normal equations are consistent.
+*(1) Existence.* First, $\text{Null}(X^\top X) = \text{Null}(X)$: if $X^\top X v = 0$ then $\Vert Xv\Vert^2 = v^\top X^\top X v = 0$, so $Xv = 0$; the converse is immediate. Hence $\text{rank}(X^\top X) = \text{rank}(X) = \text{rank}(X^\top)$, and since $\text{Col}(X^\top X) \subseteq \text{Col}(X^\top)$ with equal dimensions, $\text{Col}(X^\top X) = \text{Col}(X^\top)$. As $X^\top y \in \text{Col}(X^\top)$, the normal equations are consistent.
 
 *(2) Uniqueness.* $L$ is strictly convex iff $\text{rank}(X) = p$ (§5.4). A strictly convex function has at most one minimiser; combined with (1), exactly one.
 
-*(3) Closed form.* Under $\text{rank}(X) = p$, $X^\top X$ is invertible, so the normal equations have the unique solution $\theta^* = (X^\top X)^{-1} X^\top y$. $\blacksquare$
+*(3) Closed form.* Under $\text{rank}(X) = p$, $X^\top X$ is invertible, so the normal equations have the unique solution $\theta^\ast = (X^\top X)^{-1} X^\top y$. $\blacksquare$
 
 **Result:** $\hat{\theta} = (X^\top X)^{-1} X^\top y$ when $X$ has full column rank.
 
@@ -285,15 +295,19 @@ This is the system of **normal equations** for OLS.
 
 Rewrite the normal equations as
 
-$$X^\top (X \theta^* - y) = 0$$
+```math
+X^\top (X \theta^* - y) = 0
+```
 
-i.e. $X^\top r^* = 0$, where $r^* := X \theta^* - y$. The residual is orthogonal to every column of $X$, hence to every vector in $\text{Col}(X)$. This is the linear-algebra signature of an **orthogonal projection**: $\hat{y}^* = X \theta^*$ is the unique vector in $\text{Col}(X)$ such that $y - \hat{y}^* \perp \text{Col}(X)$.
+i.e. $X^\top r^\ast = 0$, where $r^\ast := X \theta^\ast - y$. The residual is orthogonal to every column of $X$, hence to every vector in $\text{Col}(X)$. This is the linear-algebra signature of an **orthogonal projection**: $\hat{y}^\ast = X \theta^\ast$ is the unique vector in $\text{Col}(X)$ such that $y - \hat{y}^\ast \perp \text{Col}(X)$.
 
 ### 7.2 Definition (hat matrix)
 
-Assume $\text{rank}(X) = p$. Substituting $\theta^* = (X^\top X)^{-1} X^\top y$ into $\hat{y}^* = X \theta^*$:
+Assume $\text{rank}(X) = p$. Substituting $\theta^\ast = (X^\top X)^{-1} X^\top y$ into $\hat{y}^\ast = X \theta^\ast$:
 
-$$\hat{y}^* = X (X^\top X)^{-1} X^\top y = H y$$
+```math
+\hat{y}^* = X (X^\top X)^{-1} X^\top y = H y
+```
 
 where $H := X (X^\top X)^{-1} X^\top \in \mathbb{R}^{n \times n}$. $H$ is called the **hat matrix** — it puts the hat on $y$.
 
@@ -316,15 +330,17 @@ where $H := X (X^\top X)^{-1} X^\top \in \mathbb{R}^{n \times n}$. $H$ is called
 
 *(3)* For any $y$, $Hy = X[(X^\top X)^{-1} X^\top y] \in \text{Col}(X)$. Conversely, $z = Xw \implies Hz = Xw = z$.
 
-*(4)* If $Hv = \lambda v$ with $v \neq 0$, then $H^2 v = \lambda^2 v$; using $H^2 = H$: $\lambda(\lambda - 1)v = 0 \implies \lambda \in \{0, 1\}$. The multiplicity of eigenvalue 1 equals $\text{rank}(X) = p$. $\blacksquare$
+*(4)* If $Hv = \lambda v$ with $v \neq 0$, then $H^2 v = \lambda^2 v$; using $H^2 = H$: $\lambda(\lambda - 1)v = 0 \implies \lambda \in \lbrace0, 1\rbrace$. The multiplicity of eigenvalue 1 equals $\text{rank}(X) = p$. $\blacksquare$
 
 ### 7.4 Corollary (Pythagoras)
 
-> $\|y\|^2 = \|\hat{y}^*\|^2 + \|r^*\|^2$
+> $\Vert y\Vert^2 = \Vert\hat{y}^\ast\Vert^2 + \Vert r^\ast\Vert^2$
 
-**Proof.** $r^* \perp \text{Col}(X)$ and $\hat{y}^* \in \text{Col}(X)$, so $\langle \hat{y}^*, r^* \rangle = 0$. Since $y = \hat{y}^* - r^*$:
+**Proof.** $r^\ast \perp \text{Col}(X)$ and $\hat{y}^\ast \in \text{Col}(X)$, so $\langle \hat{y}^\ast, r^\ast \rangle = 0$. Since $y = \hat{y}^\ast - r^\ast$:
 
-$$\|y\|^2 = \|\hat{y}^*\|^2 - 2\langle \hat{y}^*, r^* \rangle + \|r^*\|^2 = \|\hat{y}^*\|^2 + \|r^*\|^2 \quad \blacksquare$$
+```math
+\|y\|^2 = \|\hat{y}^*\|^2 - 2\langle \hat{y}^*, r^* \rangle + \|r^*\|^2 = \|\hat{y}^*\|^2 + \|r^*\|^2 \quad \blacksquare
+```
 
 ### 7.5 Leverage
 
@@ -336,16 +352,16 @@ $$h_{ii} := H_{ii} = x_i^\top (X^\top X)^{-1} x_i$$
 >
 > 1. $0 \le h_{ii} \le 1$ for every $i$.
 > 2. $\sum_{i=1}^n h_{ii} = p$; the average leverage is $p/n$.
-> 3. $\partial \hat{y}_i^* / \partial y_i = h_{ii}$ — leverage is the sensitivity of a fitted value to its own target.
+> 3. $\partial \hat y_i^\ast / \partial y_i = h_{ii}$ — leverage is the sensitivity of a fitted value to its own target.
 > 4. If $\mathbb{1} \in \text{Col}(X)$ (intercept present), then $h_{ii} \ge 1/n$.
 
 **Proof.**
 
-*(1)* By symmetry and idempotence, $h_{ii} = (H^2)_{ii} = \sum_j H_{ij} H_{ji} = \sum_j H_{ij}^2 \ge 0$, and $h_{ii} = h_{ii}^2 + \sum_{j \neq i} H_{ij}^2 \ge h_{ii}^2$, which forces $h_{ii} \le 1$.
+*(1)* By symmetry and idempotence, $h_{ii} = (H^2)_ {ii} = \sum_j H_{ij} H_{ji} = \sum_j H_{ij}^2 \ge 0$, and $h_{ii} = h_{ii}^2 + \sum_{j \neq i} H_{ij}^2 \ge h_{ii}^2$, which forces $h_{ii} \le 1$.
 
 *(2)* $\sum_i h_{ii} = \text{trace}(H) = p$ (§7.3).
 
-*(3)* $\hat{y}^* = Hy$ is linear in $y$ with Jacobian $H$.
+*(3)* $\hat{y}^\ast = Hy$ is linear in $y$ with Jacobian $H$.
 
 *(4)* Let $P_{\mathbb{1}} := \frac{1}{n} \mathbb{1} \mathbb{1}^\top$, the orthogonal projection onto $\text{span}(\mathbb{1})$. Since $\mathbb{1} \in \text{Col}(X)$, $H P_{\mathbb{1}} = P_{\mathbb{1}}$, and taking transposes $P_{\mathbb{1}} H = P_{\mathbb{1}}$; hence $(H - P_{\mathbb{1}})^2 = H - P_{\mathbb{1}}$ and $H - P_{\mathbb{1}}$ is symmetric — an orthogonal projection, therefore PSD, therefore its diagonal $h_{ii} - \frac{1}{n}$ is non-negative. $\blacksquare$
 
@@ -355,7 +371,7 @@ $$h_{ii} := H_{ii} = x_i^\top (X^\top X)^{-1} x_i$$
 
 ## 8. Singular Case — SVD and Moore–Penrose Pseudoinverse
 
-When $\text{rank}(X) < p$ (the *multicollinear* regime), $X^\top X$ is singular, the closed form is undefined, and $\Theta^*$ is an infinite affine subspace.
+When $\text{rank}(X) < p$ (the *multicollinear* regime), $X^\top X$ is singular, the closed form is undefined, and $\Theta^\ast$ is an infinite affine subspace.
 
 ### 8.1 The singular value decomposition
 
@@ -375,8 +391,8 @@ $$X^+ := V \Sigma^+ U^\top \in \mathbb{R}^{p \times n}$$
 
 > **Theorem.**
 >
-> 1. If $\text{rank}(X) = p$, then $X^+ = (X^\top X)^{-1} X^\top$. Hence $\theta^* = X^+ y$ agrees with the OLS closed form.
-> 2. For arbitrary $X$, $\theta_{\text{minnorm}} := X^+ y$ is the unique element of $\Theta^*$ with smallest Euclidean norm.
+> 1. If $\text{rank}(X) = p$, then $X^+ = (X^\top X)^{-1} X^\top$. Hence $\theta^\ast = X^+ y$ agrees with the OLS closed form.
+> 2. For arbitrary $X$, $\theta_{\text{minnorm}} := X^+ y$ is the unique element of $\Theta^\ast$ with smallest Euclidean norm.
 > 3. The prediction $X X^+ y$ is the orthogonal projection of $y$ onto $\text{Col}(X)$, regardless of rank.
 
 **Result:** When the design is multicollinear, the *parameters* $\theta$ are non-unique, but the *predictions* $\hat{y}$ are. The pseudoinverse picks the shortest coordinate vector that lands on the projection. Numerically, solve least squares with QR or SVD rather than forming the inverse.
@@ -398,7 +414,10 @@ $$\mathbb{E}[\hat{\theta}] = \theta + (X^\top X)^{-1} X^\top \cdot \mathbb{E}[\v
 ### 9.2 Variance
 
 > **Theorem.** Under A1 + A2 + A3 + A4,
-> $$\text{Var}(\hat{\theta}) = \sigma^2 (X^\top X)^{-1}$$
+>
+> ```math
+> \text{Var}(\hat{\theta}) = \sigma^2 (X^\top X)^{-1}
+> ```
 
 **Proof.** $\hat{\theta} - \theta = A\varepsilon$ where $A := (X^\top X)^{-1} X^\top$. Then
 
@@ -427,7 +446,7 @@ Since $DD^\top$ is PSD, $\text{Var}(\tilde{\theta}) \succeq \text{Var}(\hat{\the
 
 The variance formula of §9.2 involves the unknown $\sigma^2$; using it in practice requires an estimate.
 
-> **Theorem.** Under A1 + A2 + A3 + A4, $\mathbb{E}[\text{RSS}] = (n - p) \, \sigma^2$. Consequently
+> **Theorem.** Under A1 + A2 + A3 + A4, $\mathbb{E}[\text{RSS}] = (n - p) \thinspace \sigma^2$. Consequently
 >
 > $$\hat{\sigma}^2 := \frac{\text{RSS}}{n - p}$$
 >
@@ -435,15 +454,21 @@ The variance formula of §9.2 involves the unknown $\sigma^2$; using it in pract
 
 **Proof.** Since every column of $X$ lies in $\text{Col}(X)$, on which $H$ acts as the identity (§7.3), $HX = X$ and hence $(I_n - H)X = 0$. Therefore
 
-$$r^* = Hy - y = -(I_n - H)\, y = -(I_n - H)(X\theta + \varepsilon) = -(I_n - H)\, \varepsilon$$
+```math
+r^* = Hy - y = -(I_n - H)\, y = -(I_n - H)(X\theta + \varepsilon) = -(I_n - H)\, \varepsilon
+```
 
 Because $I_n - H$ is symmetric and idempotent,
 
-$$\text{RSS} = \|r^*\|^2 = \varepsilon^\top (I_n - H) \varepsilon$$
+```math
+\text{RSS} = \|r^*\|^2 = \varepsilon^\top (I_n - H) \varepsilon
+```
 
 Take expectations with the trace trick, using $\mathbb{E}[\varepsilon \varepsilon^\top] = \sigma^2 I_n$ (A2–A4):
 
-$$\mathbb{E}[\text{RSS}] = \mathbb{E}\bigl[ \text{trace}\bigl( (I_n - H)\, \varepsilon \varepsilon^\top \bigr) \bigr] = \text{trace}\bigl( (I_n - H)\, \sigma^2 I_n \bigr) = \sigma^2 \bigl( n - \text{trace}(H) \bigr) = \sigma^2 (n - p) \quad \blacksquare$$
+```math
+\mathbb{E}[\text{RSS}] = \mathbb{E}\bigl[ \text{trace}\bigl( (I_n - H)\, \varepsilon \varepsilon^\top \bigr) \bigr] = \text{trace}\bigl( (I_n - H)\, \sigma^2 I_n \bigr) = \sigma^2 \bigl( n - \text{trace}(H) \bigr) = \sigma^2 (n - p) \quad \blacksquare
+```
 
 **Result:** $\hat{\sigma}^2 = \text{RSS}/(n-p)$; the divisor $n - p$ (not $n$) accounts for the $p$ degrees of freedom absorbed by the fit. The **standard error** of a coefficient is
 
@@ -453,7 +478,7 @@ Normality (A5) is *not* needed for any of this — only for the exact distributi
 
 ### 9.5 Sampling distribution (adding A5)
 
-Under A1–A5 ($\varepsilon \sim \mathcal{N}(0, \sigma^2 I_n)$):
+Under A1–A5, i.e. $\varepsilon \sim \mathcal{N}(0, \sigma^2 I_n)$:
 
 $$\hat{\theta} \sim \mathcal{N}(\theta, \sigma^2 (X^\top X)^{-1}), \quad \text{RSS}/\sigma^2 \sim \chi^2(n-p)$$
 
@@ -467,34 +492,42 @@ Assume the design contains the intercept column, $\mathbb{1} \in \text{Col}(X)$,
 
 > **Theorem (ANOVA decomposition).** With $\mathbb{1} \in \text{Col}(X)$,
 >
-> $$\underbrace{\|y - \bar{y} \mathbb{1}\|^2}_{\text{TSS}} = \underbrace{\|\hat{y}^* - \bar{y} \mathbb{1}\|^2}_{\text{ESS}} + \underbrace{\|r^*\|^2}_{\text{RSS}}$$
+> ```math
+> \underbrace{\|y - \bar{y} \mathbb{1}\|^2}_{\text{TSS}} = \underbrace{\|\hat{y}^* - \bar{y} \mathbb{1}\|^2}_{\text{ESS}} + \underbrace{\|r^*\|^2}_{\text{RSS}}
+> ```
 
-**Proof.** The row of the normal equations $X^\top r^* = 0$ corresponding to the ones column gives $\mathbb{1}^\top r^* = 0$; in particular the fitted values have the same mean as $y$. Write $y - \bar{y}\mathbb{1} = (\hat{y}^* - \bar{y}\mathbb{1}) - r^*$. The cross term vanishes:
+**Proof.** The row of the normal equations $X^\top r^\ast = 0$ corresponding to the ones column gives $\mathbb{1}^\top r^\ast = 0$; in particular the fitted values have the same mean as $y$. Write $y - \bar{y}\mathbb{1} = (\hat{y}^\ast - \bar{y}\mathbb{1}) - r^\ast$. The cross term vanishes:
 
-$$\langle \hat{y}^* - \bar{y}\mathbb{1}, \; r^* \rangle = \langle \hat{y}^*, r^* \rangle - \bar{y} \, \langle \mathbb{1}, r^* \rangle = 0 - 0 = 0$$
+```math
+\langle \hat{y}^* - \bar{y}\mathbb{1}, \; r^* \rangle = \langle \hat{y}^*, r^* \rangle - \bar{y} \, \langle \mathbb{1}, r^* \rangle = 0 - 0 = 0
+```
 
-since both $\hat{y}^*$ and $\mathbb{1}$ lie in $\text{Col}(X)$, which is orthogonal to $r^*$ (§7.1). Expanding the square gives the identity. $\blacksquare$
+since both $\hat{y}^\ast$ and $\mathbb{1}$ lie in $\text{Col}(X)$, which is orthogonal to $r^\ast$ (§7.1). Expanding the square gives the identity. $\blacksquare$
 
 The **coefficient of determination** is
 
 $$R^2 := \frac{\text{ESS}}{\text{TSS}} = 1 - \frac{\text{RSS}}{\text{TSS}} \in [0, 1]$$
 
-the fraction of the centred variation in $y$ captured by the fit; equivalently, $R^2$ is the squared sample correlation between $y$ and $\hat{y}^*$.
+the fraction of the centred variation in $y$ captured by the fit; equivalently, $R^2$ is the squared sample correlation between $y$ and $\hat{y}^\ast$.
 
 **Remarks.**
 
-- **No intercept ⇒ no decomposition.** Without $\mathbb{1} \in \text{Col}(X)$, $\mathbb{1}^\top r^* = 0$ can fail, $\text{TSS} \neq \text{ESS} + \text{RSS}$, the two expressions for $R^2$ above disagree, and $1 - \text{RSS}/\text{TSS}$ can even be negative. (§7.4 is the *uncentred* analogue, valid regardless.)
+- **No intercept ⇒ no decomposition.** Without $\mathbb{1} \in \text{Col}(X)$, $\mathbb{1}^\top r^\ast = 0$ can fail, $\text{TSS} \neq \text{ESS} + \text{RSS}$, the two expressions for $R^2$ above disagree, and $1 - \text{RSS}/\text{TSS}$ can even be negative. (§7.4 is the *uncentred* analogue, valid regardless.)
 - **$R^2$ never decreases when features are added** — enlarging $\text{Col}(X)$ can only shrink RSS — so it cannot compare models of different sizes. The **adjusted** version penalises $p$:
-  $$\bar{R}^2 := 1 - \frac{\text{RSS}/(n-p)}{\text{TSS}/(n-1)} = 1 - (1 - R^2) \, \frac{n-1}{n-p}$$
-- Under A1–A5, the overall **F-statistic** $F = \dfrac{\text{ESS}/(p-1)}{\text{RSS}/(n-p)} \sim F(p-1, \, n-p)$ under the null hypothesis that all non-intercept coefficients are zero — the "F" referred to in §12.
+
+  $$\bar{R}^2 := 1 - \frac{\text{RSS}/(n-p)}{\text{TSS}/(n-1)} = 1 - (1 - R^2) \thinspace \frac{n-1}{n-p}$$
+
+- Under A1–A5, the overall **F-statistic** $F = \dfrac{\text{ESS}/(p-1)}{\text{RSS}/(n-p)} \sim F(p-1, \thinspace n-p)$ under the null hypothesis that all non-intercept coefficients are zero — the "F" referred to in §12.
 
 ### 9.7 Prediction at a new point
 
 Let $x_0 \in \mathbb{R}^p$ be a new feature vector (leading $1$ included) and $\hat{y}_0 := x_0^\top \hat{\theta}$.
 
-**Mean response.** Under A1–A4, $\mathbb{E}[\hat{y}_0] = x_0^\top \theta$ and $\text{Var}(\hat{y}_0) = \sigma^2 \, x_0^\top (X^\top X)^{-1} x_0$ (immediate from §9.1–9.2). Adding A5, a $1 - \alpha$ **confidence interval for the mean response** $x_0^\top \theta$ is
+**Mean response.** Under A1–A4, $\mathbb{E}[\hat{y}_0] = x_0^\top \theta$ and $\text{Var}(\hat{y}_0) = \sigma^2 \thinspace x_0^\top (X^\top X)^{-1} x_0$ (immediate from §9.1–9.2). Adding A5, a $1 - \alpha$ **confidence interval for the mean response** $x_0^\top \theta$ is
 
-$$x_0^\top \hat{\theta} \; \pm \; t_{1-\alpha/2}(n-p) \cdot \hat{\sigma} \sqrt{x_0^\top (X^\top X)^{-1} x_0}$$
+```math
+x_0^\top \hat{\theta} \; \pm \; t_{1-\alpha/2}(n-p) \cdot \hat{\sigma} \sqrt{x_0^\top (X^\top X)^{-1} x_0}
+```
 
 **New observation.** A fresh draw $y_0 = x_0^\top \theta + \varepsilon_0$, with $\varepsilon_0 \sim \mathcal{N}(0, \sigma^2)$ independent of the training noise, carries its own irreducible noise on top of the estimation error:
 
@@ -502,25 +535,27 @@ $$\text{Var}(y_0 - \hat{y}_0) = \sigma^2 \bigl( 1 + x_0^\top (X^\top X)^{-1} x_0
 
 giving the wider **prediction interval**
 
-$$x_0^\top \hat{\theta} \; \pm \; t_{1-\alpha/2}(n-p) \cdot \hat{\sigma} \sqrt{1 + x_0^\top (X^\top X)^{-1} x_0}$$
+```math
+x_0^\top \hat{\theta} \; \pm \; t_{1-\alpha/2}(n-p) \cdot \hat{\sigma} \sqrt{1 + x_0^\top (X^\top X)^{-1} x_0}
+```
 
 **Remarks.**
 
-- As data accumulates and $x_0^\top (X^\top X)^{-1} x_0 \to 0$, the CI width shrinks to $0$ but the PI width tends to $2 \, z_{1-\alpha/2} \, \sigma$: no amount of data removes the noise in a single future observation.
+- As data accumulates and $x_0^\top (X^\top X)^{-1} x_0 \to 0$, the CI width shrinks to $0$ but the PI width tends to $2 \thinspace z_{1-\alpha/2} \thinspace \sigma$: no amount of data removes the noise in a single future observation.
 - For a training point $x_i$, the quantity $x_i^\top (X^\top X)^{-1} x_i$ is exactly the leverage $h_{ii}$ of §7.5 — high-leverage points are those where the model is least certain about its own mean prediction.
 
 ### 9.8 Influence — studentized residuals and Cook's distance
 
 Residuals do not share a common variance, even under homoscedastic noise:
 
-> **Theorem.** Under A1–A4, $\text{Var}(r^*) = \sigma^2 (I_n - H)$; in particular $\text{Var}(r_i^*) = \sigma^2 (1 - h_{ii})$.
+> **Theorem.** Under A1–A4, $\text{Var}(r^\ast) = \sigma^2 (I_n - H)$; in particular $\text{Var}(r_i^\ast) = \sigma^2 (1 - h_{ii})$.
 
-**Proof.** From §9.4, $r^* = -(I_n - H)\varepsilon$, so $\text{Var}(r^*) = (I_n - H) \, \sigma^2 I_n \, (I_n - H)^\top = \sigma^2 (I_n - H)$. $\blacksquare$
+**Proof.** From §9.4, $r^\ast = -(I_n - H)\varepsilon$, so $\text{Var}(r^\ast) = (I_n - H) \thinspace \sigma^2 I_n \thinspace (I_n - H)^\top = \sigma^2 (I_n - H)$. $\blacksquare$
 
-High-leverage points thus have *small* raw residuals by construction ($h_{ii} \to 1 \Rightarrow \text{Var}(r_i^*) \to 0$): the fit is dragged toward them. Two standard corrections:
+High-leverage points thus have *small* raw residuals by construction ($h_{ii} \to 1 \Rightarrow \text{Var}(r_i^\ast) \to 0$): the fit is dragged toward them. Two standard corrections:
 
-- **Studentized residual.** $t_i := \dfrac{r_i^*}{\hat{\sigma} \sqrt{1 - h_{ii}}}$; observations with $|t_i| \gtrsim 2$ deserve a look. (This is the *internally* studentized version; the *externally* studentized one re-estimates $\hat{\sigma}$ without example $i$ and follows exactly $t(n-p-1)$ under A1–A5.)
-- **Cook's distance.** $D_i := \dfrac{(r_i^*)^2}{p \, \hat{\sigma}^2} \cdot \dfrac{h_{ii}}{(1 - h_{ii})^2}$ measures how far *all* fitted values move when example $i$ is deleted. Common screens: investigate $D_i > 4/n$; $D_i$ near $1$ signals serious influence.
+- **Studentized residual.** $t_i := \dfrac{r_i^\ast}{\hat{\sigma} \sqrt{1 - h_{ii}}}$; observations with $|t_i| \gtrsim 2$ deserve a look. (This is the *internally* studentized version; the *externally* studentized one re-estimates $\hat{\sigma}$ without example $i$ and follows exactly $t(n-p-1)$ under A1–A5.)
+- **Cook's distance.** $D_i := \dfrac{(r_i^\ast)^2}{p \thinspace \hat{\sigma}^2} \cdot \dfrac{h_{ii}}{(1 - h_{ii})^2}$ measures how far *all* fitted values move when example $i$ is deleted. Common screens: investigate $D_i > 4/n$; $D_i$ near $1$ signals serious influence.
 
 Influence = discrepancy × leverage: a point matters when it is both poorly fit *and* alone in feature space.
 

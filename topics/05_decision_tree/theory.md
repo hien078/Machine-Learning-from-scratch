@@ -13,11 +13,11 @@ All symbols used below — defined once.
 | $K$ | scalar | number of distinct classes (classification) |
 | $\mathcal{R}$ | set | set of examples reaching a given node |
 | $\vert \mathcal{R}\vert $ | scalar | number of examples in a node |
-| $p_k$ | scalar in $[0, 1]$ | proportion of class $k$ in a node: $p_k = \vert \{i \in \mathcal{R} : y_i = k\}\vert  / \vert \mathcal{R}\vert $ |
+| $p_k$ | scalar in $[0, 1]$ | proportion of class $k$ in a node: $p_k = \vert \lbrace i \in \mathcal{R} : y_i = k\rbrace\vert  / \vert \mathcal{R}\vert $ |
 | $G(\mathcal{R})$ | scalar in $[0, 1]$ | Gini impurity of node $\mathcal{R}$ |
 | $H(\mathcal{R})$ | scalar $\ge 0$ | entropy of node $\mathcal{R}$ |
 | $j$ | scalar | feature index used for splitting |
-| $t$ | scalar | threshold for the split: left child gets $\{x : x_j < t\}$ |
+| $t$ | scalar | threshold for the split: left child gets $\lbrace x : x_j < t\rbrace$ |
 | $\mathcal{R}_L, \mathcal{R}_R$ | sets | left and right child partitions after a split |
 | $D$ | scalar | maximum allowed tree depth |
 | $n_{\min}$ | scalar | minimum samples required to split a node |
@@ -76,7 +76,7 @@ label. $H = 0$ for a pure node; $H = \log_2 K$ when all classes are equally like
 ### 2.3 Regression: Mean Squared Error
 
 For a regression tree, each leaf predicts the mean of its targets:
-$\hat{y}_{\mathcal{R}} = \frac{1}{|\mathcal{R}|} \sum_{i \in \mathcal{R}} y_i$. The
+$\hat y_{\mathcal{R}} = \frac{1}{|\mathcal{R}|} \sum_{i \in \mathcal{R}} y_i$. The
 impurity of a node is the variance of the targets:
 
 $$\text{MSE}(\mathcal{R}) = \frac{1}{|\mathcal{R}|} \sum_{i \in \mathcal{R}} (y_i - \hat{y}_{\mathcal{R}})^2. \qquad (2.3)$$
@@ -98,11 +98,11 @@ the split $(j, t)$ that **maximises** $\Delta I$.
 
 At each node $\mathcal{R}$:
 
-1. **For each feature** $j \in \{1, \dots, d\}$:
+1. **For each feature** $j \in \lbrace1, \dots, d\rbrace$:
    a. Sort the distinct values of $x_j$ in $\mathcal{R}$.
    b. For each candidate threshold $t$ (midpoint between consecutive sorted values):
-      - Partition $\mathcal{R}$ into $\mathcal{R}_L = \{i : x_{ij} < t\}$ and
-        $\mathcal{R}_R = \{i : x_{ij} \ge t\}$.
+      - Partition $\mathcal{R}$ into $\mathcal R_L = \lbrace i : x_{ij} < t\rbrace$ and
+        $\mathcal R_R = \lbrace i : x_{ij} \ge t\rbrace$.
       - Compute the weighted impurity
         $\frac{|\mathcal{R}_L|}{|\mathcal{R}|} I(\mathcal{R}_L) + \frac{|\mathcal{R}_R|}{|\mathcal{R}|} I(\mathcal{R}_R)$.
 2. **Pick** the $(j^\ast, t^\ast)$ that minimises the weighted child impurity (equivalently,
@@ -129,7 +129,9 @@ $H''(p) = -\frac{1}{p(1-p) \ln 2} < 0$ for $p \in (0, 1)$. Strictly concave. $\b
 
 **Consequence.** By Jensen's inequality applied to the concave function $I$:
 
-$$I\!\left(\frac{|\mathcal{R}_L|}{|\mathcal{R}|} \mathbf{p}_L + \frac{|\mathcal{R}_R|}{|\mathcal{R}|} \mathbf{p}_R\right) \ge \frac{|\mathcal{R}_L|}{|\mathcal{R}|} I(\mathbf{p}_L) + \frac{|\mathcal{R}_R|}{|\mathcal{R}|} I(\mathbf{p}_R),$$
+```math
+I\!\left(\frac{|\mathcal{R}_L|}{|\mathcal{R}|} \mathbf{p}_L + \frac{|\mathcal{R}_R|}{|\mathcal{R}|} \mathbf{p}_R\right) \ge \frac{|\mathcal{R}_L|}{|\mathcal{R}|} I(\mathbf{p}_L) + \frac{|\mathcal{R}_R|}{|\mathcal{R}|} I(\mathbf{p}_R),
+```
 
 where $\mathbf{p}_L, \mathbf{p}_R$ are the class-proportion vectors of the children.
 The left side is the parent's impurity (since proportions mix linearly). Equality holds
@@ -201,11 +203,13 @@ controls the trade-off:
 1. Grow the full tree $T_{\max}$.
 2. For increasing $\alpha$, find the weakest link — the internal node whose subtree
    contributes the least per-leaf reduction in impurity:
+
    $$\alpha_{\text{eff}}(t) = \frac{R(t) - R(T_t)}{|T_t| - 1},$$
+
    where $R(t)$ is the impurity of node $t$ treated as a leaf and $R(T_t)$ is the
    total impurity of the subtree rooted at $t$.
 3. Collapse the weakest link to a leaf. Repeat to generate a nested sequence
-   $T_{\max} \supset T_1 \supset T_2 \supset \cdots \supset \{root\}$.
+   $T_{\max} \supset T_1 \supset T_2 \supset \cdots \supset \lbrace root\rbrace$.
 4. Select the best $\alpha$ (and corresponding tree) by cross-validation.
 
 **Result:** Cost-complexity pruning produces a nested sequence of optimally pruned

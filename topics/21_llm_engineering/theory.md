@@ -47,7 +47,7 @@ This module details the critical engineering components that make this pipeline 
 Before a text sequence can be fed into an LLM, it must be converted into a sequence of discrete integers (tokens).
 
 ### Motivation
-*   **Character-level:** Small vocabulary ($\sim$256), no Out-Of-Vocabulary (OOV) tokens, but results in extremely long sequences, making transformer self-attention computationally infeasible ($O(N^2)$).
+*   **Character-level:** Small vocabulary ($\sim 256$), no Out-Of-Vocabulary (OOV) tokens, but results in extremely long sequences, making transformer self-attention computationally infeasible, $O(N^2)$.
 *   **Word-level:** Short sequences, but huge vocabulary (millions of words), leading to a massive embedding matrix and OOV issues for rare words, misspellings, or morphologically rich languages.
 *   **Subword-level:** The optimal middle ground. Frequent words remain single tokens, while rare words are broken into subword pieces. This balances vocabulary size and sequence length.
 
@@ -60,11 +60,14 @@ Start with a vocabulary of base characters (or bytes) present in the training co
 
 **Step 2: Frequency Counting**
 Count the frequency of all adjacent token pairs in the corpus.
-$$ \text{count}(t_a, t_b) = \sum_{\text{words}} \text{freq}(w) \cdot \mathbb{I}[(t_a, t_b) \in w] $$
+
+```math
+\text{count}(t_a, t_b) = \sum_{\text{words}} \text{freq}(w) \cdot \mathbb{I}[(t_a, t_b) \in w]
+```
 
 **Step 3: Greedy Merge**
 Find the most frequent adjacent pair $(t_a, t_b)$. Create a new token $t_{new} = t_a t_b$.
-Add $t_{new}$ to the vocabulary $V = V \cup \{t_{new}\}$.
+Add $t_{new}$ to the vocabulary $V = V \cup \lbrace t_{new}\rbrace$.
 
 **Step 4: Update Corpus**
 Replace all occurrences of the pair $(t_a, t_b)$ in the corpus with the new token $t_{new}$.
@@ -98,13 +101,23 @@ During SFT, updating all weights of an LLM is extremely costly. For LLaMA-7B, fu
 LoRA hypothesize that the change in weights during fine-tuning has a low intrinsic dimension. Instead of updating $W_0 \in \mathbb{R}^{d \times k}$, LoRA injects trainable rank decomposition matrices.
 
 **Formulation:**
-$$ W = W_0 + \Delta W $$
-$$ W = W_0 + \frac{\alpha}{r} B A $$
+
+```math
+W = W_0 + \Delta W
+```
+
+```math
+W = W_0 + \frac{\alpha}{r} B A
+```
 
 Where $B \in \mathbb{R}^{d \times r}$ and $A \in \mathbb{R}^{r \times k}$, and the rank $r \ll \min(d, k)$. The scalar $\alpha$ is a constant scaling factor.
 
 **Forward Pass for input $x \in \mathbb{R}^{1 \times d}$:**
-$$ h = x W = x W_0 + \frac{\alpha}{r} x B A $$
+
+```math
+h = x W = x W_0 + \frac{\alpha}{r} x B A
+```
+
 By linearity (distributive property), we compute $x W_0$ and $x B A$ separately and sum them. $W_0$ is frozen.
 
 **Parameter Reduction Proof:**
@@ -121,8 +134,14 @@ By linearity (distributive property), we compute $x W_0$ and $x B A$ separately 
 *   **Why?** This ensures that at initialization, $\Delta W = B A = 0$, so the model acts exactly like the pre-trained base model.
 
 Applying the Chain Rule for loss $L$:
-$$ \frac{\partial L}{\partial A} = B^T \frac{\partial L}{\partial \Delta W} $$
-$$ \frac{\partial L}{\partial B} = \frac{\partial L}{\partial \Delta W} A^T $$
+
+```math
+\frac{\partial L}{\partial A} = B^T \frac{\partial L}{\partial \Delta W}
+```
+
+```math
+\frac{\partial L}{\partial B} = \frac{\partial L}{\partial \Delta W} A^T
+```
 
 ### Application and QLoRA
 The original LoRA paper found that applying LoRA to the Attention $W^Q$ and $W^V$ projection matrices yields the best performance-to-parameter tradeoff.
@@ -137,7 +156,9 @@ Base models hallucinate, generate toxic text, and fail to follow instructions pe
 ### RLHF Pipeline (Reinforcement Learning from Human Feedback)
 1.  **Reward Model (RM) Training:** Train a classifier $r_\phi(x, y)$ on human preference data to predict human scoring.
 2.  **PPO Optimization:** Use Proximal Policy Optimization (RL) to update the policy $\pi_\theta$ to maximize the reward.
-    $$ \max_{\pi_\theta} \mathbb{E}_{x \sim D, y \sim \pi_\theta} [r_\phi(x, y)] - \beta \mathbb{KL}[\pi_\theta(y \mid x) \| \pi_{\text{ref}}(y \mid x)] $$
+
+    $$\max_{\pi_\theta} \mathbb{E}_ {x \sim D, y \sim \pi_\theta} [r_\phi(x, y)] - \beta \mathbb{KL}[\pi_\theta(y \mid x) \Vert \pi_{\text{ref}}(y \mid x)]$$
+
     The KL penalty prevents the policy from drifting too far from the reference model (preventing "reward hacking").
 
 ### Direct Preference Optimization (DPO)
@@ -146,27 +167,47 @@ RLHF is complex, requiring a distinct reward model and unstable RL loops. DPO ma
 
 **Step 1: The Optimal Policy**
 Starting from the RLHF objective, the optimal policy $\pi^\ast$ that maximizes the regularized reward has a closed-form solution:
-$$ \pi^\ast(y \mid x) = \frac{1}{Z(x)} \pi_{\text{ref}}(y \mid x) \exp\left( \frac{1}{\beta} r(x, y) \right) $$
+
+```math
+\pi^\ast(y \mid x) = \frac{1}{Z(x)} \pi_{\text{ref}}(y \mid x) \exp\left( \frac{1}{\beta} r(x, y) \right)
+```
+
 Where $Z(x) = \sum_y \pi_{\text{ref}}(y \mid x) \exp\left( \frac{1}{\beta} r(x, y) \right)$ is the partition function.
 
 **Step 2: Rewriting the Reward**
 By taking the log and rearranging (algebraic manipulation), we can express the reward function $r(x,y)$ in terms of the optimal policy and reference policy:
-$$ r(x, y) = \beta \log \frac{\pi^\ast(y \mid x)}{\pi_{\text{ref}}(y \mid x)} + \beta \log Z(x) $$
+
+```math
+r(x, y) = \beta \log \frac{\pi^\ast(y \mid x)}{\pi_{\text{ref}}(y \mid x)} + \beta \log Z(x)
+```
 
 **Step 3: The Bradley-Terry Preference Model**
 The probability that human prefers $y_w$ over $y_l$ under the Bradley-Terry model is:
-$$ P(y_w \succ y_l \| x) = \sigma(r(x, y_w) - r(x, y_l)) $$
+
+```math
+P(y_w \succ y_l \| x) = \sigma(r(x, y_w) - r(x, y_l))
+```
 
 **Step 4: The DPO Derivation**
 Substitute the reward formulation from Step 2 into the Bradley-Terry model. The partition function $Z(x)$ cancels out because it only depends on $x$!
-$$ r(x, y_w) - r(x, y_l) = \beta \log \frac{\pi_\theta(y_w\|x)}{\pi_{\text{ref}}(y_w\|x)} - \beta \log \frac{\pi_\theta(y_l\|x)}{\pi_{\text{ref}}(y_l\|x)} $$
-Let the implicit reward for a completion under policy $\pi_\theta$ be $\hat{r}_\theta(x, y) = \beta \log \frac{\pi_\theta(y \mid x)}{\pi_{\text{ref}}(y \mid x)}$.
+
+```math
+r(x, y_w) - r(x, y_l) = \beta \log \frac{\pi_\theta(y_w\|x)}{\pi_{\text{ref}}(y_w\|x)} - \beta \log \frac{\pi_\theta(y_l\|x)}{\pi_{\text{ref}}(y_l\|x)}
+```
+
+Let the implicit reward for a completion under policy $\pi_\theta$ be $\hat r_\theta(x, y) = \beta \log \frac{\pi_\theta(y \mid x)}{\pi_{\text{ref}}(y \mid x)}$.
 The probability of preference becomes:
-$$ P(y_w \succ y_l \| x) = \sigma\left( \hat{r}_\theta(x, y_w) - \hat{r}_\theta(x, y_l) \right) $$
+
+```math
+P(y_w \succ y_l \| x) = \sigma\left( \hat{r}_\theta(x, y_w) - \hat{r}_\theta(x, y_l) \right)
+```
 
 **Result: DPO Loss Function**
 We optimize $\pi_\theta$ directly using Negative Log-Likelihood on the preference data:
-$$ \mathcal{L}_{\text{DPO}}(\theta; \pi_{\text{ref}}) = - \mathbb{E}_{(x, y_w, y_l) \sim D} \left[ \log \sigma \left( \beta \log \frac{\pi_\theta(y_w\|x)}{\pi_{\text{ref}}(y_w\|x)} - \beta \log \frac{\pi_\theta(y_l\|x)}{\pi_{\text{ref}}(y_l\|x)} \right) \right] $$
+
+```math
+\mathcal{L}_{\text{DPO}}(\theta; \pi_{\text{ref}}) = - \mathbb{E}_{(x, y_w, y_l) \sim D} \left[ \log \sigma \left( \beta \log \frac{\pi_\theta(y_w\|x)}{\pi_{\text{ref}}(y_w\|x)} - \beta \log \frac{\pi_\theta(y_l\|x)}{\pi_{\text{ref}}(y_l\|x)} \right) \right]
+```
 
 | Feature | RLHF | DPO |
 |---|---|---|

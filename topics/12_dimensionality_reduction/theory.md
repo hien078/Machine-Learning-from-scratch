@@ -23,7 +23,7 @@ pairwise similarities through a nonlinear, non-parametric embedding.
 | Symbol | Type | Meaning |
 |---|---:|---|
 | $X \in \mathbb{R}^{n \times d}$ | matrix | data matrix, $n$ samples, $d$ features |
-| $y_i \in \{1, \ldots, C\}$ | scalar | class label of sample $i$ |
+| $y_i \in \lbrace1, \ldots, C\rbrace$ | scalar | class label of sample $i$ |
 | $n_k$ | scalar | number of samples in class $k$ |
 | $\mu$ | vector | global mean $\frac{1}{n}\sum_i x_i$ |
 | $\mu_k$ | vector | mean of class $k$: $\frac{1}{n_k}\sum_{i: y_i=k} x_i$ |
@@ -55,7 +55,9 @@ pairwise similarities through a nonlinear, non-parametric embedding.
 
 **Within-class scatter** measures how spread out each class is internally:
 
-$$S_W = \sum_{k=1}^{C} \sum_{i:\, y_i = k} (x_i - \mu_k)(x_i - \mu_k)^\top$$
+```math
+S_W = \sum_{k=1}^{C} \sum_{i:\, y_i = k} (x_i - \mu_k)(x_i - \mu_k)^\top
+```
 
 **Between-class scatter** measures how separated the class means are:
 
@@ -74,7 +76,9 @@ $$J(w) = \frac{w^\top S_B w}{w^\top S_W w}$$
 
 This is a **generalized Rayleigh quotient**. Taking the gradient and setting to zero:
 
-$$\nabla_w J = 0 \implies S_B w = J(w)\, S_W w$$
+```math
+\nabla_w J = 0 \implies S_B w = J(w)\, S_W w
+```
 
 which is the generalized eigenvalue problem:
 
@@ -110,7 +114,9 @@ in each class.
 For each pair $(i, j)$, define a conditional probability that $x_j$ is a neighbor of $x_i$
 under a Gaussian centered at $x_i$:
 
-$$p_{j \mid i} = \frac{\exp\bigl(-\|x_i - x_j\|^2 / 2\sigma_i^2\bigr)}{\sum_{k \neq i} \exp\bigl(-\|x_i - x_k\|^2 / 2\sigma_i^2\bigr)}$$
+```math
+p_{j \mid i} = \frac{\exp\bigl(-\|x_i - x_j\|^2 / 2\sigma_i^2\bigr)}{\sum_{k \neq i} \exp\bigl(-\|x_i - x_k\|^2 / 2\sigma_i^2\bigr)}
+```
 
 Set $p_{i \mid i} = 0$. The bandwidth $\sigma_i$ is chosen so that the entropy of the
 conditional distribution $P_i$ matches $\log(\text{Perp})$, where $\text{Perp}$ is the
@@ -124,7 +130,9 @@ Symmetrize: $p_{ij} = \frac{p_{j \mid i} + p_{i \mid j}}{2n}$.
 In the embedding space, use a Student-t distribution with 1 degree of freedom
 (i.e., a Cauchy kernel):
 
-$$q_{ij} = \frac{(1 + \|z_i - z_j\|^2)^{-1}}{\sum_{k \neq l} (1 + \|z_k - z_l\|^2)^{-1}}$$
+```math
+q_{ij} = \frac{(1 + \|z_i - z_j\|^2)^{-1}}{\sum_{k \neq l} (1 + \|z_k - z_l\|^2)^{-1}}
+```
 
 **Why Student-t?** In high dimensions, moderate-distance points become nearly equidistant
 (concentration of measure). In low dimensions, there is less "room" to place moderately
@@ -136,7 +144,9 @@ low-d without incurring a large cost, while still keeping true neighbors close.
 
 t-SNE minimizes:
 
-$$C = D_{\text{KL}}(P \| Q) = \sum_{i \neq j} p_{ij} \log \frac{p_{ij}}{q_{ij}}$$
+```math
+C = D_{\text{KL}}(P \| Q) = \sum_{i \neq j} p_{ij} \log \frac{p_{ij}}{q_{ij}}
+```
 
 Because KL divergence is asymmetric:
 - **Large $p_{ij}$, small $q_{ij}$** (nearby points mapped far apart): **high cost** —
@@ -150,7 +160,9 @@ This is why t-SNE preserves local neighborhoods but not global geometry.
 
 The gradient of $C$ with respect to $z_i$ is:
 
-$$\frac{\partial C}{\partial z_i} = 4 \sum_{j \neq i} (p_{ij} - q_{ij})(1 + \|z_i - z_j\|^2)^{-1}(z_i - z_j)$$
+```math
+\frac{\partial C}{\partial z_i} = 4 \sum_{j \neq i} (p_{ij} - q_{ij})(1 + \|z_i - z_j\|^2)^{-1}(z_i - z_j)
+```
 
 This decomposes into two forces on each embedded point:
 

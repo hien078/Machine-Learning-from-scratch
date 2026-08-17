@@ -20,7 +20,7 @@ All symbols used below — defined once.
 | $V_p(r)$ | scalar | volume of a $p$-dimensional ball of radius $r$ |
 
 **Vector convention.** All vectors are column vectors. Lowercase Latin = vector;
-uppercase = matrix. Norms carry explicit subscripts: $\|x\|_1$, $\|x\|_2$.
+uppercase = matrix. Norms carry explicit subscripts: $\Vert x\Vert_1$, $\Vert x\Vert_2$.
 
 ---
 
@@ -30,7 +30,7 @@ Most classifiers (logistic regression, SVM, neural networks) learn a **parametri
 during training: they compress the data into a fixed set of parameters $\theta$, then
 discard the training set. KNN takes the opposite approach:
 
-- **No training phase.** Store the entire training set $\{(x_i, y_i)\}_{i=1}^n$.
+- **No training phase.** Store the entire training set $\lbrace(x_i, y_i)\rbrace_{i=1}^n$.
 - **Prediction = local lookup.** For a query $x_q$, find the $K$ training points closest
   to $x_q$ and let them vote.
 - **Non-parametric.** The model complexity grows with $n$, not with a fixed $p$-dimensional
@@ -54,7 +54,9 @@ Given a query $x_q$:
 2. Select the $K$ indices with the smallest distances: $\mathcal{N}_K(x_q)$.
 3. Predict by **majority vote**:
 
-$$\hat{y}(x_q) = \arg\max_{c \in \{1, \dots, C\}} \sum_{i \in \mathcal{N}_K(x_q)} \mathbb{1}[y_i = c].$$
+```math
+\hat{y}(x_q) = \arg\max_{c \in \{1, \dots, C\}} \sum_{i \in \mathcal{N}_K(x_q)} \mathbb{1}[y_i = c].
+```
 
 **Result:** KNN predicts the most frequent class among the $K$ nearest neighbors.
 
@@ -64,15 +66,21 @@ The choice of distance function defines "nearest."
 
 **Euclidean distance (L2):**
 
-$$d_2(x, z) = \|x - z\|_2 = \left(\sum_{j=1}^p (x_j - z_j)^2 \right)^{1/2}.$$
+```math
+d_2(x, z) = \|x - z\|_2 = \left(\sum_{j=1}^p (x_j - z_j)^2 \right)^{1/2}.
+```
 
 **Manhattan distance (L1):**
 
-$$d_1(x, z) = \|x - z\|_1 = \sum_{j=1}^p |x_j - z_j|.$$
+```math
+d_1(x, z) = \|x - z\|_1 = \sum_{j=1}^p |x_j - z_j|.
+```
 
 **Minkowski distance (Lp):**
 
-$$d_q(x, z) = \|x - z\|_q = \left(\sum_{j=1}^p |x_j - z_j|^q \right)^{1/q}, \qquad q \ge 1.$$
+```math
+d_q(x, z) = \|x - z\|_q = \left(\sum_{j=1}^p |x_j - z_j|^q \right)^{1/q}, \qquad q \ge 1.
+```
 
 Euclidean is $q = 2$, Manhattan is $q = 1$. As $q \to \infty$, $d_q \to \max_j |x_j - z_j|$
 (Chebyshev distance).
@@ -173,7 +181,7 @@ requires an astronomical number of samples.
 |---|---|
 | Training (fit) | $O(np)$ — just store the data |
 | Single query (predict) | $O(np)$ — compute $n$ distances, each costing $O(p)$ |
-| Sorting/selection | $O(n \log K)$ — partial sort for top-$K$ |
+| Sorting/selection | $O(n \log K)$ — partial sort for $\text{top-}K$ |
 | $m$ queries | $O(mnp)$ — linear in dataset size |
 
 ### 6.2 Acceleration structures
@@ -250,5 +258,5 @@ This ensures each feature contributes proportionally to the distance.
 ## 10. References
 
 - **Cover, T., & Hart, P. (1967).** Nearest neighbor pattern classification. *IEEE Transactions on Information Theory*, 13(1), 21–27. (Cover-Hart theorem: $R^\ast \le R_{1\text{-NN}} \le 2 R^\ast$).
-- **Hastie, T., Tibshirani, R., & Friedman, J. (2009).** *The Elements of Statistical Learning: Data Mining, Inference, and Prediction* (2nd ed.). Springer. Chapter 13.3: *$k$-Nearest-Neighbor Classifiers*.
+- **Hastie, T., Tibshirani, R., & Friedman, J. (2009).** *The Elements of Statistical Learning: Data Mining, Inference, and Prediction* (2nd ed.). Springer. Chapter 13.3: $k$*-Nearest-Neighbor Classifiers*.
 - **Bishop, C. M. (2006).** *Pattern Recognition and Machine Learning*. Springer. Chapter 2.5: *Non-parametric Methods*.

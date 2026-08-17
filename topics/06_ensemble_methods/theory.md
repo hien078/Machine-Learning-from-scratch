@@ -23,8 +23,8 @@ All symbols used below — defined once.
 | $F_m(x)$ | function | ensemble prediction after $m$ boosting rounds |
 | $r_{im}$ | scalar | pseudo-residual: $-\partial L(y_i, F) / \partial F$ evaluated at $F = F_{m-1}(x_i)$ |
 
-**Convention.** Classification labels are $y_i \in \{-1, +1\}$ for AdaBoost and
-$y_i \in \{0, 1, \dots, K-1\}$ for random forest. Regression targets are real-valued.
+**Convention.** Classification labels are $y_i \in \lbrace-1, +1\rbrace$ for AdaBoost and
+$y_i \in \lbrace0, 1, \dots, K-1\rbrace$ for random forest. Regression targets are real-valued.
 
 ---
 
@@ -49,7 +49,7 @@ errors partially cancel**.
 
 ### 2.1 Procedure
 
-Given training data $\{(x_i, y_i)\}_{i=1}^n$:
+Given training data $\lbrace(x_i, y_i)\rbrace_{i=1}^n$:
 
 1. For $m = 1, \dots, M$:
    a. Draw a **bootstrap sample** $S_m$: sample $n$ examples from the training set
@@ -57,14 +57,16 @@ Given training data $\{(x_i, y_i)\}_{i=1}^n$:
    b. Train a base learner $h_m$ on $S_m$.
 2. Aggregate:
    - **Regression:** $H(x) = \frac{1}{M} \sum_{m=1}^M h_m(x)$ (average).
-   - **Classification:** $H(x) = \text{mode}\{h_1(x), \dots, h_M(x)\}$ (majority vote).
+   - **Classification:** $H(x) = \text{mode}\lbrace h_1(x), \dots, h_M(x)\rbrace$ (majority vote).
 
 ### 2.2 Why averaging reduces variance
 
 Suppose we have $M$ predictors with identical variance $\sigma^2$ and pairwise
 correlation $\rho$. The variance of their average is:
 
-$$\text{Var}\!\left(\frac{1}{M}\sum_{m=1}^M h_m\right) = \frac{1}{M^2} \left[\sum_{m=1}^M \text{Var}(h_m) + \sum_{m \ne m'} \text{Cov}(h_m, h_{m'})\right].$$
+```math
+\text{Var}\!\left(\frac{1}{M}\sum_{m=1}^M h_m\right) = \frac{1}{M^2} \left[\sum_{m=1}^M \text{Var}(h_m) + \sum_{m \ne m'} \text{Cov}(h_m, h_{m'})\right].
+```
 
 Since $\text{Var}(h_m) = \sigma^2$ and $\text{Cov}(h_m, h_{m'}) = \rho\sigma^2$:
 
@@ -124,13 +126,15 @@ Smaller $m_{\text{try}}$ → more decorrelation (lower $\rho$) but weaker indivi
 
 ### 4.1 The OOB idea
 
-Each bootstrap sample $S_m$ contains about $1 - (1 - 1/n)^n \approx 1 - 1/e \approx 63.2\%$
+Each bootstrap sample $S_m$ contains about $1 - (1 - 1/n)^n \approx 1 - 1/e \approx 63.2$%
 of the original training examples. The remaining ~36.8% are **out-of-bag** for tree $m$.
 
-For each training example $x_i$, let $\text{OOB}(i) = \{m : x_i \notin S_m\}$ be the
+For each training example $x_i$, let $\text{OOB}(i) = \lbrace m : x_i \notin S_m\rbrace$ be the
 set of trees that did not train on $x_i$. The OOB prediction is:
 
-$$\hat{y}_i^{\text{OOB}} = \text{aggregate}\{h_m(x_i) : m \in \text{OOB}(i)\}.$$
+```math
+\hat{y}_i^{\text{OOB}} = \text{aggregate}\{h_m(x_i) : m \in \text{OOB}(i)\}.
+```
 
 ### 4.2 Why it works
 
@@ -153,19 +157,25 @@ previous ensemble.
 
 ### 5.2 AdaBoost (Adaptive Boosting)
 
-For binary classification with $y_i \in \{-1, +1\}$:
+For binary classification with $y_i \in \lbrace-1, +1\rbrace$:
 
 1. Initialize equal weights: $w_i^{(1)} = 1/n$ for all $i$.
 2. For $m = 1, \dots, M$:
    a. Train weak learner $h_m$ on the weighted training set.
    b. Compute weighted error:
+
       $$\epsilon_m = \frac{\sum_{i=1}^n w_i^{(m)} \cdot \mathbb{1}[h_m(x_i) \ne y_i]}{\sum_{i=1}^n w_i^{(m)}}. \qquad (5.1)$$
+
    c. Compute learner weight:
+
       $$\alpha_m = \frac{1}{2} \ln\frac{1 - \epsilon_m}{\epsilon_m}. \qquad (5.2)$$
+
    d. Update sample weights:
+
       $$w_i^{(m+1)} = w_i^{(m)} \cdot \exp(-\alpha_m \cdot y_i \cdot h_m(x_i)). \qquad (5.3)$$
+
    e. Normalize: $w_i^{(m+1)} \leftarrow w_i^{(m+1)} / \sum_j w_j^{(m+1)}$.
-3. Final prediction: $H(x) = \text{sign}\!\left(\sum_{m=1}^M \alpha_m h_m(x)\right)$.
+3. Final prediction: $H(x) = \text{sign}\negthinspace\left(\sum_{m=1}^M \alpha_m h_m(x)\right)$.
 
 **Key properties of $\alpha_m$:**
 - If $\epsilon_m < 0.5$ (better than random), then $\alpha_m > 0$: the learner contributes positively.
@@ -186,8 +196,10 @@ Given a differentiable loss $L(y, F)$ and current ensemble $F_{m-1}$:
 1. Initialize: $F_0(x) = \arg\min_\gamma \sum_{i=1}^n L(y_i, \gamma)$.
 2. For $m = 1, \dots, M$:
    a. Compute **pseudo-residuals** (negative gradient of loss):
-      $$r_{im} = -\frac{\partial L(y_i, F)}{\partial F}\bigg|_{F = F_{m-1}(x_i)}. \qquad (5.4)$$
-   b. Fit a regression tree $h_m$ to the pseudo-residuals $\{(x_i, r_{im})\}$.
+
+      $$r_{im} = -\frac{\partial L(y_i, F)}{\partial F}\bigg|_ {F = F_{m-1}(x_i)}. \qquad (5.4)$$
+
+   b. Fit a regression tree $h_m$ to the pseudo-residuals $\lbrace(x_i, r_{im})\rbrace$.
    c. Update: $F_m(x) = F_{m-1}(x) + \eta \cdot h_m(x)$.
 
 For **squared loss** $L(y, F) = \frac{1}{2}(y - F)^2$:
@@ -259,7 +271,7 @@ tree depth.
 
 ### 8.2 Random forest: diminishing returns and computational cost
 
-- **Diminishing returns:** After $M \approx 100$–$500$ trees, additional trees reduce
+- **Diminishing returns:** After $M \approx 100\text{–}500$ trees, additional trees reduce
   variance negligibly (the $\rho\sigma^2$ floor in equation 2.1).
 - **Computational cost:** Each tree costs $O(m_{\text{try}} \cdot n \log n)$ to build.
   Total training cost is $O(M \cdot m_{\text{try}} \cdot n \log n)$.

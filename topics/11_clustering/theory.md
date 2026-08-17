@@ -19,28 +19,28 @@
 | $K$ | scalar $\in \mathbb{N}$ | number of clusters |
 | $x_i$ | vector $\in \mathbb{R}^d$ | feature vector of the $i$-th point |
 | $X$ | matrix $\in \mathbb{R}^{n \times d}$ | data matrix; row $i$ is $x_i^\top$ |
-| $c_i$ | scalar $\in \{1, \dots, K\}$ | cluster assignment of point $i$ |
-| $C_k$ | set | set of indices assigned to cluster $k$: $C_k = \{i : c_i = k\}$ |
+| $c_i$ | scalar $\in \lbrace1, \dots, K\rbrace$ | cluster assignment of point $i$ |
+| $C_k$ | set | set of indices assigned to cluster $k$: $C_k = \lbrace i : c_i = k\rbrace$ |
 | $\mu_k$ | vector $\in \mathbb{R}^d$ | centroid (mean) of cluster $k$ |
 | $\pi_k$ | scalar $\in (0, 1)$ | mixture weight for component $k$; $\sum_k \pi_k = 1$ |
 | $\Sigma_k$ | matrix $\in \mathbb{R}^{d \times d}$ | covariance matrix of component $k$ |
 | $r_{ik}$ | scalar $\in [0, 1]$ | responsibility: posterior probability that point $i$ belongs to component $k$ |
 | $\varepsilon$ | scalar $> 0$ | DBSCAN neighbourhood radius |
-| $N_\varepsilon(x_i)$ | set | $\varepsilon$-neighbourhood: $\{x_j : \Vert x_j - x_i\Vert  \le \varepsilon\}$ |
+| $N_\varepsilon(x_i)$ | set | $\varepsilon$-neighbourhood: $\lbrace x_j : \Vert x_j - x_i\Vert  \le \varepsilon\rbrace$ |
 | $\text{minPts}$ | scalar $\in \mathbb{N}$ | DBSCAN minimum density threshold |
 | $J$ | scalar | K-Means objective (inertia) |
 | $\mathcal{L}$ | scalar | log-likelihood of the GMM |
 
 **Conventions.**
 
-- All vectors are column vectors. $\|\cdot\|$ denotes the Euclidean ($\ell^2$) norm.
+- All vectors are column vectors. $\Vert\cdot\Vert$ denotes the Euclidean ($\ell^2$) norm.
 - $\mathcal{N}(x; \mu, \Sigma)$ is the multivariate Gaussian density evaluated at $x$.
 
 ---
 
 ## 1. The Problem — WHY
 
-Given $n$ data points $\{x_1, \dots, x_n\}$ with **no labels**, we want to discover natural groups (clusters) in the data. This arises whenever we need to:
+Given $n$ data points $\lbrace x_1, \dots, x_n\rbrace$ with **no labels**, we want to discover natural groups (clusters) in the data. This arises whenever we need to:
 
 - **Segment** customers, images, or documents into meaningful categories.
 - **Compress** data by replacing each point with its cluster representative.
@@ -56,7 +56,9 @@ The challenge: "cluster" has no single mathematical definition. Different algori
 
 K-Means seeks assignments $c = (c_1, \dots, c_n)$ and centroids $\mu = (\mu_1, \dots, \mu_K)$ that minimise the **within-cluster sum of squares (WCSS)**, also called **inertia**:
 
-$$J(c, \mu) = \sum_{i=1}^n \|x_i - \mu_{c_i}\|^2 = \sum_{k=1}^K \sum_{i \in C_k} \|x_i - \mu_k\|^2$$
+```math
+J(c, \mu) = \sum_{i=1}^n \|x_i - \mu_{c_i}\|^2 = \sum_{k=1}^K \sum_{i \in C_k} \|x_i - \mu_k\|^2
+```
 
 This is equivalent to minimising the total squared distance from each point to its assigned centroid.
 
@@ -66,7 +68,9 @@ The joint optimisation over $(c, \mu)$ is NP-hard in general. Lloyd's algorithm 
 
 **Step 1 — Assignment (fix $\mu$, optimise $c$).** For each point $i$, choose the nearest centroid:
 
-$$c_i = \arg\min_{k \in \{1, \dots, K\}} \|x_i - \mu_k\|^2$$
+```math
+c_i = \arg\min_{k \in \{1, \dots, K\}} \|x_i - \mu_k\|^2
+```
 
 This minimises $J$ with respect to $c$ because each term depends only on its own $c_i$.
 
@@ -74,11 +78,15 @@ This minimises $J$ with respect to $c$ because each term depends only on its own
 
 > **Derivation.** Fix $k$ and consider the sub-problem:
 >
-> $$\min_{\mu_k} \sum_{i \in C_k} \|x_i - \mu_k\|^2$$
+> ```math
+> \min_{\mu_k} \sum_{i \in C_k} \|x_i - \mu_k\|^2
+> ```
 >
 > Expand: $\sum_{i \in C_k} (x_i - \mu_k)^\top (x_i - \mu_k)$. Take the gradient with respect to $\mu_k$:
 >
-> $$\nabla_{\mu_k} \sum_{i \in C_k} \|x_i - \mu_k\|^2 = -2 \sum_{i \in C_k} (x_i - \mu_k) = 0$$
+> ```math
+> \nabla_{\mu_k} \sum_{i \in C_k} \|x_i - \mu_k\|^2 = -2 \sum_{i \in C_k} (x_i - \mu_k) = 0
+> ```
 >
 > Solving: $|C_k| \cdot \mu_k = \sum_{i \in C_k} x_i$
 
@@ -95,7 +103,7 @@ This minimises $J$ with respect to $c$ because each term depends only on its own
 
 > **Theorem.** Lloyd's algorithm converges in a finite number of steps.
 
-**Proof sketch.** Each step (assign or update) does not increase $J$. Since $J \ge 0$ and there are finitely many possible assignment vectors $c \in \{1, \dots, K\}^n$, the algorithm must terminate. $\blacksquare$
+**Proof sketch.** Each step (assign or update) does not increase $J$. Since $J \ge 0$ and there are finitely many possible assignment vectors $c \in \lbrace1, \dots, K\rbrace^n$, the algorithm must terminate. $\blacksquare$
 
 **Caveat:** Convergence is to a **local** minimum, not necessarily the global one. The final result depends on initialisation.
 
@@ -103,9 +111,9 @@ This minimises $J$ with respect to $c$ because each term depends only on its own
 
 Random initialisation often leads to poor local minima. K-Means++ selects initial centroids that are spread apart:
 
-1. Choose $\mu_1$ uniformly at random from $\{x_1, \dots, x_n\}$.
+1. Choose $\mu_1$ uniformly at random from $\lbrace x_1, \dots, x_n\rbrace$.
 2. For $k = 2, \dots, K$:
-   - Compute $D(x_i) = \min_{j < k} \|x_i - \mu_j\|^2$ for each point.
+   - Compute $D(x_i) = \min_{j < k} \Vert x_i - \mu_j\Vert^2$ for each point.
    - Select $\mu_k = x_i$ with probability proportional to $D(x_i)$.
 
 > **Theorem (Arthur & Vassilvitskii, 2007).** K-Means++ initialisation guarantees $\mathbb{E}[J] \le 8(\ln K + 2) \cdot J^\ast$, where $J^\ast$ is the optimal objective.
@@ -159,19 +167,25 @@ DBSCAN (Density-Based Spatial Clustering of Applications with Noise) defines clu
 
 A GMM assumes the data is generated from a mixture of $K$ Gaussian components:
 
-$$p(x) = \sum_{k=1}^K \pi_k \, \mathcal{N}(x; \mu_k, \Sigma_k)$$
+```math
+p(x) = \sum_{k=1}^K \pi_k \, \mathcal{N}(x; \mu_k, \Sigma_k)
+```
 
 where each component density is:
 
-$$\mathcal{N}(x; \mu_k, \Sigma_k) = \frac{1}{(2\pi)^{d/2} |\Sigma_k|^{1/2}} \exp\!\left( -\frac{1}{2} (x - \mu_k)^\top \Sigma_k^{-1} (x - \mu_k) \right)$$
+```math
+\mathcal{N}(x; \mu_k, \Sigma_k) = \frac{1}{(2\pi)^{d/2} |\Sigma_k|^{1/2}} \exp\!\left( -\frac{1}{2} (x - \mu_k)^\top \Sigma_k^{-1} (x - \mu_k) \right)
+```
 
-The parameters are $\theta = \{\pi_k, \mu_k, \Sigma_k\}_{k=1}^K$.
+The parameters are $\theta = \lbrace\pi_k, \mu_k, \Sigma_k\rbrace_{k=1}^K$.
 
 ### 4.2 The log-likelihood
 
-Given observed data $X = \{x_1, \dots, x_n\}$, the log-likelihood is:
+Given observed data $X = \lbrace x_1, \dots, x_n\rbrace$, the log-likelihood is:
 
-$$\mathcal{L}(\theta) = \sum_{i=1}^n \log \left( \sum_{k=1}^K \pi_k \, \mathcal{N}(x_i; \mu_k, \Sigma_k) \right)$$
+```math
+\mathcal{L}(\theta) = \sum_{i=1}^n \log \left( \sum_{k=1}^K \pi_k \, \mathcal{N}(x_i; \mu_k, \Sigma_k) \right)
+```
 
 Direct maximisation is intractable because the log is outside the sum. The **Expectation-Maximisation (EM)** algorithm circumvents this.
 
@@ -179,14 +193,16 @@ Direct maximisation is intractable because the log is outside the sum. The **Exp
 
 **E-step — compute responsibilities.** Using Bayes' rule, compute the posterior probability that point $i$ belongs to component $k$:
 
-$$r_{ik} = \frac{\pi_k \, \mathcal{N}(x_i; \mu_k, \Sigma_k)}{\sum_{j=1}^K \pi_j \, \mathcal{N}(x_i; \mu_j, \Sigma_j)}$$
+```math
+r_{ik} = \frac{\pi_k \, \mathcal{N}(x_i; \mu_k, \Sigma_k)}{\sum_{j=1}^K \pi_j \, \mathcal{N}(x_i; \mu_j, \Sigma_j)}
+```
 
 **M-step — update parameters.** Let $N_k = \sum_{i=1}^n r_{ik}$ be the effective number of points in component $k$.
 
 > **Derivation of M-step updates.** Setting the derivative of the expected complete-data log-likelihood with respect to each parameter to zero:
 >
 > For $\mu_k$: differentiate $\sum_i r_{ik} \log \mathcal{N}(x_i; \mu_k, \Sigma_k)$ w.r.t. $\mu_k$ and set to zero.
-> The key term is $\sum_i r_{ik} \, \Sigma_k^{-1}(x_i - \mu_k) = 0$, giving $\mu_k = \frac{1}{N_k} \sum_i r_{ik} \, x_i$.
+> The key term is $\sum_i r_{ik} \thinspace \Sigma_k^{-1}(x_i - \mu_k) = 0$, giving $\mu_k = \frac{1}{N_k} \sum_i r_{ik} \thinspace x_i$.
 >
 > For $\Sigma_k$: similarly, $\Sigma_k = \frac{1}{N_k} \sum_i r_{ik} (x_i - \mu_k)(x_i - \mu_k)^\top$.
 >
@@ -194,7 +210,9 @@ $$r_{ik} = \frac{\pi_k \, \mathcal{N}(x_i; \mu_k, \Sigma_k)}{\sum_{j=1}^K \pi_j 
 
 **Result:** The M-step updates are:
 
-$$\mu_k = \frac{\sum_{i=1}^n r_{ik} \, x_i}{N_k}, \qquad \Sigma_k = \frac{\sum_{i=1}^n r_{ik} (x_i - \mu_k)(x_i - \mu_k)^\top}{N_k}, \qquad \pi_k = \frac{N_k}{n}$$
+```math
+\mu_k = \frac{\sum_{i=1}^n r_{ik} \, x_i}{N_k}, \qquad \Sigma_k = \frac{\sum_{i=1}^n r_{ik} (x_i - \mu_k)(x_i - \mu_k)^\top}{N_k}, \qquad \pi_k = \frac{N_k}{n}
+```
 
 ### 4.4 Convergence
 
@@ -208,7 +226,7 @@ $$\mu_k = \frac{\sum_{i=1}^n r_{ik} \, x_i}{N_k}, \qquad \Sigma_k = \frac{\sum_{
 
 K-Means can be viewed as a degenerate GMM where:
 - All covariances are $\Sigma_k = \sigma^2 I$ with $\sigma \to 0$.
-- Responsibilities become hard assignments: $r_{ik} \in \{0, 1\}$.
+- Responsibilities become hard assignments: $r_{ik} \in \lbrace0, 1\rbrace$.
 - Mixture weights are uniform.
 
 ---

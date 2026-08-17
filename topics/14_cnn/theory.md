@@ -25,7 +25,7 @@ cross-correlation, written as $\star$.
 ## 1. WHY — Why Convolution for Images
 
 A grayscale image of size $224 \times 224$ has 50 176 pixels. A dense (fully connected)
-layer mapping this to just 256 hidden units needs $50\,176 \times 256 \approx 12.8$ million
+layer mapping this to just 256 hidden units needs $50\thinspace176 \times 256 \approx 12.8$ million
 parameters — for a single layer. Three problems arise:
 
 1. **Too many parameters.** Millions of weights per layer → massive memory, slow training,
@@ -55,14 +55,14 @@ shifting the input shifts the feature map by the same amount.
 Given input $X \in \mathbb{R}^{H \times W}$ and kernel $K \in \mathbb{R}^{k_h \times k_w}$,
 the output ("valid" mode) is $Y \in \mathbb{R}^{H_{\text{out}} \times W_{\text{out}}}$ with
 
-$$
+```math
 Y_{i,j} = \sum_{m=0}^{k_h - 1} \sum_{n=0}^{k_w - 1} K_{m,n} \, X_{i+m,\, j+n},
 \qquad
 \begin{cases}
 i = 0, \ldots, H - k_h \\
 j = 0, \ldots, W - k_w
 \end{cases}
-$$
+```
 
 Output dimensions:
 
@@ -95,8 +95,10 @@ An RGB image has $C_{\text{in}} = 3$ channels. A single filter is now a 3D tenso
 $K \in \mathbb{R}^{C_{\text{in}} \times k_h \times k_w}$. The output at position $(i, j)$
 sums over all input channels:
 
-$$Y_{i,j} = \sum_{c=0}^{C_{\text{in}} - 1} \sum_{m=0}^{k_h - 1} \sum_{n=0}^{k_w - 1}
-  K_{c, m, n} \, X_{c,\, i+m,\, j+n} + b.$$
+```math
+Y_{i,j} = \sum_{c=0}^{C_{\text{in}} - 1} \sum_{m=0}^{k_h - 1} \sum_{n=0}^{k_w - 1}
+K_{c, m, n} \, X_{c,\, i+m,\, j+n} + b.
+```
 
 With $C_{\text{out}}$ such filters, the output is a tensor of shape
 $C_{\text{out}} \times H_{\text{out}} \times W_{\text{out}}$. Each output channel is called
@@ -106,7 +108,7 @@ a **feature map**.
 
 | Layer type | Input size | Output size | Parameters |
 |---|---|---|---|
-| Dense | $50\,176$ | $256$ | $50\,176 \times 256 + 256 \approx 12.8$M |
+| Dense | $50\thinspace176$ | $256$ | $50\thinspace176 \times 256 + 256 \approx 12.8\text{M}$ |
 | Conv ($3 \times 3$, 64 filters) | $1 \times 224 \times 224$ | $64 \times 222 \times 222$ | $64 \times (1 \times 3 \times 3) + 64 = 640$ |
 
 **Result:** Convolution achieves a 20 000× reduction in parameters for this example, while
@@ -120,8 +122,10 @@ producing a richer spatial output.
 
 The forward pass for a single output channel $f$ at position $(i, j)$:
 
-$$Y_{f, i, j} = b_f + \sum_{c=0}^{C_{\text{in}}-1} \sum_{m=0}^{k_h-1} \sum_{n=0}^{k_w-1}
-  K_{f, c, m, n} \, X_{c,\, i \cdot s + m,\, j \cdot s + n}.$$
+```math
+Y_{f, i, j} = b_f + \sum_{c=0}^{C_{\text{in}}-1} \sum_{m=0}^{k_h-1} \sum_{n=0}^{k_w-1}
+K_{f, c, m, n} \, X_{c,\, i \cdot s + m,\, j \cdot s + n}.
+```
 
 ### 3.2 Backpropagation through convolution
 
@@ -129,8 +133,10 @@ Let $G_Y = \frac{\partial L}{\partial Y}$ be the upstream gradient (same shape a
 
 **Gradient w.r.t. kernel** (for filter $f$, channel $c$):
 
-$$\frac{\partial L}{\partial K_{f,c,m,n}} = \sum_{i} \sum_{j}
-  G_{Y_{f,i,j}} \cdot X_{c,\, i \cdot s + m,\, j \cdot s + n}.$$
+```math
+\frac{\partial L}{\partial K_{f,c,m,n}} = \sum_{i} \sum_{j}
+G_{Y_{f,i,j}} \cdot X_{c,\, i \cdot s + m,\, j \cdot s + n}.
+```
 
 This is itself a cross-correlation of the input $X$ with the upstream gradient $G_Y$.
 
@@ -140,8 +146,10 @@ $$\frac{\partial L}{\partial b_f} = \sum_{i} \sum_{j} G_{Y_{f,i,j}}.$$
 
 **Gradient w.r.t. input** (for stride 1, valid padding):
 
-$$\frac{\partial L}{\partial X_{c,i,j}} = \sum_{f} \sum_{m} \sum_{n}
-  K_{f,c,m,n} \cdot G_{Y_{f,\, i-m,\, j-n}},$$
+```math
+\frac{\partial L}{\partial X_{c,i,j}} = \sum_{f} \sum_{m} \sum_{n}
+K_{f,c,m,n} \cdot G_{Y_{f,\, i-m,\, j-n}},
+```
 
 where out-of-bounds indices contribute zero. This is equivalent to convolving $G_Y$ with
 the *180°-rotated* (flipped) kernel — a "full" convolution with the flipped kernel. This
@@ -161,15 +169,19 @@ Pooling reduces spatial dimensions and introduces a degree of local translation 
 
 For a $p_h \times p_w$ pooling window with stride $s$:
 
-$$Y_{i,j} = \max_{0 \le m < p_h,\; 0 \le n < p_w} X_{i \cdot s + m,\; j \cdot s + n}.$$
+```math
+Y_{i,j} = \max_{0 \le m < p_h,\; 0 \le n < p_w} X_{i \cdot s + m,\; j \cdot s + n}.
+```
 
 **Backprop:** The gradient passes only to the position of the maximum in each window.
 All other positions receive zero gradient.
 
 ### 4.2 Average pooling
 
-$$Y_{i,j} = \frac{1}{p_h \cdot p_w} \sum_{m=0}^{p_h-1} \sum_{n=0}^{p_w-1}
-  X_{i \cdot s + m,\; j \cdot s + n}.$$
+```math
+Y_{i,j} = \frac{1}{p_h \cdot p_w} \sum_{m=0}^{p_h-1} \sum_{n=0}^{p_w-1}
+X_{i \cdot s + m,\; j \cdot s + n}.
+```
 
 **Backprop:** The gradient is distributed equally to all positions in the window.
 
@@ -222,12 +234,12 @@ The original CNN for digit recognition:
 | Input | $1 \times 32 \times 32$ | — |
 | Conv $5 \times 5$, 6 filters | $6 \times 28 \times 28$ | $6 \times 25 + 6 = 156$ |
 | AvgPool $2 \times 2$ | $6 \times 14 \times 14$ | 0 |
-| Conv $5 \times 5$, 16 filters | $16 \times 10 \times 10$ | $16 \times 150 + 16 = 2\,416$ |
+| Conv $5 \times 5$, 16 filters | $16 \times 10 \times 10$ | $16 \times 150 + 16 = 2\thinspace416$ |
 | AvgPool $2 \times 2$ | $16 \times 5 \times 5$ | 0 |
-| Flatten → Dense 120 | 120 | $400 \times 120 + 120 = 48\,120$ |
-| Dense 84 | 84 | $120 \times 84 + 84 = 10\,164$ |
+| Flatten → Dense 120 | 120 | $400 \times 120 + 120 = 48\thinspace120$ |
+| Dense 84 | 84 | $120 \times 84 + 84 = 10\thinspace164$ |
 | Dense 10 | 10 | $84 \times 10 + 10 = 850$ |
-| **Total** | | **$\approx 61\,700$** |
+| **Total** | | **$\approx 61\thinspace700$** |
 
 ### 6.2 Deeper architectures (overview)
 

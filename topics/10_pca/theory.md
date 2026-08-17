@@ -36,12 +36,12 @@ that preserves the maximum centered squared variation.
 
 ### 3.1 One-component problem
 
-Project $X_c$ onto a unit vector $v \in \mathbb{R}^d$ ($\|v\|_2 = 1$). The sample
+Project $X_c$ onto a unit vector $v \in \mathbb{R}^d$ ($\Vert v\Vert_2 = 1$). The sample
 variance of the projected data is:
 
-$$
+```math
 \text{Var}_v = \frac{1}{n}\|X_c v\|_2^2 = v^\top S v
-$$
+```
 
 We seek $v$ maximizing $v^\top S v$ subject to $v^\top v = 1$.
 
@@ -66,14 +66,14 @@ $W_k^\top W_k = I_k$.
 By the **Rayleigh–Ritz theorem**, the solution is $W_k = [v_1, \ldots, v_k]$, the top
 $k$ eigenvectors of $S$.
 
-**Result:** the first $k$ principal directions are the top-$k$ eigenvectors of the
+**Result:** the first $k$ principal directions are the $\text{top-}k$ eigenvectors of the
 covariance matrix, and the $j$-th component captures variance $\lambda_j$.
 
 ## 4. Reconstruction View
 
 ### 4.1 Projection and reconstruction
 
-Given $W_k$, the rank-$k$ approximation of $X_c$ is:
+Given $W_k$, the $\text{rank-}k$ approximation of $X_c$ is:
 
 $$
 \hat{X}_c = X_c W_k W_k^\top
@@ -84,14 +84,14 @@ $\mathbb{R}^d$.
 
 ### 4.2 Reconstruction error
 
-$$
+```math
 \|X_c - \hat{X}_c\|_F^2
 = \sum_{j=k+1}^{d} \lambda_j \cdot n
-$$
+```
 
 Minimizing squared reconstruction error is equivalent to maximizing captured variance.
 
-**Result:** PCA provides the best linear rank-$k$ reconstruction under squared error.
+**Result:** PCA provides the best linear $\text{rank-}k$ reconstruction under squared error.
 
 ## 5. SVD Connection
 

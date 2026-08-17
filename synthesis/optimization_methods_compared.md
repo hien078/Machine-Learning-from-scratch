@@ -56,7 +56,7 @@ $$\hat{\mathbf{w}}_{\text{ridge}} = (\mathbf{X}^\top \mathbf{X} + \lambda \mathb
 $$\mathbf{w}_{t+1} = \mathbf{w}_t - \eta \nabla \mathcal{L}(\mathbf{w}_t)$$
 
 **Convergence theory:**
-- Convex + L-Lipschitz gradient: $\mathcal{L}(\mathbf{w}_T) - \mathcal{L}^\ast \le \frac{L \|\mathbf{w}_0 - \mathbf{w}^\ast\|^2}{2T}$
+- Convex + L-Lipschitz gradient: $\mathcal{L}(\mathbf{w}_T) - \mathcal{L}^\ast \le \frac{L \Vert\mathbf{w}_0 - \mathbf{w}^\ast\Vert^2}{2T}$
 - Strongly convex: linear convergence rate
 - Learning rate: $\eta < \frac{2}{L}$ for convergence
 
@@ -85,8 +85,13 @@ $$\mathbf{w}_{t+1} = \mathbf{w}_t - \eta \frac{1}{|B|} \sum_{i \in B} \nabla \ma
 
 ### Momentum
 
-$$\mathbf{v}_{t+1} = \beta \mathbf{v}_t + \nabla \mathcal{L}(\mathbf{w}_t)$$
-$$\mathbf{w}_{t+1} = \mathbf{w}_t - \eta \mathbf{v}_{t+1}$$
+```math
+\mathbf{v}_{t+1} = \beta \mathbf{v}_t + \nabla \mathcal{L}(\mathbf{w}_t)
+```
+
+```math
+\mathbf{w}_{t+1} = \mathbf{w}_t - \eta \mathbf{v}_{t+1}
+```
 
 - Accumulates velocity in consistent gradient direction
 - Dampens oscillation in ravine-shaped landscapes
@@ -94,9 +99,17 @@ $$\mathbf{w}_{t+1} = \mathbf{w}_t - \eta \mathbf{v}_{t+1}$$
 
 ### Adam (Adaptive Moment Estimation)
 
-$$m_t = \beta_1 m_{t-1} + (1-\beta_1) g_t \quad \text{(first moment)}$$
-$$v_t = \beta_2 v_{t-1} + (1-\beta_2) g_t^2 \quad \text{(second moment)}$$
-$$\mathbf{w}_{t+1} = \mathbf{w}_t - \eta \frac{\hat{m}_t}{\sqrt{\hat{v}_t} + \epsilon}$$
+```math
+m_t = \beta_1 m_{t-1} + (1-\beta_1) g_t \quad \text{(first moment)}
+```
+
+```math
+v_t = \beta_2 v_{t-1} + (1-\beta_2) g_t^2 \quad \text{(second moment)}
+```
+
+```math
+\mathbf{w}_{t+1} = \mathbf{w}_t - \eta \frac{\hat{m}_t}{\sqrt{\hat{v}_t} + \epsilon}
+```
 
 - Adaptive per-parameter learning rates
 - Default: $\beta_1 = 0.9$, $\beta_2 = 0.999$, $\epsilon = 10^{-8}$

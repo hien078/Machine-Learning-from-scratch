@@ -59,7 +59,11 @@ Early GNNs were inspired by signal processing on graphs, operating in the spectr
 
 ### Graph Laplacian
 The fundamental operator in spectral graph theory is the unnormalized Graph Laplacian:
-$$L = D - A$$
+
+```math
+L = D - A
+```
+
 **Rule Used:** Graph representation definition.
 
 **Properties of $L$:**
@@ -69,29 +73,53 @@ $$L = D - A$$
 
 ### Normalized Laplacian
 To maintain numerical stability, we often use the symmetric normalized Laplacian:
-$$L_{sym} = I - D^{-1/2} A D^{-1/2}$$
+
+```math
+L_{sym} = I - D^{-1/2} A D^{-1/2}
+```
+
 **Rule Used:** Normalization by node degrees.
 
 ### Eigendecomposition and Graph Fourier Transform
 Since $L$ (or $L_{sym}$) is symmetric and real, it admits an eigendecomposition:
-$$L = U \Lambda U^T$$
+
+```math
+L = U \Lambda U^T
+```
+
 where $U \in \mathbb{R}^{N \times N}$ is the matrix of orthonormal eigenvectors and $\Lambda$ is the diagonal matrix of eigenvalues ($\lambda_1 \leq \lambda_2 \leq \dots \leq \lambda_N$).
 
 The eigenvectors $U$ form a basis for graph signals. We define the **Graph Fourier Transform** of a signal $x \in \mathbb{R}^N$ as:
-$$\hat{x} = U^T x$$
+
+```math
+\hat{x} = U^T x
+```
+
 **Rule Used:** Change of basis to Laplacian eigenbasis.
 
 ### Spectral Convolution
 Given a filter $g_\theta$ in the spectral domain, the convolution of $x$ with $g_\theta$ is:
-$$g_\theta \star x = U g_\theta(\Lambda) U^T x$$
+
+```math
+g_\theta \star x = U g_\theta(\Lambda) U^T x
+```
+
 where $g_\theta(\Lambda)$ is a diagonal matrix of learnable filter coefficients.
 
 ### Chebyshev Approximation (ChebNet)
 Computing $U$ is $\mathcal{O}(N^3)$, which is intractable for large graphs. Defferrard et al. approximated the filter using a truncated Chebyshev polynomial of order $K$:
-$$g_{\theta}(\Lambda) \approx \sum_{k=0}^{K} \theta_k T_k(\tilde{\Lambda})$$
+
+```math
+g_{\theta}(\Lambda) \approx \sum_{k=0}^{K} \theta_k T_k(\tilde{\Lambda})
+```
+
 where $\tilde{\Lambda} = \frac{2}{\lambda_{max}} \Lambda - I$ scales eigenvalues to $[-1, 1]$.
 By applying this to the Laplacian, the convolution avoids the eigendecomposition:
-$$g_\theta \star x \approx \sum_{k=0}^{K} \theta_k T_k(\tilde{L}) x$$
+
+```math
+g_\theta \star x \approx \sum_{k=0}^{K} \theta_k T_k(\tilde{L}) x
+```
+
 **Result:** A localized, scalable graph convolution where $K$ controls the neighborhood radius.
 
 ## 4. HOW: Graph Convolutional Networks (GCN)
@@ -101,28 +129,48 @@ Kipf and Welling simplified ChebNet by setting $K=1$ and making specific approxi
 ### Step-by-Step Derivation
 **Step 1: First-order Approximation**
 Set $K=1$ and assume $\lambda_{max} \approx 2$ (true for many normalized graphs).
-$$g_\theta \star x \approx \theta_0 x + \theta_1 (L_{sym} - I) x$$
+
+```math
+g_\theta \star x \approx \theta_0 x + \theta_1 (L_{sym} - I) x
+```
+
 **Rule Used:** Truncated Chebyshev polynomial.
 
 **Step 2: Laplacian Substitution**
 Substitute $L_{sym} = I - D^{-1/2} A D^{-1/2}$:
-$$g_\theta \star x \approx \theta_0 x - \theta_1 (D^{-1/2} A D^{-1/2}) x$$
+
+```math
+g_\theta \star x \approx \theta_0 x - \theta_1 (D^{-1/2} A D^{-1/2}) x
+```
+
 **Rule Used:** Definition of normalized Laplacian.
 
 **Step 3: Single Parameter Restriction**
 To constrain the number of parameters and avoid overfitting, set $\theta = \theta_0 = -\theta_1$:
-$$g_\theta \star x \approx \theta (I + D^{-1/2} A D^{-1/2}) x$$
+
+```math
+g_\theta \star x \approx \theta (I + D^{-1/2} A D^{-1/2}) x
+```
+
 **Rule Used:** Parameter sharing/regularization.
 
 **Step 4: Renormalization Trick**
 The operator $I + D^{-1/2} A D^{-1/2}$ has eigenvalues in $[0, 2]$, leading to numerical instability (exploding/vanishing gradients) in deep models. Kipf & Welling proposed replacing it with:
-$$\tilde{D}^{-1/2} \tilde{A} \tilde{D}^{-1/2}$$
-where $\tilde{A} = A + I$ (adding self-loops) and $\tilde{D}_{ii} = \sum_j \tilde{A}_{ij}$.
+
+```math
+\tilde{D}^{-1/2} \tilde{A} \tilde{D}^{-1/2}
+```
+
+where $\tilde{A} = A + I$ (adding self-loops) and $\tilde D_{ii} = \sum_j \tilde A_{ij}$.
 **Rule Used:** Spectral norm bounding via renormalization.
 
 **Step 5: Layer-wise Propagation**
 Generalizing to multi-dimensional features $H^{(l)}$ and multiple filters $W^{(l)}$, we get the final GCN layer:
-$$H^{(l+1)} = \sigma(\tilde{D}^{-1/2} \tilde{A} \tilde{D}^{-1/2} H^{(l)} W^{(l)})$$
+
+```math
+H^{(l+1)} = \sigma(\tilde{D}^{-1/2} \tilde{A} \tilde{D}^{-1/2} H^{(l)} W^{(l)})
+```
+
 **Result:** The standard GCN forward pass, which elegantly bridges spectral theory and spatial message passing.
 
 ### The Over-Smoothing Problem
@@ -136,22 +184,41 @@ GCN uses fixed aggregation weights ($1/\sqrt{D_{ii}D_{jj}}$). Graph Attention Ne
 
 ### Attention Coefficient Computation
 For nodes $i$ and $j$, the attention mechanism computes a raw score:
-$$e_{ij} = \text{LeakyReLU}(a^T [W h_i || W h_j])$$
+
+```math
+e_{ij} = \text{LeakyReLU}(a^T [W h_i || W h_j])
+```
+
 where $a$ is a learnable weight vector and $||$ denotes concatenation.
 
 This score is normalized across all neighbors $j \in \mathcal{N}(i)$ using a softmax function:
-$$\alpha_{ij} = \text{softmax}_j(e_{ij}) = \frac{\exp(e_{ij})}{\sum_{k \in \mathcal{N}(i)} \exp(e_{ik})}$$
+
+```math
+\alpha_{ij} = \text{softmax}_j(e_{ij}) = \frac{\exp(e_{ij})}{\sum_{k \in \mathcal{N}(i)} \exp(e_{ik})}
+```
+
 **Rule Used:** Softmax normalization.
 
 ### Node Update
 The updated node representation is the weighted sum of transformed neighbor features:
-$$h_i^{(l+1)} = \sigma \left( \sum_{j \in \mathcal{N}(i)} \alpha_{ij} W h_j^{(l)} \right)$$
+
+```math
+h_i^{(l+1)} = \sigma \left( \sum_{j \in \mathcal{N}(i)} \alpha_{ij} W h_j^{(l)} \right)
+```
 
 ### Multi-Head Attention
 To stabilize learning, GAT employs multi-head attention. For $K$ independent attention heads, the outputs are typically concatenated for hidden layers:
-$$h_i^{(l+1)} = \Big\|_{k=1}^K \sigma \left( \sum_{j \in \mathcal{N}(i)} \alpha_{ij}^k W^k h_j^{(l)} \right)$$
+
+```math
+h_i^{(l+1)} = \Big\|_{k=1}^K \sigma \left( \sum_{j \in \mathcal{N}(i)} \alpha_{ij}^k W^k h_j^{(l)} \right)
+```
+
 For the final output layer (e.g., classification), averaging is preferred over concatenation:
-$$h_i^{(out)} = \sigma \left( \frac{1}{K} \sum_{k=1}^K \sum_{j \in \mathcal{N}(i)} \alpha_{ij}^k W^k h_j^{(L-1)} \right)$$
+
+```math
+h_i^{(out)} = \sigma \left( \frac{1}{K} \sum_{k=1}^K \sum_{j \in \mathcal{N}(i)} \alpha_{ij}^k W^k h_j^{(L-1)} \right)
+```
+
 **Result:** A fully spatial, attention-driven node update mechanism.
 
 ## 6. HOW: Message Passing Neural Networks (MPNN)
@@ -159,11 +226,19 @@ $$h_i^{(out)} = \sigma \left( \frac{1}{K} \sum_{k=1}^K \sum_{j \in \mathcal{N}(i
 Gilmer et al. formalized GNNs into a unified spatial framework called **Message Passing Neural Networks**. The forward pass consists of two phases:
 
 1. **Aggregate Phase (Message Generation & Aggregation):**
-$$m_i^{(l+1)} = \sum_{j \in \mathcal{N}(i)} M_l(h_i^{(l)}, h_j^{(l)}, e_{ij})$$
+
+```math
+m_i^{(l+1)} = \sum_{j \in \mathcal{N}(i)} M_l(h_i^{(l)}, h_j^{(l)}, e_{ij})
+```
+
 where $M_l$ is a message function (e.g., MLPs) and $e_{ij}$ represents edge features. The aggregation operator (sum, max, mean) must be permutation invariant.
 
 2. **Combine Phase (Node Update):**
-$$h_i^{(l+1)} = U_l(h_i^{(l)}, m_i^{(l+1)})$$
+
+```math
+h_i^{(l+1)} = U_l(h_i^{(l)}, m_i^{(l+1)})
+```
+
 where $U_l$ is an update function (e.g., GRU, dense layer).
 
 GCN and GAT are special cases of MPNN with specific message and update functions.

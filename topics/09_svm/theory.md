@@ -8,7 +8,7 @@
 | $p$ | scalar | number of features |
 | $x_i$ | vector of length $p$ | feature vector of the $i$-th example |
 | $X$ | matrix of size $n \times p$ | design matrix; row $i$ is $x_i^T$ |
-| $y_i$ | scalar in $\{-1, +1\}$ | binary label of the $i$-th example |
+| $y_i$ | scalar in $\lbrace-1, +1\rbrace$ | binary label of the $i$-th example |
 | $w$ | vector of length $p$ | weight vector (normal to the separating hyperplane) |
 | $b$ | scalar | bias (offset) term |
 | $f(x)$ | scalar | decision function: $f(x) := w^T x + b$ |
@@ -17,9 +17,9 @@
 | $\alpha_i$ | scalar $\ge 0$ | dual variable (Lagrange multiplier) for example $i$ |
 | $K(x, x')$ | scalar | kernel function evaluating the inner product in feature space |
 | $\phi(x)$ | vector | feature map induced by a kernel |
-| $\lambda$ | scalar $\ge 0$ | regularization strength in the hinge-loss formulation ($\lambda = 1/(2nC)$) |
+| $\lambda$ | scalar $\ge 0$ | regularization strength in the hinge-loss formulation $(\lambda = 1/(2nC))$ |
 
-**Label convention.** SVM uses $y_i \in \{-1, +1\}$, not $\{0, 1\}$. The *functional margin*
+**Label convention.** SVM uses $y_i \in \lbrace-1, +1\rbrace$, not $\lbrace0, 1\rbrace$. The *functional margin*
 of example $i$ is $y_i f(x_i) = y_i (w^T x_i + b)$. Correct classification means
 $y_i f(x_i) > 0$.
 
@@ -37,12 +37,16 @@ gap* (margin) on both sides is robust to noise and generalizes better.
 **Geometric margin.** The hyperplane $w^T x + b = 0$ divides space into two half-spaces.
 The signed distance from a point $x_i$ to the hyperplane is
 
-$$d_i = \frac{w^T x_i + b}{\|w\|_2}.$$
+```math
+d_i = \frac{w^T x_i + b}{\|w\|_2}.
+```
 
 The *margin* is the distance from the hyperplane to the nearest point on either side.
 For correctly classified data ($y_i f(x_i) > 0$), the geometric margin is
 
-$$\gamma = \min_{i=1,\dots,n} \frac{y_i(w^T x_i + b)}{\|w\|_2}.$$
+```math
+\gamma = \min_{i=1,\dots,n} \frac{y_i(w^T x_i + b)}{\|w\|_2}.
+```
 
 SVM maximizes this quantity.
 
@@ -61,19 +65,23 @@ Under this convention, the closest points satisfy $y_i(w^T x_i + b) = 1$ and lie
 *margin boundaries* $w^T x + b = +1$ and $w^T x + b = -1$. The distance between these
 two parallel hyperplanes is
 
-$$\text{margin} = \frac{2}{\|w\|_2}.$$
+```math
+\text{margin} = \frac{2}{\|w\|_2}.
+```
 
 **Proof.** Pick $x_+$ on $w^T x + b = +1$ and $x_-$ on $w^T x + b = -1$. Their
-difference projected onto the unit normal $w / \|w\|_2$ gives
-$(w^T(x_+ - x_-)) / \|w\|_2 = 2 / \|w\|_2$. $\blacksquare$
+difference projected onto the unit normal $w / \Vert w\Vert_2$ gives
+$(w^T(x_+ - x_-)) / \Vert w\Vert_2 = 2 / \Vert w\Vert_2$. $\blacksquare$
 
 ### 2.2 Optimization problem
 
-Maximizing $2/\|w\|_2$ is equivalent to minimizing $\frac{1}{2}\|w\|_2^2$.
+Maximizing $2/\Vert w\Vert_2$ is equivalent to minimizing $\frac{1}{2}\Vert w\Vert_2^2$.
 
 **Result:** The hard-margin SVM solves
 
-$$\min_{w, b} \quad \frac{1}{2} \|w\|_2^2 \quad \text{s.t.} \quad y_i(w^T x_i + b) \ge 1, \quad i = 1, \dots, n. \qquad (2.1)$$
+```math
+\min_{w, b} \quad \frac{1}{2} \|w\|_2^2 \quad \text{s.t.} \quad y_i(w^T x_i + b) \ge 1, \quad i = 1, \dots, n. \qquad (2.1)
+```
 
 This is a *convex quadratic program* (QP) — the objective is convex quadratic and the
 constraints are linear.
@@ -87,7 +95,9 @@ constraints are linear.
 Real data is rarely perfectly separable. The soft-margin SVM introduces *slack variables*
 $\xi_i \ge 0$ to allow violations:
 
-$$\min_{w, b, \xi} \quad \frac{1}{2} \|w\|_2^2 + C \sum_{i=1}^n \xi_i \quad \text{s.t.} \quad y_i(w^T x_i + b) \ge 1 - \xi_i, \quad \xi_i \ge 0. \qquad (3.1)$$
+```math
+\min_{w, b, \xi} \quad \frac{1}{2} \|w\|_2^2 + C \sum_{i=1}^n \xi_i \quad \text{s.t.} \quad y_i(w^T x_i + b) \ge 1 - \xi_i, \quad \xi_i \ge 0. \qquad (3.1)
+```
 
 **Interpretation of $\xi_i$:**
 - $\xi_i = 0$: point is on or beyond the correct margin boundary.
@@ -107,20 +117,31 @@ $$\min_{w, b, \xi} \quad \frac{1}{2} \|w\|_2^2 + C \sum_{i=1}^n \xi_i \quad \tex
 Introduce Lagrange multipliers $\alpha_i \ge 0$ for the margin constraints and $\mu_i \ge 0$
 for $\xi_i \ge 0$:
 
-$$\mathcal{L}(w, b, \xi, \alpha, \mu) = \frac{1}{2}\|w\|^2 + C\sum_i \xi_i - \sum_i \alpha_i \big[y_i(w^T x_i + b) - 1 + \xi_i\big] - \sum_i \mu_i \xi_i.$$
+```math
+\mathcal{L}(w, b, \xi, \alpha, \mu) = \frac{1}{2}\|w\|^2 + C\sum_i \xi_i - \sum_i \alpha_i \big[y_i(w^T x_i + b) - 1 + \xi_i\big] - \sum_i \mu_i \xi_i.
+```
 
 ### 4.2 Stationarity conditions
 
 Set the partial derivatives to zero:
 
 **w.r.t. $w$:**
-$$\frac{\partial \mathcal{L}}{\partial w} = w - \sum_i \alpha_i y_i x_i = 0 \implies w = \sum_{i=1}^n \alpha_i y_i x_i. \qquad (4.1)$$
+
+```math
+\frac{\partial \mathcal{L}}{\partial w} = w - \sum_i \alpha_i y_i x_i = 0 \implies w = \sum_{i=1}^n \alpha_i y_i x_i. \qquad (4.1)
+```
 
 **w.r.t. $b$:**
-$$\frac{\partial \mathcal{L}}{\partial b} = -\sum_i \alpha_i y_i = 0 \implies \sum_{i=1}^n \alpha_i y_i = 0. \qquad (4.2)$$
+
+```math
+\frac{\partial \mathcal{L}}{\partial b} = -\sum_i \alpha_i y_i = 0 \implies \sum_{i=1}^n \alpha_i y_i = 0. \qquad (4.2)
+```
 
 **w.r.t. $\xi_i$:**
-$$\frac{\partial \mathcal{L}}{\partial \xi_i} = C - \alpha_i - \mu_i = 0 \implies \alpha_i + \mu_i = C. \qquad (4.3)$$
+
+```math
+\frac{\partial \mathcal{L}}{\partial \xi_i} = C - \alpha_i - \mu_i = 0 \implies \alpha_i + \mu_i = C. \qquad (4.3)
+```
 
 Since $\mu_i \ge 0$, equation (4.3) gives $0 \le \alpha_i \le C$.
 
@@ -128,7 +149,9 @@ Since $\mu_i \ge 0$, equation (4.3) gives $0 \le \alpha_i \le C$.
 
 Substitute (4.1), (4.2), (4.3) back into the Lagrangian. After simplification:
 
-$$\|w\|^2 = \left(\sum_i \alpha_i y_i x_i\right)^T \left(\sum_j \alpha_j y_j x_j\right) = \sum_i \sum_j \alpha_i \alpha_j y_i y_j x_i^T x_j.$$
+```math
+\|w\|^2 = \left(\sum_i \alpha_i y_i x_i\right)^T \left(\sum_j \alpha_j y_j x_j\right) = \sum_i \sum_j \alpha_i \alpha_j y_i y_j x_i^T x_j.
+```
 
 The Lagrangian becomes the *Wolfe dual*:
 
@@ -181,7 +204,9 @@ In practice, average over all free support vectors for numerical stability.
 The soft-margin SVM (3.1) has an equivalent *unconstrained* formulation using the
 **hinge loss**:
 
-$$\min_{w, b} \quad \frac{1}{2}\|w\|_2^2 + C \sum_{i=1}^n \max(0, 1 - y_i f(x_i)). \qquad (6.1)$$
+```math
+\min_{w, b} \quad \frac{1}{2}\|w\|_2^2 + C \sum_{i=1}^n \max(0, 1 - y_i f(x_i)). \qquad (6.1)
+```
 
 **Proof of equivalence.** In (3.1), at optimality $\xi_i = \max(0, 1 - y_i f(x_i))$
 because the $\xi_i$ constraint is tight when active and zero otherwise. Substituting
@@ -199,7 +224,9 @@ The hinge loss $\ell(m) = \max(0, 1 - m)$ where $m = y_i f(x_i)$ is the function
 
 Dividing (6.1) by $n$ and defining $\lambda = 1/(2nC)$:
 
-$$\min_{w, b} \quad \frac{1}{n} \sum_{i=1}^n \max(0, 1 - y_i f(x_i)) + \lambda \|w\|_2^2. \qquad (6.2)$$
+```math
+\min_{w, b} \quad \frac{1}{n} \sum_{i=1}^n \max(0, 1 - y_i f(x_i)) + \lambda \|w\|_2^2. \qquad (6.2)
+```
 
 This is the standard *regularized empirical risk minimization* form: data loss + regularizer.
 
@@ -207,11 +234,15 @@ This is the standard *regularized empirical risk minimization* form: data loss +
 
 The subgradient of the hinge loss w.r.t. $w$ for example $i$:
 
-$$\frac{\partial \ell_i}{\partial w} = \begin{cases} 0 & \text{if } y_i f(x_i) \ge 1, \\ -y_i x_i & \text{if } y_i f(x_i) < 1. \end{cases}$$
+```math
+\frac{\partial \ell_i}{\partial w} = \begin{cases} 0 & \text{if } y_i f(x_i) \ge 1, \\ -y_i x_i & \text{if } y_i f(x_i) < 1. \end{cases}
+```
 
 **Result:** The full subgradient of (6.1) w.r.t. $w$ is
 
-$$g_w = w - C \sum_{i:\, y_i f(x_i) < 1} y_i x_i. \qquad (6.3)$$
+```math
+g_w = w - C \sum_{i:\, y_i f(x_i) < 1} y_i x_i. \qquad (6.3)
+```
 
 This is the basis for subgradient descent (Pegasos algorithm).
 
@@ -244,7 +275,7 @@ higher-dimensional feature space *without explicitly computing* $\phi(x)$.
 
 A function $K: \mathbb{R}^p \times \mathbb{R}^p \to \mathbb{R}$ is a valid kernel if and
 only if the Gram matrix $G_{ij} = K(x_i, x_j)$ is positive semidefinite for every finite
-set of points $\{x_1, \dots, x_n\}$.
+set of points $\lbrace x_1, \dots, x_n\rbrace$.
 
 ### 7.3 Common kernels
 
@@ -253,9 +284,9 @@ set of points $\{x_1, \dots, x_n\}$.
 | Linear | $x^T x'$ | — | Original space |
 | Polynomial | $(x^T x' + c)^d$ | degree $d$, offset $c \ge 0$ | All monomials up to degree $d$ |
 | RBF (Gaussian) | $\exp(-\gamma \Vert x - x'\Vert^2)$ | $\gamma > 0$ | Infinite-dimensional |
-| Sigmoid | $\tanh(\kappa \, x^T x' + c)$ | $\kappa > 0$, $c$ | Not always valid (not PSD for all $\kappa, c$) |
+| Sigmoid | $\tanh(\kappa \thinspace x^T x' + c)$ | $\kappa > 0$, $c$ | Not always valid (not PSD for all $\kappa, c$) |
 
-**RBF intuition.** Two points close together ($\|x - x'\|$ small) → $K \approx 1$.
+**RBF intuition.** Two points close together ($\Vert x - x'\Vert$ small) → $K \approx 1$.
 Far apart → $K \approx 0$. Each training point acts like a localized "bump." High
 $\gamma$ → sharp bumps (complex boundary), low $\gamma$ → smooth bumps (simple boundary).
 
@@ -269,7 +300,7 @@ Only the support vectors ($\alpha_i > 0$) contribute to the sum.
 
 ## 8. Failure Cases
 
-1. **Sensitive to feature scaling.** SVM uses distances (via $\|w\|$ and inner products).
+1. **Sensitive to feature scaling.** SVM uses distances (via $\Vert w\Vert$ and inner products).
    Features on different scales dominate the margin. **Cure:** Always standardize features
    before training.
 
@@ -282,7 +313,7 @@ Only the support vectors ($\alpha_i > 0$) contribute to the sum.
 
 4. **Computational cost of kernel SVM.** Training requires the $n \times n$ Gram matrix →
    $O(n^2)$ memory. Solving the dual QP is $O(n^2)$ to $O(n^3)$ time. **Impractical for
-   $n > 10^4$–$10^5$.** **Cure:** Use linear SVM with stochastic subgradient descent, or
+   $n > 10^4\text{–}10^5$.** **Cure:** Use linear SVM with stochastic subgradient descent, or
    approximate kernel methods (random Fourier features, Nyström).
 
 5. **No probabilistic output.** SVM produces a decision function, not probabilities.
@@ -301,7 +332,7 @@ Only the support vectors ($\alpha_i > 0$) contribute to the sum.
   At the margin, hinge loss = 1, log-loss ≈ 0.69. SVM produces sparse support vectors;
   logistic regression uses all points.
 
-- **[Regularization](../03_regularization/README.md).** The $\frac{1}{2}\|w\|^2$ term is
+- **[Regularization](../03_regularization/README.md).** The $\frac{1}{2}\Vert w\Vert^2$ term is
   L2 regularization. The SVM objective (6.2) is structurally identical to ridge-regularized
   logistic regression, just with a different loss function.
 

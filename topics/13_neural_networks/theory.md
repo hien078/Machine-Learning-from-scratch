@@ -15,8 +15,8 @@ two-layer network with 2 hidden units.
 | Symbol | Type | Meaning |
 |---|---:|---|
 | $X \in \mathbb{R}^{n \times d}$ | matrix | input data ($n$ samples, $d$ features) |
-| $Y \in \{0,1\}^{n \times c}$ | matrix | one-hot targets ($c$ classes) |
-| $y \in \{0,\ldots,c-1\}^n$ | vector | integer labels |
+| $Y \in \lbrace0,1\rbrace^{n \times c}$ | matrix | one-hot targets ($c$ classes) |
+| $y \in \lbrace0,\ldots,c-1\rbrace^n$ | vector | integer labels |
 
 ### 2.2 Two-layer classifier (one hidden layer)
 
@@ -48,10 +48,10 @@ because the ratio is invariant to additive constants.
 
 The data flow is:
 
-$$
+```math
 X \;\xrightarrow{W_1, b_1}\; Z_1 \;\xrightarrow{\phi}\; H
-  \;\xrightarrow{W_2, b_2}\; S \;\xrightarrow{\text{softmax}}\; P
-$$
+\;\xrightarrow{W_2, b_2}\; S \;\xrightarrow{\text{softmax}}\; P
+```
 
 **Shape flow** for a concrete example ($n = 100$, $d = 4$, $h = 8$, $c = 3$):
 
@@ -75,10 +75,10 @@ $$
 
 With weight decay (L2 regularization on weights, not biases):
 
-$$
+```math
 \mathcal{L} = \mathcal{L}_{\text{data}}
-  + \frac{\lambda}{2}\bigl(\|W_1\|_F^2 + \|W_2\|_F^2\bigr)
-$$
++ \frac{\lambda}{2}\bigl(\|W_1\|_F^2 + \|W_2\|_F^2\bigr)
+```
 
 ## 4. Backpropagation
 
@@ -148,18 +148,18 @@ Random initialization breaks symmetry. The scale matters for gradient flow.
 
 ### 5.1 Xavier (Glorot) initialization — for tanh
 
-$$
+```math
 W_{ij} \sim \mathcal{N}\!\left(0,\; \frac{2}{d_{\text{in}} + d_{\text{out}}}\right)
-$$
+```
 
 Derived by requiring $\operatorname{Var}(\text{output}) \approx \operatorname{Var}(\text{input})$ under the assumption that activations
 are in the linear regime near zero.
 
 ### 5.2 He initialization — for ReLU
 
-$$
+```math
 W_{ij} \sim \mathcal{N}\!\left(0,\; \frac{2}{d_{\text{in}}}\right)
-$$
+```
 
 ReLU zeroes out half the activations on average, so the variance must be doubled
 relative to Xavier.
