@@ -7,6 +7,12 @@ versions follow [SemVer](https://semver.org/).
 ## [Unreleased]
 
 ### Added
+- Four applied capstone projects under `projects/` (standard subproject layout,
+  <30s seeded training, bundled data only, committed generated reports, fast
+  test suites wired into CI): `tabular_benchmark` (scratch vs sklearn),
+  `char_transformer_tiny` (NumPy causal transformer with manual backprop and a
+  full finite-difference gradient check), `digits_autoencoder` (MLP +
+  autoencoder vs PCA), `rl_gridworld` (Q-learning vs value iteration).
 - `ROADMAP.md` with the five-phase ecosystem plan and decisions log.
 - `py.typed` marker so type hints are exported to consumers (PEP 561).
 - `ml_first_principles.__version__`.
@@ -37,6 +43,22 @@ versions follow [SemVer](https://semver.org/).
   `topics/13_neural_networks/theory.md` (7.3K → 19K).
 - Rewrote the 6 stub synthesis docs (~2K each) into full documents (~8K each).
 - All 22 topics now carry the Verified maturity rung in INDEX.md.
+
+### Library API friction (v0.2.0 backlog, found by the projects)
+- `optimizers.adam`/`sgd` are whole-loop drivers (gradient_fn + x0 + internal
+  history) — no step-based `opt.step(params, grads)` interface for minibatch
+  training; `adam` keeps a mandatory full iterate history.
+- `nn_core` layers fuse the update into `backward(grad, lr)` (no
+  gradients/apply split), assume 2-D inputs, and the library has no attention,
+  LayerNorm, softmax, or embedding layer.
+- `data_utils.standardize` has no fit/transform split for train/test folds;
+  `metrics.mse` rejects 2-D arrays (reconstruction losses need `.ravel()`).
+- `LogisticRegression` lacks a regularization option; `LinearSVC`'s `C` scales
+  mean hinge loss vs sklearn's sum (not objective-equivalent at same `C`);
+  `DecisionTreeClassifier.max_features` (int only) is inconsistent with
+  `RandomForestClassifier` ("sqrt"/"log2"/float).
+- `GridWorldEnv` exposes no dynamics accessor, state indexing helper, or
+  truncation; `QLearningAgent` has no greedy/evaluation mode.
 
 ### Fixed
 - Dead links in `topics/01_linear_regression/theory.md` to the removed local

@@ -39,6 +39,7 @@ Every algorithm is built step-by-step from raw matrix operations and calculus be
 Machine-Learning-from-scratch/
 ├── topics/                    # 22 algorithm modules (theory, implementation, exercises)
 ├── synthesis/                 # Cross-model comparisons & decision guides
+├── projects/                  # Applied capstones using the library end-to-end
 ├── src/ml_first_principles/   # Clean, installable Python library written from scratch
 ├── tests/                     # Unit tests & numerical regression suites
 ├── scripts/                   # Notebook validation & normalization tooling
@@ -135,6 +136,16 @@ Ensure all algorithm implementations pass the unit test suite:
 ```bash
 pytest
 ```
+
+---
+
+## 🚀 Applied Projects
+
+The [projects/](projects/README.md) directory holds end-to-end capstones built on the
+library: a tabular benchmark against sklearn, a from-scratch NumPy char-level
+transformer, a digits autoencoder vs PCA study, and a Q-learning gridworld
+analysis. Each trains in under 30 seconds, uses only bundled data, and commits
+its generated report.
 
 ---
 

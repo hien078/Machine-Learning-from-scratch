@@ -10,7 +10,7 @@ Per-topic maturity is tracked in [INDEX.md](INDEX.md); this file tracks phases a
 | 1 | Infrastructure | Verification foundation | ✅ Done |
 | 2 | Curriculum | Curriculum hardening | 🟡 Content done, CI streak pending |
 | 3 | Publishing | Docs site | ✅ Done |
-| 4 | Projects | Applied capstone projects | ⚪ Planned |
+| 4 | Projects | Applied capstone projects | ✅ Done |
 | 5 | Library | v0.2.0 + release | ⚪ Planned |
 
 ---
@@ -50,11 +50,11 @@ Make the [NOTEBOOK_STANDARDS.md](NOTEBOOK_STANDARDS.md) §9 *Verified* gate pass
 
 Each project follows the subproject layout (`README.md`, `requirements.txt`, `data/`, `notebooks/`, `src/`, `tests/`, `reports/`); default configs train < 30 s; downloads/heavy modes documented behind ask-first gates.
 
-- [ ] `projects/tabular_benchmark` (core): from-scratch linear/tree/ensemble/distance/probabilistic models vs sklearn on built-in datasets; metrics + timing report
-- [ ] `projects/char_transformer_tiny` (core): char-level mini-transformer via `nn_core`/`llm_models`/`optimizers`; embedded small corpus by default
-- [ ] `projects/digits_autoencoder` (optional): MLP + autoencoder on `load_digits`, latent-space visualization
-- [ ] `projects/rl_gridworld` (optional): tabular Q-learning learning-curve report
-- [ ] Project tests in CI fast path
+- [x] `projects/tabular_benchmark` (core): from-scratch linear/tree/ensemble/distance/probabilistic models vs sklearn on built-in datasets; metrics + timing report
+- [x] `projects/char_transformer_tiny` (core): char-level mini-transformer via `nn_core`/`llm_models`/`optimizers`; embedded small corpus by default
+- [x] `projects/digits_autoencoder` (optional): MLP + autoencoder on `load_digits`, latent-space visualization
+- [x] `projects/rl_gridworld` (optional): tabular Q-learning learning-curve report
+- [x] Project tests in CI fast path
 
 **Done when:** core projects reproduce from fresh clone with one command; `pytest projects/` green in CI; API friction filed into CHANGELOG `[Unreleased]`.
 

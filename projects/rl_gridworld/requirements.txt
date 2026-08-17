@@ -1,0 +1,4 @@
+# No dependencies beyond the repo root environment.
+# From the repo root: source .venv/bin/activate && pip install -r requirements.txt
+# (root requirements.txt provides numpy, matplotlib, pytest; ml_first_principles
+# is installed editable from src/.)

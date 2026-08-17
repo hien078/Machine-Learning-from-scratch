@@ -192,6 +192,20 @@ nav:
     - Regularization Across Models — Cross-Topic Synthesis: synthesis/regularization_across_models.md
     - Sequence Models and Attention — Cross-Topic Synthesis: synthesis/sequence_models_and_attention.md
     - Supervised vs Unsupervised — Cross-Topic Synthesis: synthesis/supervised_vs_unsupervised.md
+  - Projects:
+    - Overview: projects/README.md
+    - Tabular Benchmark:
+      - About: projects/tabular_benchmark/README.md
+      - Report: projects/tabular_benchmark/reports/benchmark.md
+    - Char Transformer Tiny:
+      - About: projects/char_transformer_tiny/README.md
+      - Report: projects/char_transformer_tiny/reports/training_report.md
+    - Digits Autoencoder:
+      - About: projects/digits_autoencoder/README.md
+      - Report: projects/digits_autoencoder/reports/report.md
+    - RL Gridworld:
+      - About: projects/rl_gridworld/README.md
+      - Report: projects/rl_gridworld/reports/report.md
   - Standards: NOTEBOOK_STANDARDS.md
   - Roadmap: ROADMAP.md
   - Changelog: CHANGELOG.md

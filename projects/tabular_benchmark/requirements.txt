@@ -1,0 +1,4 @@
+# This project uses the repo root environment — no new dependencies.
+# Everything needed (numpy, scikit-learn, pytest, ruff) comes from installing
+# the root package in editable mode. From this directory:
+-e ../..[dev]
