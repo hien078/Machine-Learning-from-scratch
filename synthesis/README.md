@@ -17,6 +17,9 @@ These documents connect ideas across multiple topics. They answer questions like
 | [model_selection_guide.md](model_selection_guide.md) | Decision framework |
 | [supervised_vs_unsupervised.md](supervised_vs_unsupervised.md) | Taxonomy and connections |
 | [regularization_across_models.md](regularization_across_models.md) | L1/L2/dropout/early stopping |
+| [deep_learning_building_blocks.md](deep_learning_building_blocks.md) | Inductive biases of MLP, CNN, RNN, attention, AE, GNN |
+| [sequence_models_and_attention.md](sequence_models_and_attention.md) | The arc RNN → LSTM → Transformer → LLM engineering |
+| [generative_and_self_supervised.md](generative_and_self_supervised.md) | VAE, GAN, diffusion, MAE, InfoNCE, RLHF/DPO |
 
 ## Format
 

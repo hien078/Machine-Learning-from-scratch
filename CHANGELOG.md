@@ -17,10 +17,26 @@ versions follow [SemVer](https://semver.org/).
 - CI: ruff format check, coverage report, notebook format gate on every push;
   weekly full notebook execution job.
 
+- Three new synthesis documents covering curriculum phases 3–5:
+  `deep_learning_building_blocks.md`, `sequence_models_and_attention.md`,
+  `generative_and_self_supervised.md`.
+
 ### Changed
 - NOTEBOOK_STANDARDS.md §7/§10/§11: outputs policy shifted from "no outputs in
   source control" to "no hand-run stale outputs" — committed outputs must come
   from a fresh-kernel `execute_all_notebooks.py --write` run.
+- Rebuilt 8 below-standard exercises notebooks to the §8 exercise standard
+  (topics 01, 11, 14, 15, 16, 17, 19, 22): 4–10 cells each → 16–18 cells with
+  hand derivations, deterministic checks, and failure-analysis questions.
+- Expanded thin theory to peer depth: `topics/10_pca/theory.md` (6.5K → 19K),
+  `topics/13_neural_networks/theory.md` (7.3K → 19K).
+- Rewrote the 6 stub synthesis docs (~2K each) into full documents (~8K each).
+- All 22 topics now carry the Verified maturity rung in INDEX.md.
+
+### Fixed
+- Wrong hand-computed expected values in two old exercises notebooks, hidden
+  behind commented-out asserts: RNN second-step forward values (topic 15) and
+  the 2-D cross-correlation example (topic 14). Both now assert-checked.
 
 ## [0.1.0] - 2026-08-17
 

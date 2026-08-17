@@ -7,8 +7,8 @@ Per-topic maturity is tracked in [INDEX.md](INDEX.md); this file tracks phases a
 
 | Phase | Pillar | Goal | Status |
 |---|---|---|---|
-| 1 | Infrastructure | Verification foundation | 🟡 In progress |
-| 2 | Curriculum | Curriculum hardening | ⚪ Planned |
+| 1 | Infrastructure | Verification foundation | ✅ Done |
+| 2 | Curriculum | Curriculum hardening | 🟡 Content done, CI streak pending |
 | 3 | Publishing | Docs site | ⚪ Planned |
 | 4 | Projects | Applied capstone projects | ⚪ Planned |
 | 5 | Library | v0.2.0 + release | ⚪ Planned |
@@ -19,22 +19,22 @@ Per-topic maturity is tracked in [INDEX.md](INDEX.md); this file tracks phases a
 
 Make the [NOTEBOOK_STANDARDS.md](NOTEBOOK_STANDARDS.md) §9 *Verified* gate passable and enforced.
 
-- [ ] Resolve outputs policy: committed outputs are legitimate, produced only by `scripts/execute_all_notebooks.py --write`
-- [ ] `normalize_notebooks.py`: output-clearing behind opt-in `--clear-outputs`
-- [ ] `execute_all_notebooks.py`: `--write` and `--only` flags
-- [ ] NOTEBOOK_STANDARDS.md §8/§10 updated to match
-- [ ] Library hygiene: `py.typed`, `__version__`, `CHANGELOG.md`
-- [ ] CI: ruff format check, coverage report, notebook format gate; weekly full notebook execution job
-- [ ] INDEX.md maturity column; one canonical `--write` sweep; first topics marked Verified
+- [x] Resolve outputs policy: committed outputs are legitimate, produced only by `scripts/execute_all_notebooks.py --write`
+- [x] `normalize_notebooks.py`: output-clearing behind opt-in `--clear-outputs`
+- [x] `execute_all_notebooks.py`: `--write` and `--only` flags
+- [x] NOTEBOOK_STANDARDS.md §8/§10 updated to match
+- [x] Library hygiene: `py.typed`, `__version__`, `CHANGELOG.md`
+- [x] CI: ruff format check, coverage report, notebook format gate; weekly full notebook execution job
+- [x] INDEX.md maturity column; one canonical `--write` sweep; first topics marked Verified
 
 **Done when:** the outputs contradiction is gone from scripts *and* standards; CI enforces lint + tests + notebook format on every push and full notebook execution weekly; per-topic maturity is visible in INDEX.md.
 
 ## Phase 2 — Curriculum Hardening
 
-- [ ] Rebuild the 8 weak `exercises.ipynb` (worst first): 16_transformer, 17_autoencoder, 01_linear_regression, 11_clustering, 14_cnn, 15_rnn_lstm, 19_generative_models, 22_self_supervised_learning — each to the §8 exercise standard, re-executed via `--write --only`
-- [ ] Expand thin theory to peer parity: `topics/10_pca/theory.md`, `topics/13_neural_networks/theory.md`
-- [ ] Rewrite the 6 stub synthesis docs (~2K each) into substantive documents
-- [ ] Add synthesis coverage for curriculum phases 3–5 (deep learning building blocks; sequence models & attention; generative & self-supervised)
+- [x] Rebuild the 8 weak `exercises.ipynb` (worst first): 16_transformer, 17_autoencoder, 01_linear_regression, 11_clustering, 14_cnn, 15_rnn_lstm, 19_generative_models, 22_self_supervised_learning — each to the §8 exercise standard, re-executed via `--write --only`
+- [x] Expand thin theory to peer parity: `topics/10_pca/theory.md`, `topics/13_neural_networks/theory.md`
+- [x] Rewrite the 6 stub synthesis docs (~2K each) into substantive documents
+- [x] Add synthesis coverage for curriculum phases 3–5 (deep learning building blocks; sequence models & attention; generative & self-supervised)
 
 **Done when:** all 22 topics Verified in INDEX.md; no exercises notebook below the §8 standard; synthesis/ covers all 5 curriculum phases; weekly notebook CI green 3 consecutive weeks.
 
