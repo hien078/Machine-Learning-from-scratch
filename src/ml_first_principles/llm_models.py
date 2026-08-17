@@ -10,9 +10,7 @@ END_OF_WORD = "</w>"
 WEIGHT_INIT_SCALE = 0.01
 
 
-def _apply_merge(
-    symbols: list[str], pair: tuple[str, str], replacement: str
-) -> list[str]:
+def _apply_merge(symbols: list[str], pair: tuple[str, str], replacement: str) -> list[str]:
     merged = []
     index = 0
     while index < len(symbols):
