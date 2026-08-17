@@ -158,3 +158,9 @@ data/
 # Personal / private notes (not for commit)
 MY_PROGRESS.md
 *.local.md
+
+# Project data dirs: keep documentation and small embedded corpora, ignore real datasets
+!projects/*/data/
+projects/*/data/*
+!projects/*/data/README.md
+!projects/*/data/corpus.txt
