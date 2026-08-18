@@ -7,11 +7,8 @@ and [NOTEBOOK_STANDARDS.md](NOTEBOOK_STANDARDS.md); this is the short version.
 
 ## Setup
 
-```bash
-python -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt   # pinned notebook runtime
-pip install -e ".[dev]"           # library + test/lint/type tooling
-```
+See [README.md](README.md), "Quick Start & Installation" — `requirements.txt` pins the
+notebook runtime, `pip install -e ".[dev]"` adds the library plus test/lint/type tooling.
 
 ## Quality gates (all must pass before pushing)
 
@@ -35,15 +32,18 @@ Committed notebook outputs may ONLY come from `execute_all_notebooks.py --write`
 
 ## Code conventions
 
-- `from __future__ import annotations`, full type hints on signatures,
-  NumPy `NDArray` typing, Google-style docstrings on public API.
+General Python style — `from __future__ import annotations`, type hints on signatures,
+Google-style docstrings on public API — is [AGENTS.md](https://github.com/hien078/Machine-Learning-from-scratch/blob/master/AGENTS.md) §8. Where content
+belongs (theory vs notebook vs `src/`) is [NOTEBOOK_STANDARDS.md](NOTEBOOK_STANDARDS.md) §2.
+
+Specific to this library:
+
+- NumPy `NDArray` typing on array parameters and returns.
 - `ValueError` for bad arguments, `RuntimeError` for not-fitted state.
 - New public names go into the alphabetized `__all__` in
   `src/ml_first_principles/__init__.py` (a test enforces it resolves).
 - Additive, non-breaking API changes preferred; breaking changes need a
   CHANGELOG entry and a version bump discussion.
-- Docs: theory in `theory.md` (markdown only, ```math fences), computation in
-  notebooks, reusable code in `src/` — see NOTEBOOK_STANDARDS §2.
 
 ## Release procedure (maintainer)
 
