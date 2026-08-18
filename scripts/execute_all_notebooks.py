@@ -4,8 +4,8 @@ Runs every notebook (or the paths given via positionals / --only) top-to-bottom
 on a fresh kernel against an in-memory copy. By default source notebooks are
 never overwritten (NOTEBOOK_STANDARDS.md §11). With --write, the freshly
 executed notebook is written back to disk: this script is the only legitimate
-producer of committed outputs (NOTEBOOK_STANDARDS.md §8), using the Agg
-matplotlib backend for headless determinism.
+producer of committed outputs (NOTEBOOK_STANDARDS.md §8), using the inline
+matplotlib backend so figures are captured headlessly and deterministically.
 """
 
 from __future__ import annotations
@@ -47,7 +47,7 @@ def run_notebook(path: str, write: bool) -> tuple[bool, str]:
         env = os.environ.copy()
         env["PYTHONPATH"] = src_path + ":" + env.get("PYTHONPATH", "")
         if write:
-            env["MPLBACKEND"] = "Agg"
+            env["MPLBACKEND"] = "module://matplotlib_inline.backend_inline"
 
         # Execute the in-memory copy; errors must fail the run.
         client = NotebookClient(

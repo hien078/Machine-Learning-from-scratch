@@ -200,8 +200,8 @@ Every notebook must have:
 - notebook format 4 with `nbformat_minor >= 5`;
 - a unique cell ID on every cell;
 - outputs in source control produced exclusively by
-  `python scripts/execute_all_notebooks.py --write` (fresh kernel, seeded, Agg
-  backend) — never committed from a hand-run interactive kernel;
+  `python scripts/execute_all_notebooks.py --write` (fresh kernel, seeded,
+  inline backend) — never committed from a hand-run interactive kernel;
 - canonical `python3` kernelspec and `language_info.name = python`;
 - no host-specific paths or volatile editor metadata;
 - no static Python errors or invalid escape warnings;
