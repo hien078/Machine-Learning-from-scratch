@@ -17,7 +17,7 @@ Supplementary rules that override/extend Antigravity defaults. Does not repeat `
 - **Purpose:** Educational ML workspace — learning, experimentation, implementation from scratch.
 - **Stage:** Learning phase (notebooks/scripts OK, production rules apply when project > 1 file).
 - **Tech:** Python 3.12+, NumPy, PyTorch, Matplotlib, Jupyter.
-- **Subproject layout (capstone or any multi-file project):** `README.md`, `requirements.txt`, `data/`, `notebooks/`, `src/`, `tests/`, `reports/`.
+- **Subproject layout (capstone or any multi-file project):** `README.md`, `requirements.txt`, `src/`, `tests/`, `reports/`; add `data/` or `notebooks/` only when they hold real content — no placeholder directories or READMEs.
 - **Repo organization:** `topics/` (22 algorithm stories) · `synthesis/` (cross-topic comparisons) · `src/ml_first_principles/` (reusable implementations) · `tests/` · `scripts/` (notebook validation/normalization). Math prerequisites live in the sister repo [applied-mathematics-foundation](https://github.com/hien078/applied-mathematics-foundation). Each topic folder follows the first-principles file pattern below.
 - **Map files (read first to navigate):** [README.md](README.md), [INDEX.md](INDEX.md) (22-topic curriculum index), [NOTEBOOK_STANDARDS.md](NOTEBOOK_STANDARDS.md) (quality contract), [topics/_template.ipynb](topics/_template.ipynb) (notebook boilerplate).
 - **Web (edge case):** dark mode + HSL accent. WCAG 2.1 AA.

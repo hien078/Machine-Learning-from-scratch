@@ -27,8 +27,6 @@ fully vectorized full-batch one.
 | `src/da_experiment.py` | Everything: models, training, PCA, plotting, report writing. |
 | `tests/` | 6 fast checks: shapes, loss decrease, PCA vs sklearn/analytic, determinism. |
 | `reports/` | Generated `report.md`, `latent_space.png`, `reconstructions.png`. |
-| `data/` | Empty by design — the dataset ships with scikit-learn. |
-| `notebooks/` | Placeholder (no notebook needed; the script is the artifact). |
 
 ## How to run
 

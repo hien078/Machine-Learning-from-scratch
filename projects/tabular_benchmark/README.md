@@ -56,5 +56,3 @@ for the full discussion.
 | `src/tb_benchmark.py` | The whole benchmark: data loading, model pairs, evaluation, report writer, `main()`. |
 | `tests/` | Fast unit tests on small pieces (single pairs, report formatting, determinism). |
 | `reports/benchmark.md` | Generated benchmark report (committed). |
-| `data/` | Empty by design — datasets are sklearn built-ins. |
-| `notebooks/` | Placeholder for future exploration notebooks. |

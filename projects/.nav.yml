@@ -1,9 +1,8 @@
-# Only the write-ups belong on the site. Source, tests, and the data/notebooks
-# placeholders are ignored so they are not published as documentation pages.
+# Only the write-ups belong on the site. Source, tests, and data files are
+# ignored so they are not published as documentation pages.
 ignore:
   - "*.py"
   - data
-  - notebooks
 
 nav:
   - README.md
