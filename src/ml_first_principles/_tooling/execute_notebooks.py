@@ -2,9 +2,9 @@
 
 Runs every notebook (or the paths given via positionals / --only) top-to-bottom
 on a fresh kernel against an in-memory copy. By default source notebooks are
-never overwritten (NOTEBOOK_STANDARDS.md §11). With --write, the freshly
+never overwritten (Notebook Standards §11, CONTRIBUTING.md). With --write, the freshly
 executed notebook is written back to disk: this script is the only legitimate
-producer of committed outputs (NOTEBOOK_STANDARDS.md §8), using the inline
+producer of committed outputs (Notebook Standards §8), using the inline
 matplotlib backend so figures are captured headlessly and deterministically.
 """
 

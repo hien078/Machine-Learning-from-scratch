@@ -17,7 +17,7 @@ The mathematical prerequisites are maintained in the sister repository
 
 ## Topic Matrix
 
-Maturity follows [NOTEBOOK_STANDARDS.md](NOTEBOOK_STANDARDS.md) §9: Planned → Draft →
+Maturity follows the [Notebook Standards](CONTRIBUTING.md) §9: Planned → Draft →
 Complete → **Verified** (Complete plus every §10 validation gate passing). This table is
 the single source of per-topic maturity; other dashboards link here.
 

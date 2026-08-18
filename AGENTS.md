@@ -19,7 +19,7 @@ Supplementary rules that override/extend Antigravity defaults. Does not repeat `
 - **Tech:** Python 3.12+, NumPy, PyTorch, Matplotlib, Jupyter.
 - **Subproject layout (capstone or any multi-file project):** `README.md`, `requirements.txt`, `src/`, `tests/`, `reports/`; add `data/` or `notebooks/` only when they hold real content — no placeholder directories or READMEs.
 - **Repo organization:** `topics/` (22 algorithm stories) · `topics/synthesis/` (cross-topic comparisons) · `src/ml_first_principles/` (reusable implementations) · `tests/` · the `mlfp` CLI (quality gates & notebook tooling, `src/ml_first_principles/_tooling/`). Math prerequisites live in the sister repo [applied-mathematics-foundation](https://github.com/hien078/applied-mathematics-foundation). Each topic folder follows the first-principles file pattern below.
-- **Map files (read first to navigate):** [README.md](README.md), [INDEX.md](INDEX.md) (22-topic curriculum index), [NOTEBOOK_STANDARDS.md](NOTEBOOK_STANDARDS.md) (quality contract), [topics/_template.ipynb](topics/_template.ipynb) (notebook boilerplate).
+- **Map files (read first to navigate):** [README.md](README.md), [INDEX.md](INDEX.md) (22-topic curriculum index), [CONTRIBUTING.md](CONTRIBUTING.md) (process + Notebook Standards quality contract), [topics/_template.ipynb](topics/_template.ipynb) (notebook boilerplate).
 - **Web (edge case):** dark mode + HSL accent. WCAG 2.1 AA.
 
 **First-principles file pattern** — every topic folder. Each file has a distinct role; do not duplicate content across files.
@@ -31,7 +31,7 @@ Supplementary rules that override/extend Antigravity defaults. Does not repeat `
 | `first_principles.ipynb` | HOW + BUILD + VERIFY | From-scratch NumPy implementation, library comparison, experiments, failure cases. |
 | `exercises.ipynb` | Practice | Hand derivation, coding task with deterministic check, conceptual question. |
 
-Large topics may add focused notebooks (e.g. `variants.ipynb`, `geometry_and_sparsity.ipynb`). The boundary between Markdown, notebooks, and reusable Python is defined in [NOTEBOOK_STANDARDS.md](NOTEBOOK_STANDARDS.md).
+Large topics may add focused notebooks (e.g. `variants.ipynb`, `geometry_and_sparsity.ipynb`). The boundary between Markdown, notebooks, and reusable Python is defined in the Notebook Standards section of [CONTRIBUTING.md](CONTRIBUTING.md).
 
 **First-principles checklist** — before writing any topic content, identify:
 

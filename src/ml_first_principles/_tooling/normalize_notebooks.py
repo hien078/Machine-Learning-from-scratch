@@ -55,7 +55,7 @@ def normalize_notebook(path: Path, root: Path, write: bool, clear_outputs: bool)
         clear_outputs: Whether stored outputs/execution counts are cleared.
             By default they are kept: committed outputs are legitimate as long
             as they come from ``execute_all_notebooks.py --write`` (fresh
-            kernel), per NOTEBOOK_STANDARDS.md §8.
+            kernel), per the Notebook Standards (CONTRIBUTING.md) §8.
 
     Returns:
         Counts of defects found and changes proposed for this notebook.

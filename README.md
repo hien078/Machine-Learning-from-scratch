@@ -42,8 +42,7 @@ Machine-Learning-from-scratch/
 ├── src/ml_first_principles/   # Clean, installable Python library written from scratch
 ├── tests/                     # Unit tests & numerical regression suites
 ├── INDEX.md                   # Full curriculum index & prerequisite DAG
-├── CONTRIBUTING.md            # Process, quality gates, roadmap & decisions log
-├── NOTEBOOK_STANDARDS.md      # Writing & coding standards
+├── CONTRIBUTING.md            # Process, notebook standards, roadmap & decisions log
 ├── pyproject.toml             # Package metadata, dev extras, lint & test config
 └── README.md
 ```
@@ -66,8 +65,8 @@ per-topic maturity.
 | 4 | Transformers — scaled dot-product and multi-head self-attention | `16` |
 | 5 | Modern AI — RL, generative models, GNNs, LLM engineering, self-supervised learning | `18`–`22` |
 
-All 22 topics are 🏅 **Verified**: every [NOTEBOOK_STANDARDS.md](NOTEBOOK_STANDARDS.md) §10
-gate passes.
+All 22 topics are 🏅 **Verified**: every gate of the
+[Notebook Standards](CONTRIBUTING.md) (§10) passes.
 
 ---
 

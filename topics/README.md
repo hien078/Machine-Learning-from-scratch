@@ -13,7 +13,7 @@ and the five curriculum phases.
 ## What is in a topic folder
 
 The four-file layout and what each file must contain are defined in
-[NOTEBOOK_STANDARDS.md](../NOTEBOOK_STANDARDS.md) §2–§3. In short: `README.md` navigates,
+[Notebook Standards](../CONTRIBUTING.md) §2–§3. In short: `README.md` navigates,
 `theory.md` derives, `first_principles.ipynb` implements and verifies, `exercises.ipynb`
 drills.
 
@@ -26,5 +26,5 @@ Topics 14–17 compare against PyTorch, which is an optional dependency
 ## Quality gate
 
 Maturity levels and the *Verified* gate are defined in
-[NOTEBOOK_STANDARDS.md](../NOTEBOOK_STANDARDS.md) §9–§10 and enforced by
+[Notebook Standards](../CONTRIBUTING.md) §9–§10 and enforced by
 `mlfp check` plus `mlfp nb-exec`.

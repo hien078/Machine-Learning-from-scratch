@@ -1,1 +1,0 @@
-../NOTEBOOK_STANDARDS.md
