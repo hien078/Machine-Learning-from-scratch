@@ -1,8 +1,8 @@
-# AGENTS.md v2.5
+# AGENTS.md v2.6
 
 Supplementary rules that override/extend Antigravity defaults. Does not repeat `<guidelines>`, `<communication_style>`, `<web_application_development>`. On conflict → read sections in order §1 → §11.
 
-> **Mirror of [CLAUDE.md](CLAUDE.md).** §2–§10 are identical between the two files; §1 and §11 are tool-specific. **When updating shared rules, edit both files.**
+> **Single source for §1–§10.** [CLAUDE.md](CLAUDE.md) imports this file and overrides only §11; there is no second copy of the shared rules to keep in sync.
 
 ## 1. Stop — Ask Before
 

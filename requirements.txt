@@ -1,6 +1,9 @@
 # Supported environment: CPython 3.12+ (validated on 3.14, Linux).
-# These are direct dependency pins. A complete transitive lock is generated
-# from a clean, successfully validated virtual environment.
+#
+# pyproject.toml owns WHICH runtime packages exist; this file owns WHICH VERSIONS.
+# The two package sets are kept identical by
+# tests/test_package.py::test_requirements_txt_matches_pyproject_runtime_dependencies.
+#
 # Test tooling (pytest) is provided by the package dev extra: pip install -e ".[dev]"
 # Optional: topics 13-17 library-comparison notebooks additionally need torch
 # (install separately: pip install torch).

@@ -16,13 +16,12 @@ pip install -e ".[dev]"           # library + test/lint/type tooling
 ## Quality gates (all must pass before pushing)
 
 ```bash
-ruff check src tests scripts projects
-ruff format --check src tests scripts projects
-mypy
-pytest                 # library tests (coverage floor enforced in CI)
-pytest projects        # fast capstone-project tests
-python scripts/normalize_notebooks.py --check   # notebook format gate
+python scripts/check.py
 ```
+
+Runs lint, format, notebook format, types, library tests with the coverage floor,
+and project tests — in that order, continuing past failures and naming every gate
+that failed. CI runs this exact script, so green locally means green in CI.
 
 Notebook content changes additionally require a fresh-kernel pass:
 
@@ -50,7 +49,7 @@ Committed notebook outputs may ONLY come from `execute_all_notebooks.py --write`
 
 1. Move CHANGELOG `[Unreleased]` into a new `[x.y.z]` section (Keep a Changelog).
 2. Bump `version` in `pyproject.toml` AND `__version__` in
-   `src/ml_first_principles/__init__.py` (kept in sync manually).
+   `src/ml_first_principles/__init__.py` (a test fails if they diverge).
 3. `python -m build` → sdist + wheel in `dist/`.
 4. `git tag vx.y.z && git push origin master --tags`.
 5. `gh release create vx.y.z dist/* --title vx.y.z --notes-file <notes>`.

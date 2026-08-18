@@ -194,20 +194,22 @@ Further requirements:
 
 ## 7. Notebook Format
 
-Every notebook must have:
+Machine-enforced by `python scripts/normalize_notebooks.py --check` (a CI gate):
+no BOM, LF line endings, notebook format 4 with `nbformat_minor >= 5`, a unique
+ID on every cell, canonical `python3` kernelspec, and `nbformat.validate`.
 
-- UTF-8 encoding without BOM and LF line endings;
-- notebook format 4 with `nbformat_minor >= 5`;
-- a unique cell ID on every cell;
-- outputs in source control produced exclusively by
+Machine-enforced by `python scripts/execute_all_notebooks.py`: no static Python
+errors, since every cell runs top-to-bottom on a fresh kernel.
+
+Not machine-checkable — hold these yourself:
+
+- outputs in source control come exclusively from
   `python scripts/execute_all_notebooks.py --write` (fresh kernel, seeded,
-  inline backend) — never committed from a hand-run interactive kernel;
-- canonical `python3` kernelspec and `language_info.name = python`;
+  inline backend), never from a hand-run interactive kernel;
 - no host-specific paths or volatile editor metadata;
-- no static Python errors or invalid escape warnings;
-- valid local Markdown and image references.
+- local Markdown and image references resolve.
 
-Run the dry-run validator before any notebook commit:
+Run the dry run before any notebook commit:
 
 ```bash
 python scripts/normalize_notebooks.py
