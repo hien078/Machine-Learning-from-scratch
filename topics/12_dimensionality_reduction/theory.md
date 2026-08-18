@@ -136,9 +136,11 @@ q_{ij} = \frac{(1 + \|z_i - z_j\|^2)^{-1}}{\sum_{k \neq l} (1 + \|z_k - z_l\|^2)
 
 **Why Student-t?** In high dimensions, moderate-distance points become nearly equidistant
 (concentration of measure). In low dimensions, there is less "room" to place moderately
-distant points — this is the **crowding problem**. The heavy tails of the Student-t
-distribution allow moderately distant high-d neighbors to be placed further apart in
-low-d without incurring a large cost, while still keeping true neighbors close.
+distant points — this is the **crowding problem**.
+
+The heavy tails of the Student-t distribution allow moderately distant high-d neighbors
+to be placed further apart in low-d without incurring a large cost, while still keeping
+true neighbors close.
 
 ### 4.3 KL Divergence Objective
 

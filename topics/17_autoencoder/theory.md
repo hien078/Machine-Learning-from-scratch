@@ -4,10 +4,11 @@
 
 High-dimensional data often lives near a lower-dimensional manifold. An
 autoencoder learns this manifold by training a neural network to reconstruct
-its input through a bottleneck. Unlike PCA, which is limited to linear
-subspaces, a nonlinear autoencoder can capture curved manifolds. The
-bottleneck forces the network to discover the most informative features
-rather than memorizing an identity map.
+its input through a bottleneck.
+
+Unlike PCA, which is limited to linear subspaces, a nonlinear autoencoder can
+capture curved manifolds. The bottleneck forces the network to discover the most
+informative features rather than memorizing an identity map.
 
 **Applications:** dimensionality reduction, feature learning, denoising,
 anomaly detection, and (with the variational extension) generative modeling.
@@ -40,6 +41,9 @@ For binary/probability outputs, binary cross-entropy may replace MSE:
 
 $$\mathcal{L}_{\text{BCE}} = -\frac{1}{n}\sum_{i=1}^{n}\sum_{j=1}^{d}\bigl[x_{ij}\log\hat{x}_{ij} + (1-x_{ij})\log(1-\hat{x}_{ij})\bigr]$$
 
+BCE treats each output coordinate as an independent Bernoulli variable, so the
+decoder's last layer must produce values in $(0,1)$ — in practice a sigmoid.
+
 ### 2.3 Architecture choices
 
 | Variant | Constraint | Effect |
@@ -62,6 +66,9 @@ The reconstruction objective becomes:
 
 $$\min_{W_e, W_d, b_e, b_d} \frac{1}{n}\sum_{i=1}^{n}\lVert x_i - W_d(W_e x_i + b_e) - b_d\rVert_2^2$$
 
+The composite map $W_d W_e$ has rank at most $k$, so this is a rank-constrained
+least-squares problem — the form that makes the PCA connection below possible.
+
 ### 3.2 Equivalence with PCA subspace
 
 **Theorem (Baldi & Hornik, 1989).** For mean-centered data, the optimal
@@ -75,9 +82,11 @@ $$\min_{W_e, W_d} \frac{1}{n}\lVert X - XW_e^T W_d^T\rVert_F^2$$
 
 Let $M = W_d W_e$. This is a $\text{rank-}k$ approximation problem. By the
 Eckart–Young theorem, the optimal $\text{rank-}k$ approximation of $X$ in Frobenius
-norm uses the $\text{top-}k$ singular vectors. Therefore $M$ projects onto the
-subspace spanned by the $\text{top-}k$ right singular vectors of $X$, which equals
-the $\text{top-}k$ eigenvectors of the covariance matrix $\frac{1}{n}X^T X$.
+norm uses the $\text{top-}k$ singular vectors.
+
+Therefore $M$ projects onto the subspace spanned by the $\text{top-}k$ right
+singular vectors of $X$, which equals the $\text{top-}k$ eigenvectors of the
+covariance matrix $\frac{1}{n}X^T X$.
 
 **Result:** A linear autoencoder with $k$ latent dimensions recovers the PCA
 subspace. However, the individual encoder/decoder weight matrices are not
@@ -93,6 +102,9 @@ reconstruct the original:
 $$\tilde{x} = x + \varepsilon, \qquad \varepsilon \sim \mathcal{N}(0, \sigma^2 I)$$
 
 $$\mathcal{L}_{\text{DAE}} = \frac{1}{n}\sum_{i=1}^{n}\lVert x_i - g_\phi(f_\theta(\tilde{x}_i))\rVert_2^2$$
+
+The corruption enters only the encoder's input while the target stays clean, so
+copying the input is no longer optimal.
 
 ### 4.2 Why it works
 
@@ -118,6 +130,10 @@ $\rho$ (typically $\rho \approx 0.05$):
 ```math
 \Omega_{\text{KL}} = \sum_{j=1}^{k} \text{KL}(\rho \,\|\, \hat{\rho}_j) = \sum_{j=1}^{k}\left[\rho\log\frac{\rho}{\hat{\rho}_j} + (1-\rho)\log\frac{1-\rho}{1-\hat{\rho}_j}\right]
 ```
+
+This penalty vanishes exactly when each unit's mean activation $\hat{\rho}_j$
+equals the target $\rho$, and grows without bound as a unit drifts toward
+always-off or always-on.
 
 ## 6. Variational Autoencoder (VAE)
 
@@ -175,9 +191,14 @@ Split the log:
 \text{ELBO}(x; \theta, \phi) = \mathbb{E}_{q_\theta(z|x)}[\log p_\phi(x \mid z)] - D_{\text{KL}}\bigl(q_\theta(z \mid x) \,\|\, p(z)\bigr)
 ```
 
-The gap between $\log p_\phi(x)$ and the ELBO equals
-$D_{\text{KL}}(q_\theta(z|x) \thinspace\Vert\thinspace p_\phi(z|x)) \geq 0$, so maximizing the ELBO
-simultaneously improves the generative model and tightens the approximation.
+The gap between $\log p_\phi(x)$ and the ELBO equals a non-negative KL divergence:
+
+```math
+D_{\text{KL}}(q_\theta(z|x) \thinspace\Vert\thinspace p_\phi(z|x)) \geq 0
+```
+
+Maximizing the ELBO therefore simultaneously improves the generative model and
+tightens the approximation.
 
 ### 6.3 Gaussian encoder
 
@@ -210,7 +231,14 @@ Substitute $\mu_0 = 0$, $\Sigma_0 = I$, $\mu_1 = \mu$, $\Sigma_1 = \text{diag}(\
 - $\mu^T I^{-1} \mu = \sum_j \mu_j^2$
 - $\log\frac{|I|}{|\text{diag}(\sigma^2)|} = -\sum_j \log\sigma_j^2$
 
-**Result:** $D_{\text{KL}} = \frac{1}{2}\sum_{j=1}^{k}(\mu_j^2 + \sigma_j^2 - \log\sigma_j^2 - 1)$
+**Result:** the closed-form KL divergence is
+
+```math
+D_{\text{KL}} = \frac{1}{2}\sum_{j=1}^{k}(\mu_j^2 + \sigma_j^2 - \log\sigma_j^2 - 1)
+```
+
+Each latent dimension contributes independently, so this term is evaluated in
+closed form from the encoder outputs alone — no sampling of $z$ is required.
 
 ### 6.5 Reparameterization trick
 
@@ -237,6 +265,10 @@ Over the dataset:
 
 $$\mathcal{L} = \frac{1}{n}\sum_{i=1}^{n}\mathcal{L}_{\text{VAE}}(x_i)$$
 
+Encoder and decoder are trained jointly on this single average, in which the
+reconstruction term rewards faithful decoding and the KL term pulls every
+posterior toward the prior.
+
 ## 7. Failure Cases
 
 1. **Identity map (no bottleneck).** If $k \geq d$ with no regularization, the
@@ -250,8 +282,9 @@ $$\mathcal{L} = \frac{1}{n}\sum_{i=1}^{n}\mathcal{L}_{\text{VAE}}(x_i)$$
 
 3. **KL vanishing / posterior collapse.** In VAE training, a powerful decoder
    can reconstruct from $p(z)$ alone, ignoring the encoder. The KL term drops
-   to zero ($q \approx p$) and the latent code carries no information. Mitigations:
-   KL annealing (warmup $\beta$ from 0 to 1), free bits, or weaker decoders.
+   to zero ($q \approx p$) and the latent code carries no information.
+   - Mitigations: KL annealing (warmup $\beta$ from 0 to 1), free bits, or weaker
+     decoders.
 
 4. **Uninterpretable latent space.** A deterministic autoencoder's latent space
    may have gaps and irregular structure. The latent code is optimized for

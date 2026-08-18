@@ -20,7 +20,9 @@ All symbols used below — defined once.
 | $V_p(r)$ | scalar | volume of a $p$-dimensional ball of radius $r$ |
 
 **Vector convention.** All vectors are column vectors. Lowercase Latin = vector;
-uppercase = matrix. Norms carry explicit subscripts: $\Vert x\Vert_1$, $\Vert x\Vert_2$.
+uppercase = matrix.
+
+Norms carry explicit subscripts: $\Vert x\Vert_1$, $\Vert x\Vert_2$.
 
 ---
 
@@ -36,7 +38,7 @@ discard the training set. KNN takes the opposite approach:
 - **Non-parametric.** The model complexity grows with $n$, not with a fixed $p$-dimensional
   parameter vector.
 
-**When does this make sense?**
+### 1.1 When does this make sense?
 
 1. Decision boundaries are irregular and hard to express as a parametric function.
 2. The dataset is small enough that storing and scanning it is feasible.
@@ -187,7 +189,9 @@ requires an astronomical number of samples.
 ### 6.2 Acceleration structures
 
 **KD-tree.** A binary tree that recursively partitions the feature space along coordinate
-axes. Average query time: $O(p \log n)$ for low $p$. Degrades to $O(np)$ for $p \gtrsim 20$.
+axes.
+
+Average query time: $O(p \log n)$ for low $p$. Degrades to $O(np)$ for $p \gtrsim 20$.
 
 **Ball tree.** Partitions data into nested hyperspheres. Works better than KD-trees in
 moderate dimensions ($p \lesssim 50$), but still suffers from the curse of dimensionality.

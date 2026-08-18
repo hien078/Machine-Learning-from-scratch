@@ -80,6 +80,8 @@ The agent estimates the value of each action using the sample average of observe
 Q_t(a) = \frac{\sum_{i=1}^{t-1} R_i \cdot \mathbb{I}(A_i = a)}{\sum_{i=1}^{t-1} \mathbb{I}(A_i = a)}
 ```
 
+By the law of large numbers $Q_t(a)$ approaches $\mu_a$ as the arm is pulled more often, so an arm tried only a few times still carries a very uncertain estimate.
+
 ## 2.6 Exploration Strategies
 
 To minimize regret, the agent must balance exploration and exploitation.
@@ -145,6 +147,8 @@ The expected return starting from state $s$, taking action $a$, and then followi
 Q^\pi(s, a) = \mathbb{E}_\pi [ G_t \mid S_t = s, A_t = a ]
 ```
 
+Fixing the first action instead of drawing it from $\pi$ is what makes $Q^\pi$ the object to compare candidate actions in a state, while $V^\pi$ averages over them.
+
 ## 4. HOW: Bellman Equations
 
 The Bellman equations express the recursive relationship between the value of a state and the values of its successor states.
@@ -177,7 +181,13 @@ The Bellman equations express the recursive relationship between the value of a 
 V^\pi(s) = \sum_{a \in \mathcal{A}} \pi(a \mid s) Q^\pi(s, a)
 ```
 
-where $Q^\pi(s, a) = \sum_{s' \in \mathcal{S}} P(s' \mid s, a) [ R(s, a, s') + \gamma V^\pi(s') ]$.
+where the action-value is
+
+```math
+Q^\pi(s, a) = \sum_{s' \in \mathcal{S}} P(s' \mid s, a) [ R(s, a, s') + \gamma V^\pi(s') ]
+```
+
+The two identities together unroll $V^\pi$ by one step: average over the actions the policy takes, then over the states the environment moves to.
 
 ### Bellman Optimality Equations
 
@@ -192,7 +202,19 @@ Q^\ast(s, a) = \sum_{s'} P(s' \mid s, a) \left[ R(s, a, s') + \gamma \max_{a'} Q
 ```
 
 **Convergence (Contraction Mapping Theorem):**
-The Bellman optimality operator $B$ applied to a value function $V$ is defined as $(BV)(s) = \max_a \sum_{s'} P(s' \mid s, a) [R + \gamma V(s')]$. It can be shown that $B$ is a $\gamma$-contraction in the max norm: $\Vert BV_1 - BV_2\Vert_\infty \leq \gamma \Vert V_1 - V_2\Vert_\infty$. By the Banach fixed-point theorem, repeated application of $B$ converges to a unique fixed point $V^\ast$.
+The Bellman optimality operator $B$ applied to a value function $V$ is defined as
+
+```math
+(BV)(s) = \max_a \sum_{s'} P(s' \mid s, a) [R + \gamma V(s')]
+```
+
+It can be shown that $B$ is a $\gamma$-contraction in the max norm:
+
+```math
+\Vert BV_1 - BV_2\Vert_\infty \leq \gamma \Vert V_1 - V_2\Vert_\infty
+```
+
+By the Banach fixed-point theorem, repeated application of $B$ converges to a unique fixed point $V^\ast$.
 
 ## 5. HOW: Dynamic Programming
 
@@ -321,8 +343,10 @@ Instead of learning value functions and deriving a policy, Policy Gradient metho
 **REINFORCE Algorithm:** A Monte Carlo policy gradient algorithm that samples trajectories and updates $\theta \leftarrow \theta + \alpha G_t \nabla_\theta \log \pi_\theta(a_t \mid s_t)$.
 
 **Variance Reduction & Advantage:**
-The variance of Monte Carlo returns $G_t$ is high. We can subtract a baseline $b(s)$ without changing the expected gradient. Typically, $b(s) = V(s)$. 
-The **Advantage function** is $A(s, a) = Q(s, a) - V(s)$. 
+The variance of Monte Carlo returns $G_t$ is high. We can subtract a baseline $b(s)$ without changing the expected gradient. Typically, $b(s) = V(s)$.
+
+The **Advantage function** is $A(s, a) = Q(s, a) - V(s)$.
+
 Using $A(s,a)$ leads to **Actor-Critic** architectures: an Actor updates the policy, and a Critic estimates the value function to compute the advantage.
 
 ## 7.5 PPO & Trust Region Methods
@@ -338,7 +362,12 @@ TRPO constrains the policy update so the new policy doesn't deviate too far from
 
 **PPO (Proximal Policy Optimization):**
 PPO approximates TRPO's constraint using a clipped surrogate objective, making it simpler and faster.
-Let $r_t(\theta) = \frac{\pi_\theta(a|s)}{\pi_{\theta_{old}}(a|s)}$ be the probability ratio.
+Let the probability ratio be
+
+```math
+r_t(\theta) = \frac{\pi_\theta(a|s)}{\pi_{\theta_{old}}(a|s)}
+```
+
 **Result (PPO Clipped Objective):**
 
 ```math
@@ -353,6 +382,8 @@ To compute the advantage $A_t$ with a good bias-variance tradeoff, GAE uses an e
 ```math
 A_t^{GAE(\gamma,\lambda)} = \sum_{l=0}^\infty (\gamma\lambda)^l \delta_{t+l}
 ```
+
+The parameter $\lambda$ selects the tradeoff: at $\lambda = 0$ only the one-step TD error survives (low variance, high bias), while $\lambda \to 1$ recovers the full Monte Carlo advantage.
 
 ## 7.6 Actor-Critic Architecture
 

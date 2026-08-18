@@ -27,8 +27,9 @@ Standard deep learning architectures (like CNNs and RNNs) are designed for data 
 ### Why Standard Neural Networks Fail
 Applying standard feed-forward networks to graphs poses several challenges:
 1. **Arbitrary Size and Topology:** Graph nodes can have varying numbers of neighbors, unlike image pixels which have a fixed neighborhood.
-2. **Permutation Invariance/Equivariance:** If we reorder the nodes in the adjacency matrix and feature matrix, the graph structure remains the same. A neural network must process this data such that the output node representations are equivariant to the node ordering, and graph-level predictions are invariant.
-3. **Complex Relationships:** Standard MLPs treat data instances independently, failing to capture the explicit topological relationships encoded by the edges.
+2. **Permutation Invariance/Equivariance:** If we reorder the nodes in the adjacency matrix and feature matrix, the graph structure remains the same.
+3. **What this demands of the model:** A neural network must process this data such that the output node representations are equivariant to the node ordering, and graph-level predictions are invariant.
+4. **Complex Relationships:** Standard MLPs treat data instances independently, failing to capture the explicit topological relationships encoded by the edges.
 
 Graph Neural Networks solve this by leveraging the graph structure explicitly during the feature transformation process.
 
@@ -174,7 +175,9 @@ H^{(l+1)} = \sigma(\tilde{D}^{-1/2} \tilde{A} \tilde{D}^{-1/2} H^{(l)} W^{(l)})
 **Result:** The standard GCN forward pass, which elegantly bridges spectral theory and spatial message passing.
 
 ### The Over-Smoothing Problem
-A major limitation of GCNs is **over-smoothing**. As the number of layers increases, the repeated multiplication by the normalized adjacency matrix acts as a low-pass filter. Eventually, the node representations become indistinguishable and converge to a stationary distribution proportional to node degrees. This limits GCNs to shallow architectures (typically 2-4 layers).
+A major limitation of GCNs is **over-smoothing**. As the number of layers increases, the repeated multiplication by the normalized adjacency matrix acts as a low-pass filter.
+
+Eventually, the node representations become indistinguishable and converge to a stationary distribution proportional to node degrees. This limits GCNs to shallow architectures (typically 2-4 layers).
 
 ## 5. HOW: Graph Attention Networks (GAT)
 
@@ -205,6 +208,8 @@ The updated node representation is the weighted sum of transformed neighbor feat
 ```math
 h_i^{(l+1)} = \sigma \left( \sum_{j \in \mathcal{N}(i)} \alpha_{ij} W h_j^{(l)} \right)
 ```
+
+Neighbors are combined exactly as in a GCN, except that each one contributes in proportion to its learned coefficient $\alpha_{ij}$ rather than a weight fixed by the node degrees.
 
 ### Multi-Head Attention
 To stabilize learning, GAT employs multi-head attention. For $K$ independent attention heads, the outputs are typically concatenated for hidden layers:

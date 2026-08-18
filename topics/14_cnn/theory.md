@@ -84,8 +84,10 @@ Padding adds $p$ rows/columns of zeros around the input before sliding the kerne
 
 With stride $s$, the kernel advances $s$ positions instead of 1:
 
-$$H_{\text{out}} = \left\lfloor \frac{H + 2p - k_h}{s} \right\rfloor + 1, \qquad
-  W_{\text{out}} = \left\lfloor \frac{W + 2p - k_w}{s} \right\rfloor + 1.$$
+```math
+H_{\text{out}} = \left\lfloor \frac{H + 2p - k_h}{s} \right\rfloor + 1, \qquad
+W_{\text{out}} = \left\lfloor \frac{W + 2p - k_w}{s} \right\rfloor + 1.
+```
 
 Stride $> 1$ downsamples the feature map spatially.
 
@@ -126,6 +128,9 @@ The forward pass for a single output channel $f$ at position $(i, j)$:
 Y_{f, i, j} = b_f + \sum_{c=0}^{C_{\text{in}}-1} \sum_{m=0}^{k_h-1} \sum_{n=0}^{k_w-1}
 K_{f, c, m, n} \, X_{c,\, i \cdot s + m,\, j \cdot s + n}.
 ```
+
+The same kernel $K_f$ is applied at every position $(i, j)$, so one filter is reused
+across all spatial locations and the window advances by the stride $s$.
 
 ### 3.2 Backpropagation through convolution
 

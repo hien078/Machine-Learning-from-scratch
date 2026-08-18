@@ -53,7 +53,8 @@ Every symbol used later, defined once.
 - Subscripts index examples ($x_i$); commas separate row/column indices when both are needed ($X_{i,j}$).
 - A matrix is **symmetric** if $A^\top = A$; **positive semi-definite (PSD)** if $v^\top A v \ge 0$ for all $v$; **positive definite (PD)** if $v^\top A v > 0$ for all $v \neq 0$.
 - An $n \times n$ matrix $P$ is an **orthogonal projection** iff $P^\top = P$ and $P^2 = P$.
-- **Residual sign.** This document defines $r := \hat{y} - y$ (prediction minus target). Many statistics texts (e.g. Hastie et al.) and most software report $e := y - \hat{y} = -r$. All squared and norm-based quantities (MSE, RSS, $R^2$, leverage, Cook's distance) agree under both conventions; only the signs of raw residuals flip.
+- **Residual sign.** This document defines $r := \hat{y} - y$ (prediction minus target). Many statistics texts (e.g. Hastie et al.) and most software report $e := y - \hat{y} = -r$.
+- **What the sign choice affects.** All squared and norm-based quantities (MSE, RSS, $R^2$, leverage, Cook's distance) agree under both conventions; only the signs of raw residuals flip.
 
 ---
 
@@ -76,11 +77,15 @@ A **linear model** assumes the prediction is a linear combination of features. F
 
 $$\hat{y}_i = x_{i1} \theta_1 + x_{i2} \theta_2 + \dots + x_{ip} \theta_p = x_i^\top \theta$$
 
+The prediction for one example is the inner product of its feature vector with the shared parameter vector $\theta$.
+
 ### 2.2 Matrix form
 
 Stack the per-example equations row by row. Define the **design matrix** $X \in \mathbb{R}^{n \times p}$ as the matrix whose $i$-th row equals $x_i^\top$, the **target vector** $y \in \mathbb{R}^n$, and the **prediction vector** $\hat{y} \in \mathbb{R}^n$. Then:
 
 $$\hat{y} = X\theta \in \mathbb{R}^n$$
+
+A single matrix–vector product therefore produces all $n$ predictions at once.
 
 ### 2.3 Bias trick
 
@@ -121,11 +126,14 @@ Classical regression theory is organised around five assumptions on $(X, \vareps
 **Remarks.**
 
 - The rank condition in A1 implicitly requires $n \ge p$: column rank cannot exceed the number of rows. With $n < p$, only the singular machinery of §8 applies.
-- In this fixed-design setting, A2 reduces to $\mathbb{E}[\varepsilon] = 0$. In the random-design setting the corresponding assumption is **strict exogeneity**, $\mathbb{E}[\varepsilon \mid X] = 0$; its failure mode — noise correlated with regressors, e.g. through an omitted variable — is the one diagnosed in §12.
+- In this fixed-design setting, A2 reduces to $\mathbb{E}[\varepsilon] = 0$.
+- In the random-design setting the corresponding assumption is **strict exogeneity**, $\mathbb{E}[\varepsilon \mid X] = 0$; its failure mode — noise correlated with regressors, e.g. through an omitted variable — is the one diagnosed in §12.
 
 **Compact restatement of A2 + A3 + A4:**
 
 $$\mathbb{E}[\varepsilon] = 0, \quad \text{Var}(\varepsilon) := \mathbb{E}[\varepsilon \varepsilon^\top] = \sigma^2 I_n$$
+
+A noise covariance that is a multiple of the identity is exactly what A3 and A4 say together: equal variances down the diagonal, zero covariances off it.
 
 ---
 
@@ -155,6 +163,8 @@ L(\theta) &= \frac{1}{n} \sum_i r_i(\theta)^2 & \text{(scalar form)} \\
 \theta^* \in \arg\min_{\theta \in \mathbb{R}^p} L(\theta)
 ```
 
+Membership rather than equality: the minimiser need not be unique, and §6.2 gives the condition under which it is.
+
 ### 4.2 Theorem (MSE is the Gaussian negative log-likelihood)
 
 > **Theorem.** Assume the data-generating process
@@ -171,11 +181,13 @@ p(y \mid X, \theta) = \prod_i (2\pi \sigma^2)^{-1/2} \cdot \exp\!\left( -\frac{(
 
 Take logarithms:
 
-$$\begin{aligned}
+```math
+\begin{aligned}
 \ell(\theta) &:= \log p(y \mid X, \theta) \\
 &= -\frac{n}{2} \cdot \log(2\pi \sigma^2) - \frac{1}{2\sigma^2} \cdot \sum_i (y_i - x_i^\top \theta)^2 \\
 &= -\frac{n}{2} \cdot \log(2\pi \sigma^2) - \frac{n}{2\sigma^2} \cdot L(\theta)
-\end{aligned}$$
+\end{aligned}
+```
 
 The first term does not depend on $\theta$, and $n / (2\sigma^2) > 0$ is a positive constant. Therefore
 
@@ -185,7 +197,8 @@ $$\arg\max_\theta \ell(\theta) = \arg\min_\theta L(\theta) \quad \blacksquare$$
 
 **Remarks.**
 
-- Different noise models give different losses: $\varepsilon_i \sim \text{Laplace}(0, b)$ yields mean absolute error (MAE); a density proportional to $\exp[-\rho_{\delta}(\varepsilon)]$ yields the Huber loss, where $\rho_\delta(u) := \frac{1}{2} u^2$ for $|u| \le \delta$ and $\delta \bigl( |u| - \frac{\delta}{2} \bigr)$ otherwise.
+- Different noise models give different losses: $\varepsilon_i \sim \text{Laplace}(0, b)$ yields mean absolute error (MAE); a density proportional to $\exp[-\rho_{\delta}(\varepsilon)]$ yields the Huber loss.
+- The Huber penalty is $\rho_\delta(u) := \frac{1}{2} u^2$ for $|u| \le \delta$ and $\delta \bigl( |u| - \frac{\delta}{2} \bigr)$ otherwise.
 - A single residual of magnitude 10 contributes the same to $L$ as 100 residuals of magnitude 1 — a quadratic penalty for outliers.
 
 ---
@@ -226,7 +239,13 @@ $$\nabla L(\theta) = \frac{1}{n} \cdot \bigl( 2 X^\top X \theta - 2 X^\top y \bi
 
 > **Theorem.** $\nabla^2 L(\theta) = \frac{2}{n} \cdot X^\top X$, independent of $\theta$.
 
-**Proof.** From the gradient, $\nabla L(\theta) = \frac{2}{n} \cdot (X^\top X \theta - X^\top y)$. The map $\theta \mapsto \frac{2}{n} X^\top X \theta$ is linear with constant Jacobian $\frac{2}{n} X^\top X$; the constant term has zero Jacobian. $\blacksquare$
+**Proof.** From the gradient,
+
+```math
+\nabla L(\theta) = \frac{2}{n} \cdot (X^\top X \theta - X^\top y)
+```
+
+The map $\theta \mapsto \frac{2}{n} X^\top X \theta$ is linear with constant Jacobian $\frac{2}{n} X^\top X$; the constant term has zero Jacobian. $\blacksquare$
 
 **Result:** $\nabla^2 L(\theta) = \frac{2}{n} X^\top X$
 
@@ -279,7 +298,9 @@ This is the system of **normal equations** for OLS.
 
 **Proof.**
 
-*(1) Existence.* First, $\text{Null}(X^\top X) = \text{Null}(X)$: if $X^\top X v = 0$ then $\Vert Xv\Vert^2 = v^\top X^\top X v = 0$, so $Xv = 0$; the converse is immediate. Hence $\text{rank}(X^\top X) = \text{rank}(X) = \text{rank}(X^\top)$, and since $\text{Col}(X^\top X) \subseteq \text{Col}(X^\top)$ with equal dimensions, $\text{Col}(X^\top X) = \text{Col}(X^\top)$. As $X^\top y \in \text{Col}(X^\top)$, the normal equations are consistent.
+*(1) Existence.* First, $\text{Null}(X^\top X) = \text{Null}(X)$: if $X^\top X v = 0$ then $\Vert Xv\Vert^2 = v^\top X^\top X v = 0$, so $Xv = 0$; the converse is immediate.
+
+Hence $\text{rank}(X^\top X) = \text{rank}(X) = \text{rank}(X^\top)$, and since $\text{Col}(X^\top X) \subseteq \text{Col}(X^\top)$ with equal dimensions, $\text{Col}(X^\top X) = \text{Col}(X^\top)$. As $X^\top y \in \text{Col}(X^\top)$, the normal equations are consistent.
 
 *(2) Uniqueness.* $L$ is strictly convex iff $\text{rank}(X) = p$ (§5.4). A strictly convex function has at most one minimiser; combined with (1), exactly one.
 
@@ -324,13 +345,27 @@ where $H := X (X^\top X)^{-1} X^\top \in \mathbb{R}^{n \times n}$. $H$ is called
 
 **Proof.**
 
-*(1)* $H^\top = \bigl( X (X^\top X)^{-1} X^\top \bigr)^\top = X (X^\top X)^{-1} X^\top = H$.
+*(1)* Transpose the definition:
 
-*(2)* $H^2 = X (X^\top X)^{-1} X^\top X (X^\top X)^{-1} X^\top = X (X^\top X)^{-1} X^\top = H$.
+```math
+H^\top = \bigl( X (X^\top X)^{-1} X^\top \bigr)^\top = X (X^\top X)^{-1} X^\top = H
+```
+
+*(2)* Multiply the definition by itself:
+
+```math
+H^2 = X (X^\top X)^{-1} X^\top X (X^\top X)^{-1} X^\top = X (X^\top X)^{-1} X^\top = H
+```
 
 *(3)* For any $y$, $Hy = X[(X^\top X)^{-1} X^\top y] \in \text{Col}(X)$. Conversely, $z = Xw \implies Hz = Xw = z$.
 
-*(4)* If $Hv = \lambda v$ with $v \neq 0$, then $H^2 v = \lambda^2 v$; using $H^2 = H$: $\lambda(\lambda - 1)v = 0 \implies \lambda \in \lbrace0, 1\rbrace$. The multiplicity of eigenvalue 1 equals $\text{rank}(X) = p$. $\blacksquare$
+*(4)* If $Hv = \lambda v$ with $v \neq 0$, then $H^2 v = \lambda^2 v$; using $H^2 = H$:
+
+```math
+\lambda(\lambda - 1)v = 0 \implies \lambda \in \lbrace0, 1\rbrace
+```
+
+The multiplicity of eigenvalue 1 equals $\text{rank}(X) = p$. $\blacksquare$
 
 ### 7.4 Corollary (Pythagoras)
 
@@ -341,6 +376,8 @@ where $H := X (X^\top X)^{-1} X^\top \in \mathbb{R}^{n \times n}$. $H$ is called
 ```math
 \|y\|^2 = \|\hat{y}^*\|^2 - 2\langle \hat{y}^*, r^* \rangle + \|r^*\|^2 = \|\hat{y}^*\|^2 + \|r^*\|^2 \quad \blacksquare
 ```
+
+Fit and residual are the two legs of a right triangle whose hypotenuse is $y$.
 
 ### 7.5 Leverage
 
@@ -357,7 +394,13 @@ $$h_{ii} := H_{ii} = x_i^\top (X^\top X)^{-1} x_i$$
 
 **Proof.**
 
-*(1)* By symmetry and idempotence, $h_{ii} = (H^2)_ {ii} = \sum_j H_{ij} H_{ji} = \sum_j H_{ij}^2 \ge 0$, and $h_{ii} = h_{ii}^2 + \sum_{j \neq i} H_{ij}^2 \ge h_{ii}^2$, which forces $h_{ii} \le 1$.
+*(1)* By symmetry and idempotence,
+
+```math
+h_{ii} = (H^2)_ {ii} = \sum_j H_{ij} H_{ji} = \sum_j H_{ij}^2 \ge 0
+```
+
+and $h_{ii} = h_{ii}^2 + \sum_{j \neq i} H_{ij}^2 \ge h_{ii}^2$, which forces $h_{ii} \le 1$.
 
 *(2)* $\sum_i h_{ii} = \text{trace}(H) = p$ (§7.3).
 
@@ -387,6 +430,8 @@ Given the SVD $X = U \Sigma V^\top$, build $\Sigma^+ \in \mathbb{R}^{p \times n}
 
 $$X^+ := V \Sigma^+ U^\top \in \mathbb{R}^{p \times n}$$
 
+Because only the non-zero singular values are inverted, $X^+$ is defined for every $X$ — including the rank-deficient designs where $(X^\top X)^{-1}$ is not.
+
 ### 8.3 Properties
 
 > **Theorem.**
@@ -405,7 +450,13 @@ $$X^+ := V \Sigma^+ U^\top \in \mathbb{R}^{p \times n}$$
 
 > **Theorem.** Under A1 + A2, $\mathbb{E}[\hat{\theta}] = \theta$.
 
-**Proof.** From $\hat{\theta} = (X^\top X)^{-1} X^\top y = \theta + (X^\top X)^{-1} X^\top \varepsilon$:
+**Proof.** From the closed form,
+
+```math
+\hat{\theta} = (X^\top X)^{-1} X^\top y = \theta + (X^\top X)^{-1} X^\top \varepsilon
+```
+
+Taking expectations,
 
 $$\mathbb{E}[\hat{\theta}] = \theta + (X^\top X)^{-1} X^\top \cdot \mathbb{E}[\varepsilon] = \theta \quad \blacksquare$$
 
@@ -427,14 +478,17 @@ $$\text{Var}(\hat{\theta}) = A \cdot \text{Var}(\varepsilon) \cdot A^\top = \sig
 
 Three knobs control the variance:
 - **$\sigma^2$**: more noise → more variance. Linear.
-- **Sample size $n$** *(heuristic)*: if the rows of $X$ behave like i.i.d. draws with second-moment matrix $\Sigma$, then $X^\top X \approx n \Sigma$, so $(X^\top X)^{-1} \approx \Sigma^{-1}/n$ and standard errors shrink like $1/\sqrt{n}$. For a fixed design this is an intuition, not an identity.
+- **Sample size $n$** *(heuristic)*: if the rows of $X$ behave like i.i.d. draws with second-moment matrix $\Sigma$, then $X^\top X \approx n \Sigma$, so $(X^\top X)^{-1} \approx \Sigma^{-1}/n$ and standard errors shrink like $1/\sqrt{n}$.
+- **Scope of that knob.** For a fixed design this is an intuition, not an identity.
 - **Multicollinearity**: near-proportional columns make $(X^\top X)^{-1}$ have huge diagonal entries.
 
 ### 9.3 Gauss–Markov theorem
 
 > **Theorem (Gauss–Markov).** Under A1 + A2 + A3 + A4, the OLS estimator $\hat{\theta}$ is the **Best Linear Unbiased Estimator (BLUE)** — it has the lowest variance among all linear unbiased estimators.
 
-**Proof sketch.** Write any linear unbiased estimator as $\tilde{\theta} = Cy$ with $CX = I_p$. Set $C = C_{\text{OLS}} + D$ where $DX = 0$. Then
+**Proof sketch.** Write any linear unbiased estimator as $\tilde{\theta} = Cy$ with $CX = I_p$.
+
+Set $C = C_{\text{OLS}} + D$ where $DX = 0$. Then
 
 $$\text{Var}(\tilde{\theta}) = \text{Var}(\hat{\theta}) + \sigma^2 DD^\top$$
 
@@ -482,9 +536,17 @@ Under A1–A5, i.e. $\varepsilon \sim \mathcal{N}(0, \sigma^2 I_n)$:
 
 $$\hat{\theta} \sim \mathcal{N}(\theta, \sigma^2 (X^\top X)^{-1}), \quad \text{RSS}/\sigma^2 \sim \chi^2(n-p)$$
 
-with $\hat{\theta}$ and RSS independent. The t-pivot $({\hat{\theta}_j - \theta_j})/{\text{SE}(\hat{\theta}_j)} \sim t(n-p)$ gives confidence intervals:
+with $\hat{\theta}$ and RSS independent. The t-pivot
+
+```math
+({\hat{\theta}_j - \theta_j})/{\text{SE}(\hat{\theta}_j)} \sim t(n-p)
+```
+
+gives confidence intervals:
 
 $$\hat{\theta}_j \pm t_{1-\alpha/2}(n-p) \cdot \text{SE}(\hat{\theta}_j)$$
+
+The half-width is set by $\text{SE}(\hat{\theta}_j)$, so the interval widens with the noise level and with the diagonal of $(X^\top X)^{-1}$ (§9.2, §9.4).
 
 ### 9.6 Goodness of fit — $R^2$ and the ANOVA decomposition
 
@@ -496,7 +558,15 @@ Assume the design contains the intercept column, $\mathbb{1} \in \text{Col}(X)$,
 > \underbrace{\|y - \bar{y} \mathbb{1}\|^2}_{\text{TSS}} = \underbrace{\|\hat{y}^* - \bar{y} \mathbb{1}\|^2}_{\text{ESS}} + \underbrace{\|r^*\|^2}_{\text{RSS}}
 > ```
 
-**Proof.** The row of the normal equations $X^\top r^\ast = 0$ corresponding to the ones column gives $\mathbb{1}^\top r^\ast = 0$; in particular the fitted values have the same mean as $y$. Write $y - \bar{y}\mathbb{1} = (\hat{y}^\ast - \bar{y}\mathbb{1}) - r^\ast$. The cross term vanishes:
+**Proof.** The row of the normal equations $X^\top r^\ast = 0$ corresponding to the ones column gives $\mathbb{1}^\top r^\ast = 0$; in particular the fitted values have the same mean as $y$.
+
+Write the centred target as
+
+```math
+y - \bar{y}\mathbb{1} = (\hat{y}^\ast - \bar{y}\mathbb{1}) - r^\ast
+```
+
+The cross term vanishes:
 
 ```math
 \langle \hat{y}^* - \bar{y}\mathbb{1}, \; r^* \rangle = \langle \hat{y}^*, r^* \rangle - \bar{y} \, \langle \mathbb{1}, r^* \rangle = 0 - 0 = 0
@@ -512,7 +582,8 @@ the fraction of the centred variation in $y$ captured by the fit; equivalently, 
 
 **Remarks.**
 
-- **No intercept ⇒ no decomposition.** Without $\mathbb{1} \in \text{Col}(X)$, $\mathbb{1}^\top r^\ast = 0$ can fail, $\text{TSS} \neq \text{ESS} + \text{RSS}$, the two expressions for $R^2$ above disagree, and $1 - \text{RSS}/\text{TSS}$ can even be negative. (§7.4 is the *uncentred* analogue, valid regardless.)
+- **No intercept ⇒ no decomposition.** Without $\mathbb{1} \in \text{Col}(X)$, $\mathbb{1}^\top r^\ast = 0$ can fail, $\text{TSS} \neq \text{ESS} + \text{RSS}$, the two expressions for $R^2$ above disagree, and $1 - \text{RSS}/\text{TSS}$ can even be negative.
+- **What still holds.** §7.4 is the *uncentred* analogue, valid regardless.
 - **$R^2$ never decreases when features are added** — enlarging $\text{Col}(X)$ can only shrink RSS — so it cannot compare models of different sizes. The **adjusted** version penalises $p$:
 
   $$\bar{R}^2 := 1 - \frac{\text{RSS}/(n-p)}{\text{TSS}/(n-1)} = 1 - (1 - R^2) \thinspace \frac{n-1}{n-p}$$
@@ -523,7 +594,13 @@ the fraction of the centred variation in $y$ captured by the fit; equivalently, 
 
 Let $x_0 \in \mathbb{R}^p$ be a new feature vector (leading $1$ included) and $\hat{y}_0 := x_0^\top \hat{\theta}$.
 
-**Mean response.** Under A1–A4, $\mathbb{E}[\hat{y}_0] = x_0^\top \theta$ and $\text{Var}(\hat{y}_0) = \sigma^2 \thinspace x_0^\top (X^\top X)^{-1} x_0$ (immediate from §9.1–9.2). Adding A5, a $1 - \alpha$ **confidence interval for the mean response** $x_0^\top \theta$ is
+**Mean response.** Under A1–A4, $\mathbb{E}[\hat{y}_0] = x_0^\top \theta$, and immediately from §9.1–9.2,
+
+```math
+\text{Var}(\hat{y}_0) = \sigma^2 \thinspace x_0^\top (X^\top X)^{-1} x_0
+```
+
+Adding A5, a $1 - \alpha$ **confidence interval for the mean response** $x_0^\top \theta$ is
 
 ```math
 x_0^\top \hat{\theta} \; \pm \; t_{1-\alpha/2}(n-p) \cdot \hat{\sigma} \sqrt{x_0^\top (X^\top X)^{-1} x_0}
@@ -550,7 +627,13 @@ Residuals do not share a common variance, even under homoscedastic noise:
 
 > **Theorem.** Under A1–A4, $\text{Var}(r^\ast) = \sigma^2 (I_n - H)$; in particular $\text{Var}(r_i^\ast) = \sigma^2 (1 - h_{ii})$.
 
-**Proof.** From §9.4, $r^\ast = -(I_n - H)\varepsilon$, so $\text{Var}(r^\ast) = (I_n - H) \thinspace \sigma^2 I_n \thinspace (I_n - H)^\top = \sigma^2 (I_n - H)$. $\blacksquare$
+**Proof.** From §9.4, $r^\ast = -(I_n - H)\varepsilon$, so
+
+```math
+\text{Var}(r^\ast) = (I_n - H) \thinspace \sigma^2 I_n \thinspace (I_n - H)^\top = \sigma^2 (I_n - H)
+```
+
+and reading off the $i$-th diagonal entry gives the per-coordinate statement. $\blacksquare$
 
 High-leverage points thus have *small* raw residuals by construction ($h_{ii} \to 1 \Rightarrow \text{Var}(r_i^\ast) \to 0$): the fit is dragged toward them. Two standard corrections:
 
@@ -573,7 +656,11 @@ $$\hat{\theta} = \Phi^+ y$$
 
 **Bias-Variance Tradeoff:** As we increase the polynomial degree, the model becomes more flexible (lower bias), but it starts to fit the noise in the training data (higher variance), leading to overfitting.
 
-**Categorical features (dummy encoding).** A categorical feature with $k$ levels enters the design matrix as $k - 1$ indicator (dummy) columns, one level being dropped as the *reference*. Each dummy coefficient is then the predicted difference in $y$ between its level and the reference level, other features fixed. Including all $k$ indicators alongside an intercept is the **dummy-variable trap**: the $k$ columns sum to $\mathbb{1}$, so $\text{rank}(X) < p$ — exactly the singular regime of §8. Feature maps and dummy encodings compose freely; the model remains linear in $\theta$.
+**Categorical features (dummy encoding).** A categorical feature with $k$ levels enters the design matrix as $k - 1$ indicator (dummy) columns, one level being dropped as the *reference*. Each dummy coefficient is then the predicted difference in $y$ between its level and the reference level, other features fixed.
+
+Including all $k$ indicators alongside an intercept is the **dummy-variable trap**: the $k$ columns sum to $\mathbb{1}$, so $\text{rank}(X) < p$ — exactly the singular regime of §8.
+
+Feature maps and dummy encodings compose freely; the model remains linear in $\theta$.
 
 ---
 
@@ -581,7 +668,8 @@ $$\hat{\theta} = \Phi^+ y$$
 
 - **Normal-equation route:** forming $X^\top X$ costs $O(np^2)$ and solving costs $O(p^3)$ with $O(p^2)$ memory. QR/SVD is more stable.
 - **Gradient Descent:** $O(np)$ per iteration. Preferred when $n$ and $p$ are very large. Convergence requires $0 < \eta < 2/L_{\text{smooth}}$ where $L_{\text{smooth}} = \frac{2}{n}\sigma_1(X)^2$ is the largest eigenvalue of the Hessian $\nabla^2 L$.
-- **Conditioning:** the speed of GD is governed by the condition number *of the Hessian*, $\kappa(\nabla^2 L) = \kappa(X^\top X) = (\sigma_1 / \sigma_p)^2 = \kappa(X)^2$, where $\kappa(X) := \sigma_1 / \sigma_p$ is the condition number of $X$ itself. Feature scaling typically shrinks $\kappa$ and speeds convergence.
+- **Conditioning:** the speed of GD is governed by the condition number *of the Hessian*, $\kappa(\nabla^2 L) = \kappa(X^\top X) = (\sigma_1 / \sigma_p)^2 = \kappa(X)^2$, where $\kappa(X) := \sigma_1 / \sigma_p$ is the condition number of $X$ itself.
+- **Remedy.** Feature scaling typically shrinks $\kappa$ and speeds convergence.
 
 ---
 

@@ -28,15 +28,26 @@
 
 Training a Large Language Model (LLM) is not a single process, but a sequence of stages, each serving a specific purpose. The modern LLM pipeline consists of three core stages:
 
-1. **Pre-training:** The model is trained on a massive corpus of text using self-supervised learning (typically next-token prediction).
-    *   **Goal:** Learn world knowledge, grammar, and reasoning capabilities.
-    *   **Challenge:** Computationally expensive, requires thousands of GPUs, resulting in a "base model" that is a powerful autocomplete engine but cannot follow instructions.
-2. **Supervised Fine-Tuning (SFT):** The base model is fine-tuned on a smaller, high-quality dataset of instruction-response pairs.
-    *   **Goal:** Teach the model to act as an assistant and follow user instructions.
-    *   **Challenge:** Full fine-tuning updates all parameters, which is memory-intensive and prone to catastrophic forgetting. Parameter-Efficient Fine-Tuning (PEFT) methods like LoRA mitigate this.
-3. **Alignment (RLHF / DPO):** The SFT model is further optimized to align with human preferences, maximizing helpfulness and minimizing toxicity or hallucinations.
-    *   **Goal:** Instill human values and shape the model's tone and safety boundaries.
-    *   **Challenge:** Defining "good" behavior is hard. Reward models and preference learning are used to operationalize human feedback.
+### 1.1 Pre-training
+
+The model is trained on a massive corpus of text using self-supervised learning (typically next-token prediction).
+
+*   **Goal:** Learn world knowledge, grammar, and reasoning capabilities.
+*   **Challenge:** Computationally expensive, requires thousands of GPUs, resulting in a "base model" that is a powerful autocomplete engine but cannot follow instructions.
+
+### 1.2 Supervised Fine-Tuning (SFT)
+
+The base model is fine-tuned on a smaller, high-quality dataset of instruction-response pairs.
+
+*   **Goal:** Teach the model to act as an assistant and follow user instructions.
+*   **Challenge:** Full fine-tuning updates all parameters, which is memory-intensive and prone to catastrophic forgetting. Parameter-Efficient Fine-Tuning (PEFT) methods like LoRA mitigate this.
+
+### 1.3 Alignment (RLHF / DPO)
+
+The SFT model is further optimized to align with human preferences, maximizing helpfulness and minimizing toxicity or hallucinations.
+
+*   **Goal:** Instill human values and shape the model's tone and safety boundaries.
+*   **Challenge:** Defining "good" behavior is hard. Reward models and preference learning are used to operationalize human feedback.
 
 This module details the critical engineering components that make this pipeline viable at scale: subword tokenization (BPE), efficient fine-tuning (LoRA), and direct preference alignment (DPO).
 
@@ -143,8 +154,11 @@ Applying the Chain Rule for loss $L$:
 \frac{\partial L}{\partial B} = \frac{\partial L}{\partial \Delta W} A^T
 ```
 
+Both updates factor through $\partial L / \partial \Delta W$, so the frozen $W_0$ never needs a gradient of its own. Because $B = 0$ at initialization, the first step moves $B$ alone, and $A$ only starts to move once $B$ is non-zero.
+
 ### Application and QLoRA
 The original LoRA paper found that applying LoRA to the Attention $W^Q$ and $W^V$ projection matrices yields the best performance-to-parameter tradeoff.
+
 **QLoRA (Quantized LoRA)** extends this by freezing $W_0$ in a highly compressed 4-bit NormalFloat (NF4) format, while training $A$ and $B$ in 16-bit precision, further slashing VRAM usage. It uses double quantization (quantizing the quantization constants) to save more memory.
 
 ---
@@ -157,9 +171,11 @@ Base models hallucinate, generate toxic text, and fail to follow instructions pe
 1.  **Reward Model (RM) Training:** Train a classifier $r_\phi(x, y)$ on human preference data to predict human scoring.
 2.  **PPO Optimization:** Use Proximal Policy Optimization (RL) to update the policy $\pi_\theta$ to maximize the reward.
 
-    $$\max_{\pi_\theta} \mathbb{E}_ {x \sim D, y \sim \pi_\theta} [r_\phi(x, y)] - \beta \mathbb{KL}[\pi_\theta(y \mid x) \Vert \pi_{\text{ref}}(y \mid x)]$$
+```math
+\max_{\pi_\theta} \mathbb{E}_ {x \sim D, y \sim \pi_\theta} [r_\phi(x, y)] - \beta \mathbb{KL}[\pi_\theta(y \mid x) \Vert \pi_{\text{ref}}(y \mid x)]
+```
 
-    The KL penalty prevents the policy from drifting too far from the reference model (preventing "reward hacking").
+The KL penalty prevents the policy from drifting too far from the reference model (preventing "reward hacking").
 
 ### Direct Preference Optimization (DPO)
 
@@ -172,7 +188,11 @@ Starting from the RLHF objective, the optimal policy $\pi^\ast$ that maximizes t
 \pi^\ast(y \mid x) = \frac{1}{Z(x)} \pi_{\text{ref}}(y \mid x) \exp\left( \frac{1}{\beta} r(x, y) \right)
 ```
 
-Where $Z(x) = \sum_y \pi_{\text{ref}}(y \mid x) \exp\left( \frac{1}{\beta} r(x, y) \right)$ is the partition function.
+Where the partition function is
+
+```math
+Z(x) = \sum_y \pi_{\text{ref}}(y \mid x) \exp\left( \frac{1}{\beta} r(x, y) \right)
+```
 
 **Step 2: Rewriting the Reward**
 By taking the log and rearranging (algebraic manipulation), we can express the reward function $r(x,y)$ in terms of the optimal policy and reference policy:
@@ -195,7 +215,12 @@ Substitute the reward formulation from Step 2 into the Bradley-Terry model. The 
 r(x, y_w) - r(x, y_l) = \beta \log \frac{\pi_\theta(y_w\|x)}{\pi_{\text{ref}}(y_w\|x)} - \beta \log \frac{\pi_\theta(y_l\|x)}{\pi_{\text{ref}}(y_l\|x)}
 ```
 
-Let the implicit reward for a completion under policy $\pi_\theta$ be $\hat r_\theta(x, y) = \beta \log \frac{\pi_\theta(y \mid x)}{\pi_{\text{ref}}(y \mid x)}$.
+Let the implicit reward for a completion under policy $\pi_\theta$ be
+
+```math
+\hat r_\theta(x, y) = \beta \log \frac{\pi_\theta(y \mid x)}{\pi_{\text{ref}}(y \mid x)}
+```
+
 The probability of preference becomes:
 
 ```math

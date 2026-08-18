@@ -112,13 +112,15 @@ Smaller $m_{\text{try}}$ → more decorrelation (lower $\rho$) but weaker indivi
 
 ### 3.3 Algorithm summary
 
-1. For $m = 1, \dots, M$:
-   a. Draw bootstrap sample $S_m$ of size $n$.
-   b. Grow a decision tree on $S_m$, but at each node:
-      - Select $m_{\text{try}}$ features at random (without replacement).
-      - Find the best split among only those features.
-   c. Grow the tree fully (no pruning).
-2. Predict by majority vote (classification) or averaging (regression).
+For $m = 1, \dots, M$:
+
+1. Draw bootstrap sample $S_m$ of size $n$.
+2. Grow a decision tree on $S_m$, but at each node:
+   - Select $m_{\text{try}}$ features at random (without replacement).
+   - Find the best split among only those features.
+3. Grow the tree fully (no pruning).
+
+Predict by majority vote (classification) or averaging (regression).
 
 ---
 
@@ -135,6 +137,8 @@ set of trees that did not train on $x_i$. The OOB prediction is:
 ```math
 \hat{y}_i^{\text{OOB}} = \text{aggregate}\{h_m(x_i) : m \in \text{OOB}(i)\}.
 ```
+
+Each example is therefore scored only by the trees whose bootstrap sample excluded it.
 
 ### 4.2 Why it works
 
@@ -157,25 +161,29 @@ previous ensemble.
 
 ### 5.2 AdaBoost (Adaptive Boosting)
 
-For binary classification with $y_i \in \lbrace-1, +1\rbrace$:
+For binary classification with $y_i \in \lbrace-1, +1\rbrace$, initialize equal weights:
+$w_i^{(1)} = 1/n$ for all $i$. Then, for $m = 1, \dots, M$:
 
-1. Initialize equal weights: $w_i^{(1)} = 1/n$ for all $i$.
-2. For $m = 1, \dots, M$:
-   a. Train weak learner $h_m$ on the weighted training set.
-   b. Compute weighted error:
+1. Train weak learner $h_m$ on the weighted training set.
+2. Compute weighted error:
 
-      $$\epsilon_m = \frac{\sum_{i=1}^n w_i^{(m)} \cdot \mathbb{1}[h_m(x_i) \ne y_i]}{\sum_{i=1}^n w_i^{(m)}}. \qquad (5.1)$$
+   $$\epsilon_m = \frac{\sum_{i=1}^n w_i^{(m)} \cdot \mathbb{1}[h_m(x_i) \ne y_i]}{\sum_{i=1}^n w_i^{(m)}}. \qquad (5.1)$$
 
-   c. Compute learner weight:
+3. Compute learner weight:
 
-      $$\alpha_m = \frac{1}{2} \ln\frac{1 - \epsilon_m}{\epsilon_m}. \qquad (5.2)$$
+   $$\alpha_m = \frac{1}{2} \ln\frac{1 - \epsilon_m}{\epsilon_m}. \qquad (5.2)$$
 
-   d. Update sample weights:
+4. Update sample weights:
 
-      $$w_i^{(m+1)} = w_i^{(m)} \cdot \exp(-\alpha_m \cdot y_i \cdot h_m(x_i)). \qquad (5.3)$$
+   $$w_i^{(m+1)} = w_i^{(m)} \cdot \exp(-\alpha_m \cdot y_i \cdot h_m(x_i)). \qquad (5.3)$$
 
-   e. Normalize: $w_i^{(m+1)} \leftarrow w_i^{(m+1)} / \sum_j w_j^{(m+1)}$.
-3. Final prediction: $H(x) = \text{sign}\negthinspace\left(\sum_{m=1}^M \alpha_m h_m(x)\right)$.
+5. Normalize: $w_i^{(m+1)} \leftarrow w_i^{(m+1)} / \sum_j w_j^{(m+1)}$.
+
+**Final prediction:**
+
+```math
+H(x) = \text{sign}\negthinspace\left(\sum_{m=1}^M \alpha_m h_m(x)\right)
+```
 
 **Key properties of $\alpha_m$:**
 - If $\epsilon_m < 0.5$ (better than random), then $\alpha_m > 0$: the learner contributes positively.
@@ -184,23 +192,24 @@ For binary classification with $y_i \in \lbrace-1, +1\rbrace$:
 
 **Weight update intuition.** When $y_i \cdot h_m(x_i) = -1$ (misclassified), the exponent
 is $+\alpha_m > 0$, so $w_i$ increases. When $y_i \cdot h_m(x_i) = +1$ (correct), $w_i$
-decreases. The next learner focuses on hard examples.
+decreases.
+
+The next learner focuses on hard examples.
 
 ### 5.3 Gradient Boosting
 
 Gradient boosting generalises boosting to arbitrary differentiable loss functions by
 interpreting each step as **functional gradient descent**.
 
-Given a differentiable loss $L(y, F)$ and current ensemble $F_{m-1}$:
+Given a differentiable loss $L(y, F)$ and current ensemble $F_{m-1}$, initialize
+$F_0(x) = \arg\min_\gamma \sum_{i=1}^n L(y_i, \gamma)$. Then, for $m = 1, \dots, M$:
 
-1. Initialize: $F_0(x) = \arg\min_\gamma \sum_{i=1}^n L(y_i, \gamma)$.
-2. For $m = 1, \dots, M$:
-   a. Compute **pseudo-residuals** (negative gradient of loss):
+1. Compute **pseudo-residuals** (negative gradient of loss):
 
-      $$r_{im} = -\frac{\partial L(y_i, F)}{\partial F}\bigg|_ {F = F_{m-1}(x_i)}. \qquad (5.4)$$
+   $$r_{im} = -\frac{\partial L(y_i, F)}{\partial F}\bigg|_ {F = F_{m-1}(x_i)}. \qquad (5.4)$$
 
-   b. Fit a regression tree $h_m$ to the pseudo-residuals $\lbrace(x_i, r_{im})\rbrace$.
-   c. Update: $F_m(x) = F_{m-1}(x) + \eta \cdot h_m(x)$.
+2. Fit a regression tree $h_m$ to the pseudo-residuals $\lbrace(x_i, r_{im})\rbrace$.
+3. Update: $F_m(x) = F_{m-1}(x) + \eta \cdot h_m(x)$.
 
 For **squared loss** $L(y, F) = \frac{1}{2}(y - F)^2$:
 
@@ -228,8 +237,9 @@ Bias is unchanged or slightly increased because bootstrap samples are slightly s
 effective samples.
 
 **Boosting:** The initial model has high bias (e.g. a shallow stump). Each boosting round
-reduces the training error, lowering bias. However, with too many rounds or noisy data,
-boosting can overfit — increasing variance.
+reduces the training error, lowering bias.
+
+However, with too many rounds or noisy data, boosting can overfit — increasing variance.
 
 ---
 
@@ -280,8 +290,10 @@ tree depth.
 ### 8.3 Extrapolation failure (tree-based ensembles)
 
 All tree-based methods predict piecewise-constant functions. They **cannot extrapolate**
-beyond the range of the training targets. For regression on trending data (e.g.
-time-series), the ensemble's predictions are bounded by the training target range.
+beyond the range of the training targets.
+
+For regression on trending data (e.g. time-series), the ensemble's predictions are bounded
+by the training target range.
 
 ### 8.4 Loss of interpretability
 

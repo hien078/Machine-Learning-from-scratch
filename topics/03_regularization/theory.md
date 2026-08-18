@@ -5,8 +5,10 @@
 When predictors are numerous, correlated, or weakly identified, small changes in the
 sample can produce large coefficient changes. A degree-15 polynomial fitted by OLS may
 have coefficients of order $10^6$ even when the target range is $[-1, 1]$. Those huge
-coefficients cancel on training points but not on new data. Regularization trades some
-fit for lower effective complexity and often lower prediction variance.
+coefficients cancel on training points but not on new data.
+
+Regularization trades some fit for lower effective complexity and often lower
+prediction variance.
 
 ## 2. WHAT — Objectives and Notation
 
@@ -26,12 +28,18 @@ L_{\text{ridge}}(\theta)
 = \frac{1}{n}\|X\theta - y\|_2^2 + \lambda\|\theta\|_2^2
 ```
 
+Adding the squared norm makes the objective strictly convex, so a unique minimizer
+always exists and every coefficient is pulled toward zero (§3).
+
 ### 2.2 Lasso (L1 penalty)
 
 ```math
 L_{\text{lasso}}(\theta)
 = \frac{1}{n}\|X\theta - y\|_2^2 + \lambda\|\theta\|_1
 ```
+
+Swapping the squared norm for the L1 norm keeps the objective convex but destroys
+differentiability at zero, which is what lets coefficients be set exactly to zero (§4).
 
 ### 2.3 Elastic Net
 
@@ -47,11 +55,14 @@ Ridge; when $\lambda_2 = 0$ it reduces to Lasso.
 
 **Grouping effect.** Lasso treats a group of highly correlated features as interchangeable:
 it picks one member (near-arbitrarily, and unstably across resamples) and zeroes the rest.
+
 The added L2 term makes the objective strictly convex in $\theta$, which forces nearly
-identical features to receive nearly identical coefficients. Zou & Hastie (2005) prove that
-for standardized features with correlation $\rho$, the gap between two same-sign
-coefficients is bounded by a term proportional to $\sqrt{2(1-\rho)}\,/\,\lambda_2$, which
-vanishes as $\rho \to 1$: the group enters or leaves the model together.
+identical features to receive nearly identical coefficients.
+
+Zou & Hastie (2005) prove that for standardized features with correlation $\rho$, the
+gap between two same-sign coefficients is bounded by a term proportional to
+$\sqrt{2(1-\rho)}\,/\,\lambda_2$, which vanishes as $\rho \to 1$: the group enters or
+leaves the model together.
 
 **Capacity.** The L2 term also removes Lasso's saturation: Elastic Net can select more
 than $n$ features when $p > n$ (see the corresponding failure case in Section 7).
@@ -63,7 +74,9 @@ so $\lambda_1 = 2\alpha r$ and $\lambda_2 = \alpha(1-r)$ in our convention. Bewa
 `ElasticNet(alpha=α, l1_ratio=0)` matches `Ridge(alpha=nα)`, not `Ridge(alpha=α)`.
 
 **Convention note.** Multiplicative constants between the data term and penalty differ
-across implementations. sklearn's `Ridge(alpha=α)` minimizes $\Vert X\theta - y\Vert_2^2 + \alpha\Vert\theta\Vert_2^2$,
+across implementations.
+
+sklearn's `Ridge(alpha=α)` minimizes $\Vert X\theta - y\Vert_2^2 + \alpha\Vert\theta\Vert_2^2$,
 so $\alpha = n\lambda$ in our convention. sklearn's `Lasso(alpha=α)` minimizes
 $\frac{1}{2n}\Vert X\theta - y\Vert_2^2 + \alpha\Vert\theta\Vert_1$, so $\alpha = \lambda/2$.
 
@@ -72,10 +85,11 @@ center $X$ and $y$, fit ridge/lasso on centered data without an intercept column
 recover $\hat\theta_0 = \bar{y} - \bar{x}^\top\hat\theta$.
 
 *Why exclude it?* The penalty is meant to price model complexity, and the intercept
-carries none — it is the baseline level of $y$. Penalizing $\theta_0$ would make the fit
-depend on the arbitrary origin of the targets: adding a constant to every $y_i$
-(e.g., switching temperature units from °C to K) would change *all* fitted coefficients
-instead of merely shifting the intercept.
+carries none — it is the baseline level of $y$.
+
+Penalizing $\theta_0$ would make the fit depend on the arbitrary origin of the targets:
+adding a constant to every $y_i$ (e.g., switching temperature units from °C to K) would
+change *all* fitted coefficients instead of merely shifting the intercept.
 
 ## 3. HOW — Ridge: Closed Form and SVD Shrinkage
 
@@ -177,6 +191,9 @@ The subdifferential factorizes coordinate-wise:
 [-1, +1] & \text{if } z = 0
 \end{cases}
 ```
+
+Away from zero the subgradient is just the sign of $z$; at zero it widens into a whole
+interval, and that slack is what allows a coordinate to rest exactly at zero.
 
 ### 4.3 First-order optimality (KKT)
 
@@ -329,7 +346,9 @@ $1/(1 + n\lambda)$, the cornered diamond yields subtractive shrinkage with a dea
 ### 6.1 Bias–variance tradeoff
 
 Ridge and Lasso introduce bias but can reduce variance. For Ridge this can be made
-fully explicit. Assume $y = X\theta^\star + \varepsilon$ with
+fully explicit.
+
+Assume $y = X\theta^\star + \varepsilon$ with
 $\operatorname{Var}(\varepsilon) = \sigma^2 I$ and $X$ of full column rank. Decomposing
 along the right singular vectors $v_j$:
 
@@ -360,8 +379,9 @@ $$
 At $\lambda = 0^+$ the variance term decreases at rate
 $-2n\sigma^2\sum_j \sigma_j^{-4} < 0$, while the bias term — quadratic in
 $(1 - \rho_j)$ — starts flat. The derivative of the risk at $\lambda = 0^+$ is therefore
-strictly negative: **some** $\lambda > 0$ always beats OLS (Hoerl & Kennard, 1970). The
-theorem does not say *which* $\lambda$; that is what cross-validation is for.
+strictly negative: **some** $\lambda > 0$ always beats OLS (Hoerl & Kennard, 1970).
+
+The theorem does not say *which* $\lambda$; that is what cross-validation is for.
 
 ### 6.2 Bayesian interpretation
 
@@ -375,16 +395,18 @@ theorem does not say *which* $\lambda$; that is what cross-validation is for.
 and Gaussian prior yields the ridge objective.
 
 **Lasso as Laplace MAP.** The Laplace density has a cusp at zero and heavier tails than
-the Gaussian. Taking $-\log$ of the posterior yields the lasso objective. Note: the
-Laplace prior is continuous, so draws from the posterior are not themselves exactly
-sparse; exact zeros arise from the MAP optimization.
+the Gaussian. Taking $-\log$ of the posterior yields the lasso objective.
+
+Note: the Laplace prior is continuous, so draws from the posterior are not themselves
+exactly sparse; exact zeros arise from the MAP optimization.
 
 ## 7. Failure Cases
 
 - Features must be placed on comparable scales before penalty strengths are compared:
   the penalty treats all coefficients as commensurable, but a coefficient's size depends
-  on its feature's units — rescaling $x_j$ from km to m divides $\theta_j$ by $10^3$ and
-  quietly divides its share of the penalty too.
+  on its feature's units.
+- Rescaling $x_j$ from km to m divides $\theta_j$ by $10^3$ and quietly divides its
+  share of the penalty too.
 - Lasso selection can be unstable among highly correlated features; Elastic Net's
   grouping effect (Section 2.3) is the standard remedy.
 - Excessive regularization underfits (all coefficients shrunk to zero — for Lasso this

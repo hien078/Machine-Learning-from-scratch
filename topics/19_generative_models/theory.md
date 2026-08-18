@@ -113,7 +113,13 @@ We maximize $f(y) = a \log(y) + b \log(1 - y)$ with respect to $y$.
 \frac{df}{dy} = \frac{a}{y} - \frac{b}{1 - y} = 0 \implies a(1 - y) = by \implies y = \frac{a}{a+b}
 ```
 
-**Result:** The optimal discriminator is $D^\ast(x) = \frac{p_{\text{data}}(x)}{p_{\text{data}}(x) + p_g(x)}$.
+**Result:** The optimal discriminator is
+
+```math
+D^\ast(x) = \frac{p_{\text{data}}(x)}{p_{\text{data}}(x) + p_g(x)}
+```
+
+Pointwise, $D^\ast(x)$ is the share of the density at $x$ that belongs to the data, so $D^\ast \equiv \frac{1}{2}$ exactly when $p_g = p_{\text{data}}$.
 
 ### Connection to Jensen-Shannon Divergence
 
@@ -131,7 +137,13 @@ Extract $\log \frac{1}{2} = -\log 2$:
 = -2 \log 2 + D_{\text{KL}}\left(p_{\text{data}} \Big\| \frac{p_{\text{data}} + p_g}{2}\right) + D_{\text{KL}}\left(p_g \Big\| \frac{p_{\text{data}} + p_g}{2}\right)
 ```
 
-**Result:** $V(G, D^\ast) = -\log 4 + 2 \cdot JSD(p_{\text{data}} \Vert p_g)$.
+**Result:** At the optimal discriminator the objective becomes
+
+```math
+V(G, D^\ast) = -\log 4 + 2 \cdot JSD(p_{\text{data}} \Vert p_g)
+```
+
+Training $G$ against a perfect discriminator therefore minimises the Jensen-Shannon divergence between $p_g$ and $p_{\text{data}}$, whose minimum is attained exactly when the two distributions coincide.
 
 ### Training Instabilities
 
@@ -172,22 +184,44 @@ q(x_t \mid x_{t-1}) = \mathcal{N}(x_t; \sqrt{1 - \beta_t} x_{t-1}, \beta_t I)
 
 **Closed-form $q(x_t \mid x_0)$ derivation:**
 Let $\alpha_t = 1 - \beta_t$ and $\bar\alpha_t = \prod_{s=1}^t \alpha_s$. Using properties of sums of independent Gaussians:
-**Step 1:** $x_t = \sqrt{\alpha_t} x_{t-1} + \sqrt{1 - \alpha_t}\epsilon_{t-1}$
-**Step 2:** $x_{t-1} = \sqrt{\alpha_{t-1}} x_{t-2} + \sqrt{1 - \alpha_{t-1}}\epsilon_{t-2}$
+
+**Step 1:**
+
+```math
+x_t = \sqrt{\alpha_t} x_{t-1} + \sqrt{1 - \alpha_t}\epsilon_{t-1}
+```
+
+**Step 2:**
+
+```math
+x_{t-1} = \sqrt{\alpha_{t-1}} x_{t-2} + \sqrt{1 - \alpha_{t-1}}\epsilon_{t-2}
+```
+
 **Step 3:** Substitute Step 2 into Step 1:
 
 ```math
 x_t = \sqrt{\alpha_t \alpha_{t-1}} x_{t-2} + \sqrt{\alpha_t(1 - \alpha_{t-1})}\epsilon_{t-2} + \sqrt{1 - \alpha_t}\epsilon_{t-1}
 ```
 
-Since $\epsilon_i \sim \mathcal{N}(0, I)$, the sum of the noise terms is distributed as $\mathcal{N}(0, (\alpha_t(1 - \alpha_{t-1}) + 1 - \alpha_t)I) = \mathcal{N}(0, (1 - \alpha_t \alpha_{t-1})I)$.
+Since $\epsilon_i \sim \mathcal{N}(0, I)$, the sum of the noise terms is distributed as
+
+```math
+\mathcal{N}(0, (\alpha_t(1 - \alpha_{t-1}) + 1 - \alpha_t)I) = \mathcal{N}(0, (1 - \alpha_t \alpha_{t-1})I)
+```
+
 **Step 4:** By induction, extending this to $t$ steps gives:
 
 ```math
 x_t = \sqrt{\bar{\alpha}_t}x_0 + \sqrt{1 - \bar{\alpha}_t}\epsilon
 ```
 
-**Result:** $q(x_t \mid x_0) = \mathcal{N}(x_t; \sqrt{\bar{\alpha}_t} x_0, (1 - \bar{\alpha}_t) I)$.
+**Result:** The closed form of the forward marginal is
+
+```math
+q(x_t \mid x_0) = \mathcal{N}(x_t; \sqrt{\bar{\alpha}_t} x_0, (1 - \bar{\alpha}_t) I)
+```
+
+Any $x_t$ can therefore be sampled directly from $x_0$ in a single step, without simulating the chain.
 
 ### Reverse Process
 
@@ -196,6 +230,8 @@ We approximate the true reverse process $q(x_{t-1} \mid x_t)$ with a neural netw
 ```math
 p_\theta(x_{t-1} \mid x_t) = \mathcal{N}(x_{t-1}; \mu_\theta(x_t, t), \Sigma_\theta(x_t, t))
 ```
+
+Each reverse step is again Gaussian: the network reads the mean and covariance of $x_{t-1}$ off the current noisy sample $x_t$ and the step index $t$.
 
 ### Simplified Noise Prediction Objective
 
