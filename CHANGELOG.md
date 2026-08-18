@@ -6,6 +6,22 @@ versions follow [SemVer](https://semver.org/).
 
 ## [Unreleased]
 
+### Changed (structure — repo now centers on `topics/`)
+- `synthesis/` moved into `topics/synthesis/`: every piece of ML content now
+  lives under `topics/` (22 algorithm stories + the cross-topic maps). All
+  relative links rewritten; site nav regenerates from `.nav.yml`.
+- `scripts/` folded into the library as the `mlfp` console CLI
+  (`mlfp check` / `mlfp nb-exec` / `mlfp nb-fmt`; code in
+  `src/ml_first_principles/_tooling/`, excluded from the coverage floor as repo
+  workflow rather than library API).
+- `NOTEBOOK_STANDARDS.md` merged into `CONTRIBUTING.md` as its "Notebook
+  Standards" section (§ numbering preserved; references say "Notebook
+  Standards §N").
+- Projects: the seven placeholder `data/`/`notebooks/` READMEs removed;
+  AGENTS.md §2 now mandates directories only when they hold real content.
+- Repo root shrinks to 5 directories + 6 files; the Markdown entry points are
+  README, INDEX, CONTRIBUTING, CHANGELOG.
+
 ### Changed
 - Workspace de-duplication: every fact that existed in 2–4 hand-synced copies now
   has one owner. `CLAUDE.md` imports `AGENTS.md` instead of mirroring it; the
@@ -18,8 +34,9 @@ versions follow [SemVer](https://semver.org/).
   18's notebook order.
 
 ### Added
-- `scripts/check.py`: runs all six quality gates in CI order. CI invokes it, so
-  the local and CI contracts cannot drift.
+- `mlfp check` (born as `scripts/check.py`, now in `_tooling`): runs all six
+  quality gates in CI order. CI invokes it, so the local and CI contracts
+  cannot drift.
 - Tests asserting `__version__` matches `pyproject.toml` and that
   `requirements.txt` pins exactly the declared runtime dependency set.
 
