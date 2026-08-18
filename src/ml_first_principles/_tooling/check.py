@@ -13,9 +13,12 @@ import subprocess
 import sys
 
 CHECKS: tuple[tuple[str, tuple[str, ...]], ...] = (
-    ("lint", ("ruff", "check", "src", "tests", "scripts", "projects")),
-    ("format", ("ruff", "format", "--check", "src", "tests", "scripts", "projects")),
-    ("notebook format", (sys.executable, "scripts/normalize_notebooks.py", "--check")),
+    ("lint", ("ruff", "check", "src", "tests", "projects")),
+    ("format", ("ruff", "format", "--check", "src", "tests", "projects")),
+    (
+        "notebook format",
+        (sys.executable, "-m", "ml_first_principles._tooling.normalize_notebooks", "--check"),
+    ),
     ("types", ("mypy",)),
     (
         "unit tests",

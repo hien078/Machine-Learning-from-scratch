@@ -37,12 +37,10 @@ Every algorithm is built step-by-step from raw matrix operations and calculus be
 
 ```text
 Machine-Learning-from-scratch/
-├── topics/                    # 22 algorithm modules (theory, implementation, exercises)
-├── synthesis/                 # Cross-model comparisons & decision guides
+├── topics/                    # 22 algorithm modules + synthesis/ cross-topic maps
 ├── projects/                  # Applied capstones using the library end-to-end
 ├── src/ml_first_principles/   # Clean, installable Python library written from scratch
 ├── tests/                     # Unit tests & numerical regression suites
-├── scripts/                   # Quality gate runner & notebook tooling
 ├── INDEX.md                   # Full curriculum index & prerequisite DAG
 ├── CONTRIBUTING.md            # Process, quality gates, roadmap & decisions log
 ├── NOTEBOOK_STANDARDS.md      # Writing & coding standards
@@ -133,11 +131,11 @@ Every gate — lint, format, notebook format, types, tests with the coverage flo
 runs from one command, the same one CI runs:
 
 ```bash
-python scripts/check.py
+mlfp check
 ```
 
 Notebook execution is validated separately because it is slow:
-`python scripts/execute_all_notebooks.py` runs every notebook top-to-bottom on a fresh
+`mlfp nb-exec` runs every notebook top-to-bottom on a fresh
 kernel (add `--write` to refresh the committed outputs — the only sanctioned way to
 produce them).
 

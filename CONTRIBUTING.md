@@ -13,7 +13,7 @@ notebook runtime, `pip install -e ".[dev]"` adds the library plus test/lint/type
 ## Quality gates (all must pass before pushing)
 
 ```bash
-python scripts/check.py
+mlfp check
 ```
 
 Runs lint, format, notebook format, types, library tests with the coverage floor,
@@ -23,8 +23,8 @@ that failed. CI runs this exact script, so green locally means green in CI.
 Notebook content changes additionally require a fresh-kernel pass:
 
 ```bash
-python scripts/execute_all_notebooks.py --only <path> --write   # canonical outputs
-python scripts/execute_all_notebooks.py                         # full read-only sweep
+mlfp nb-exec --only <path> --write   # canonical outputs
+mlfp nb-exec                         # full read-only sweep
 ```
 
 Committed notebook outputs may ONLY come from `execute_all_notebooks.py --write`

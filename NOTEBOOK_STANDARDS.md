@@ -194,17 +194,17 @@ Further requirements:
 
 ## 7. Notebook Format
 
-Machine-enforced by `python scripts/normalize_notebooks.py --check` (a CI gate):
+Machine-enforced by `mlfp nb-fmt --check` (a CI gate):
 no BOM, LF line endings, notebook format 4 with `nbformat_minor >= 5`, a unique
 ID on every cell, canonical `python3` kernelspec, and `nbformat.validate`.
 
-Machine-enforced by `python scripts/execute_all_notebooks.py`: no static Python
+Machine-enforced by `mlfp nb-exec`: no static Python
 errors, since every cell runs top-to-bottom on a fresh kernel.
 
 Not machine-checkable — hold these yourself:
 
 - outputs in source control come exclusively from
-  `python scripts/execute_all_notebooks.py --write` (fresh kernel, seeded,
+  `mlfp nb-exec --write` (fresh kernel, seeded,
   inline backend), never from a hand-run interactive kernel;
 - no host-specific paths or volatile editor metadata;
 - local Markdown and image references resolve.
@@ -212,7 +212,7 @@ Not machine-checkable — hold these yourself:
 Run the dry run before any notebook commit:
 
 ```bash
-python scripts/normalize_notebooks.py
+mlfp nb-fmt
 ```
 
 Use `--write` only for a controlled normalization change, and `--clear-outputs`
@@ -265,6 +265,6 @@ A topic may be marked Verified only when:
 
 Notebook validation executes an in-memory copy and leaves source files untouched.
 The only sanctioned way to write generated outputs into source notebooks is
-`python scripts/execute_all_notebooks.py --write`; interactive kernels and other
+`mlfp nb-exec --write`; interactive kernels and other
 tools must never overwrite them. Redirect Jupyter and Matplotlib runtime files
 to a temporary directory in restricted environments.

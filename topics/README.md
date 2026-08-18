@@ -27,4 +27,4 @@ Topics 14–17 compare against PyTorch, which is an optional dependency
 
 Maturity levels and the *Verified* gate are defined in
 [NOTEBOOK_STANDARDS.md](../NOTEBOOK_STANDARDS.md) §9–§10 and enforced by
-`python scripts/check.py` plus `python scripts/execute_all_notebooks.py`.
+`mlfp check` plus `mlfp nb-exec`.
