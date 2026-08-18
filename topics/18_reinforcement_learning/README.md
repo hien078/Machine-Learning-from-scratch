@@ -43,7 +43,7 @@ The reusable, unit-tested reference implementations live in [`src/ml_first_princ
 - Calculus & Optimization: Chain rule for policy gradients and advantage estimation.
 
 **Related Synthesis**:
-- [Optimization Methods Compared](../../synthesis/optimization_methods_compared.md)
+- [Optimization Methods Compared](../synthesis/optimization_methods_compared.md)
 
 **Next Topics**:
 - [19 Generative Models](../19_generative_models/README.md)

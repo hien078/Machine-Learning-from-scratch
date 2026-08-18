@@ -27,8 +27,8 @@ The reusable, unit-tested reference implementations live in [`src/ml_first_princ
   - [13_neural_networks](../13_neural_networks/README.md)
   - [17_autoencoder](../17_autoencoder/README.md) (Crucial for VAE basics)
 - **Related Synthesis:**
-  - [Probabilistic View of ML](../../synthesis/probabilistic_view_of_ml.md)
-  - [Loss Functions Map](../../synthesis/loss_functions_map.md)
+  - [Probabilistic View of ML](../synthesis/probabilistic_view_of_ml.md)
+  - [Loss Functions Map](../synthesis/loss_functions_map.md)
 - **Next Topics:**
   - [21 LLM Engineering](../21_llm_engineering/README.md)
   - [22 Self-Supervised Learning](../22_self_supervised_learning/README.md)

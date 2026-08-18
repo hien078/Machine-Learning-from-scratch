@@ -26,5 +26,5 @@ The reusable, unit-tested reference implementations live in [`src/ml_first_princ
 - **Prerequisites:**
   - [Topic 10: PCA (Eigenvalues/Eigenvectors)](../10_pca/README.md)
   - [Topic 13: Neural Networks](../13_neural_networks/README.md)
-- **Related Synthesis:** [Geometry of ML](../../synthesis/geometry_of_ml.md)
+- **Related Synthesis:** [Geometry of ML](../synthesis/geometry_of_ml.md)
 - **Next Topics:** [22 Self-Supervised Learning](../22_self_supervised_learning/README.md)

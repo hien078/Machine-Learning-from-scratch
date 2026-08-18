@@ -22,5 +22,5 @@ to logistic regression.
 
 - **Prereqs:** [Probability & Statistics](https://github.com/hien078/applied-mathematics-foundation), [Information Theory](https://github.com/hien078/applied-mathematics-foundation)
 - **Generative–Discriminative pair:** [04 Logistic Regression](../04_logistic_regression/README.md) (discriminative counterpart)
-- **Synthesis:** [Probabilistic View of ML](../../synthesis/probabilistic_view_of_ml.md)
+- **Synthesis:** [Probabilistic View of ML](../synthesis/probabilistic_view_of_ml.md)
 - **Next:** [09 SVM](../09_svm/README.md) (geometric separation), [11 Clustering](../11_clustering/README.md) (unsupervised Gaussian mixtures)

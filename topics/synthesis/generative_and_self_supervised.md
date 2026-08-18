@@ -1,7 +1,7 @@
 # Generative and Self-Supervised Learning — Cross-Topic Synthesis
 
 > The "learning without labels" map across topics 17, 19, 21, 22 — and the RL bridge (18).
-> See [INDEX.md](../INDEX.md) for the full curriculum index.
+> See [INDEX.md](../../INDEX.md) for the full curriculum index.
 
 ---
 
@@ -29,7 +29,7 @@ The two overlap: every generative objective doubles as a pretext task, and sever
 | Implicit | Never write down $p_\theta(x)$; train a sampler adversarially | GAN |
 | Denoising / score | Learn to invert gradual noising, i.e. estimate $\nabla_x \log p_t(x)$ | Diffusion |
 
-### The trade-off table ([19](../topics/19_generative_models/theory.md))
+### The trade-off table ([19](../19_generative_models/theory.md))
 
 | Criterion | VAE | GAN | Diffusion |
 |---|---|---|---|
@@ -52,9 +52,9 @@ The same variational bound powers both latent-variable eras:
 \log p_\theta(x) \ge \mathbb{E}_{q(z \mid x)}[\log p_\theta(x \mid z)] - D_{\text{KL}}\bigl(q(z \mid x) \,\Vert\, p(z)\bigr)
 ```
 
-- **VAE ([17 §6](../topics/17_autoencoder/theory.md)):** one latent $z$, encoder =
+- **VAE ([17 §6](../17_autoencoder/theory.md)):** one latent $z$, encoder =
   learned $q$, reparameterization trick to backprop through sampling.
-- **Diffusion ([19 §5](../topics/19_generative_models/theory.md)):** the *same* bound
+- **Diffusion ([19 §5](../19_generative_models/theory.md)):** the *same* bound
   applied to a chain of latents $x_1, \dots, x_T$, where $q$ is the **fixed** forward
   noising process — no encoder to learn. The bound simplifies (Ho et al.) to noise
   regression, $\mathcal{L}_{\text{simple}} = \mathbb{E}\left[\Vert \epsilon - \epsilon_\theta(x_t, t) \Vert^2\right]$
@@ -70,9 +70,9 @@ One objective, escalating corruption:
 
 | Model | Corruption | Reconstructs | Purpose |
 |---|---|---|---|
-| [Autoencoder (17)](../topics/17_autoencoder/theory.md) | None (bottleneck $k < d$) | Whole input | Compression / manifold learning |
+| [Autoencoder (17)](../17_autoencoder/theory.md) | None (bottleneck $k < d$) | Whole input | Compression / manifold learning |
 | Denoising AE (17 §4) | Additive Gaussian noise | Clean input | Robust features; learns a vector field toward the manifold |
-| [MAE (22 §5)](../topics/22_self_supervised_learning/theory.md) | Mask 75% of ViT patches | Masked patches only | Semantic pretraining at scale |
+| [MAE (22 §5)](../22_self_supervised_learning/theory.md) | Mask 75% of ViT patches | Masked patches only | Semantic pretraining at scale |
 | Diffusion (19 §5) | Full noising schedule to $\mathcal{N}(0, I)$ | The noise itself, at every level | Generation |
 
 The through-line: without corruption, reconstruction risks the identity map; the harder
@@ -85,7 +85,7 @@ one keeps the encoder, the other keeps the sampler.
 ## Contrastive Objectives: InfoNCE
 
 Instead of rebuilding pixels, classify which candidate is the true positive among
-$K$ negatives ([22 §3](../topics/22_self_supervised_learning/theory.md)):
+$K$ negatives ([22 §3](../22_self_supervised_learning/theory.md)):
 
 ```math
 \mathcal{L}_{\text{InfoNCE}} = -\mathbb{E}\left[ \log \frac{\exp(f(x, y^+))}{\exp(f(x, y^+)) + \sum_{k=1}^{K} \exp(f(x, y_k))} \right],
@@ -106,7 +106,7 @@ I(X; Y) \ge \log K - \mathcal{L}_{\text{InfoNCE}}
 ## Next-Token Prediction as Self-Supervision
 
 The largest self-supervised system in existence is the LLM
-([21 §1](../topics/21_llm_engineering/theory.md)). The chain rule of probability
+([21 §1](../21_llm_engineering/theory.md)). The chain rule of probability
 factorizes the density exactly:
 
 ```math
@@ -125,9 +125,9 @@ the Transformer supplying the parallelism
 ## The RL Bridge: RLHF and DPO
 
 Pre-training gives a density model of text, not an assistant. Alignment reuses
-[topic 18](../topics/18_reinforcement_learning/theory.md):
+[topic 18](../18_reinforcement_learning/theory.md):
 
-1. **RLHF ([18 §12](../topics/18_reinforcement_learning/theory.md)):** fit a reward
+1. **RLHF ([18 §12](../18_reinforcement_learning/theory.md)):** fit a reward
    model on human preference pairs (Bradley–Terry), then run PPO with a KL leash to
    the reference policy:
 
@@ -135,7 +135,7 @@ Pre-training gives a density model of text, not an assistant. Alignment reuses
 \max_{\pi_\theta}\; \mathbb{E}\left[ r_\phi(x, y) \right] - \beta\, D_{\text{KL}}\bigl(\pi_\theta(\cdot \mid x) \,\Vert\, \pi_{\text{ref}}(\cdot \mid x)\bigr)
 ```
 
-2. **DPO ([21 §4](../topics/21_llm_engineering/theory.md)):** the optimal policy of
+2. **DPO ([21 §4](../21_llm_engineering/theory.md)):** the optimal policy of
    that objective has closed form, the partition function cancels in preference
    differences, and the RL loop collapses to a supervised NLL on preferences.
 
@@ -165,6 +165,6 @@ No labels — what do you want?
 
 ## Connections
 
-- **Topics:** [17 Autoencoder](../topics/17_autoencoder/theory.md), [19 Generative Models](../topics/19_generative_models/theory.md), [21 LLM Engineering](../topics/21_llm_engineering/theory.md), [22 Self-Supervised Learning](../topics/22_self_supervised_learning/theory.md), [18 Reinforcement Learning](../topics/18_reinforcement_learning/theory.md), [10 PCA](../topics/10_pca/theory.md) (linear ancestor of the autoencoder)
+- **Topics:** [17 Autoencoder](../17_autoencoder/theory.md), [19 Generative Models](../19_generative_models/theory.md), [21 LLM Engineering](../21_llm_engineering/theory.md), [22 Self-Supervised Learning](../22_self_supervised_learning/theory.md), [18 Reinforcement Learning](../18_reinforcement_learning/theory.md), [10 PCA](../10_pca/theory.md) (linear ancestor of the autoencoder)
 - **Related synthesis:** [Probabilistic View of ML](probabilistic_view_of_ml.md) (MLE and variational inference foundations), [Loss Functions Map](loss_functions_map.md) (KL divergence, cross-entropy), [Sequence Models and Attention](sequence_models_and_attention.md), [Supervised vs Unsupervised](supervised_vs_unsupervised.md)
-- **Maps:** [INDEX.md](../INDEX.md)
+- **Maps:** [INDEX.md](../../INDEX.md)

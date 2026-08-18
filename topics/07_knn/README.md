@@ -20,5 +20,5 @@ structures (KD-trees, ball trees).
 ## Connections
 
 - **Prereqs:** [Norms and Distances](https://github.com/hien078/applied-mathematics-foundation)
-- **Synthesis:** [Model Selection Guide](../../synthesis/model_selection_guide.md)
+- **Synthesis:** [Model Selection Guide](../synthesis/model_selection_guide.md)
 - **Next:** [Clustering](../11_clustering/README.md), [Dimensionality Reduction](../12_dimensionality_reduction/README.md)

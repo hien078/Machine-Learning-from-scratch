@@ -249,7 +249,7 @@ $$\text{Perp}(P_i) = 2^{H(P_i)}, \quad H(P_i) = -\sum_{j} p_{j \mid i} \log_2 p_
   cluster structure (but does not itself cluster).
 - **[Autoencoder](../17_autoencoder/README.md):** Nonlinear parametric dimensionality
   reduction; can be seen as a learnable t-SNE alternative.
-- **[Geometry of ML](../../synthesis/geometry_of_ml.md):** Subspace projection, manifold
+- **[Geometry of ML](../synthesis/geometry_of_ml.md):** Subspace projection, manifold
   embedding, and metric preservation are geometric themes shared across PCA, LDA, and t-SNE.
 
 ---

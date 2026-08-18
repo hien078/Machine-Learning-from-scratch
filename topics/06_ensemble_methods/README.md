@@ -24,5 +24,5 @@ and demonstrates failure modes (boosting overfitting on noisy data).
 
 - **Prereqs:** [05 Decision Tree](../05_decision_tree/README.md), [02 Gradient Descent](../02_gradient_descent/README.md)
 - **Builds on:** [05 Decision Tree](../05_decision_tree/README.md) (ensembles of trees reduce single-tree variance)
-- **Synthesis:** [Bias–Variance Tradeoff](../../synthesis/bias_variance_tradeoff.md)
+- **Synthesis:** [Bias–Variance Tradeoff](../synthesis/bias_variance_tradeoff.md)
 - **Next:** [07 KNN](../07_knn/README.md)

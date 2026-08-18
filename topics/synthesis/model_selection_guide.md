@@ -1,7 +1,7 @@
 # Model Selection Guide — Cross-Topic Synthesis
 
 > Which model to try, in what order, and how to compare candidates without fooling yourself.
-> See [INDEX.md](../INDEX.md) for the full curriculum index.
+> See [INDEX.md](../../INDEX.md) for the full curriculum index.
 
 ---
 
@@ -43,16 +43,16 @@ has been selected.
 
 | Problem | Trivial baseline | First real model | Main candidates | Escalate to |
 |---|---|---|---|---|
-| Tabular regression | Predict the mean | [Linear/Ridge](../topics/01_linear_regression/README.md) | [Random Forest, Boosting](../topics/06_ensemble_methods/README.md) | NN (rarely wins on tabular) |
-| Tabular classification | Majority class | [Logistic Regression](../topics/04_logistic_regression/README.md) | [Trees](../topics/05_decision_tree/README.md), [Ensembles](../topics/06_ensemble_methods/README.md), [SVM](../topics/09_svm/README.md), [KNN](../topics/07_knn/README.md) | Boosting, tuned |
-| High-dim sparse (text counts) | Majority class | [Naive Bayes](../topics/08_naive_bayes/README.md) | Linear SVM, Logistic | [Transformer](../topics/16_transformer/README.md), pretrained |
-| Images | — | Small [CNN](../topics/14_cnn/README.md) | CNN + augmentation | Pretrained backbone |
-| Sequences | Last-value / n-gram | [RNN/LSTM](../topics/15_rnn_lstm/README.md) | [Transformer](../topics/16_transformer/README.md) | Pretrained LLM ([21](../topics/21_llm_engineering/README.md)) |
-| Graph-structured data | Logistic on node features | [GNN](../topics/20_graph_neural_networks/README.md) | GCN/GAT variants | — |
-| Unlabeled grouping | Single cluster | [K-Means](../topics/11_clustering/README.md) | GMM, DBSCAN, hierarchical | — |
-| Dimensionality reduction | Keep raw features | [PCA](../topics/10_pca/README.md) | [t-SNE/UMAP](../topics/12_dimensionality_reduction/README.md) (visualization only) | [Autoencoder](../topics/17_autoencoder/README.md) |
-| Density / generation | Histogram / GMM | GMM | [VAE, GAN, diffusion](../topics/19_generative_models/README.md) | — |
-| Sequential decisions | Random / greedy policy | Tabular Q-learning | [Deep RL](../topics/18_reinforcement_learning/README.md) | — |
+| Tabular regression | Predict the mean | [Linear/Ridge](../01_linear_regression/README.md) | [Random Forest, Boosting](../06_ensemble_methods/README.md) | NN (rarely wins on tabular) |
+| Tabular classification | Majority class | [Logistic Regression](../04_logistic_regression/README.md) | [Trees](../05_decision_tree/README.md), [Ensembles](../06_ensemble_methods/README.md), [SVM](../09_svm/README.md), [KNN](../07_knn/README.md) | Boosting, tuned |
+| High-dim sparse (text counts) | Majority class | [Naive Bayes](../08_naive_bayes/README.md) | Linear SVM, Logistic | [Transformer](../16_transformer/README.md), pretrained |
+| Images | — | Small [CNN](../14_cnn/README.md) | CNN + augmentation | Pretrained backbone |
+| Sequences | Last-value / n-gram | [RNN/LSTM](../15_rnn_lstm/README.md) | [Transformer](../16_transformer/README.md) | Pretrained LLM ([21](../21_llm_engineering/README.md)) |
+| Graph-structured data | Logistic on node features | [GNN](../20_graph_neural_networks/README.md) | GCN/GAT variants | — |
+| Unlabeled grouping | Single cluster | [K-Means](../11_clustering/README.md) | GMM, DBSCAN, hierarchical | — |
+| Dimensionality reduction | Keep raw features | [PCA](../10_pca/README.md) | [t-SNE/UMAP](../12_dimensionality_reduction/README.md) (visualization only) | [Autoencoder](../17_autoencoder/README.md) |
+| Density / generation | Histogram / GMM | GMM | [VAE, GAN, diffusion](../19_generative_models/README.md) | — |
+| Sequential decisions | Random / greedy policy | Tabular Q-learning | [Deep RL](../18_reinforcement_learning/README.md) | — |
 
 ---
 
@@ -118,6 +118,6 @@ folds/seeds, runtime, error slices, and final limitations.
 
 ## Connections
 
-- **Topics:** [01 Linear Regression](../topics/01_linear_regression/README.md), [04 Logistic Regression](../topics/04_logistic_regression/README.md), [06 Ensemble Methods](../topics/06_ensemble_methods/README.md), [09 SVM](../topics/09_svm/README.md), [11 Clustering](../topics/11_clustering/README.md), [13 Neural Networks](../topics/13_neural_networks/README.md)
+- **Topics:** [01 Linear Regression](../01_linear_regression/README.md), [04 Logistic Regression](../04_logistic_regression/README.md), [06 Ensemble Methods](../06_ensemble_methods/README.md), [09 SVM](../09_svm/README.md), [11 Clustering](../11_clustering/README.md), [13 Neural Networks](../13_neural_networks/README.md)
 - **Related synthesis:** [Bias–Variance Trade-off](bias_variance_tradeoff.md), [Loss Functions Map](loss_functions_map.md), [Optimization Methods Compared](optimization_methods_compared.md), [Supervised vs Unsupervised](supervised_vs_unsupervised.md)
-- **Maps:** [INDEX.md](../INDEX.md)
+- **Maps:** [INDEX.md](../../INDEX.md)

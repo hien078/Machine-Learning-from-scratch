@@ -396,9 +396,9 @@ sparse; exact zeros arise from the MAP optimization.
 
 ## 8. Connections
 
-- [Bias–Variance](../../synthesis/bias_variance_tradeoff.md)
-- [Geometry of ML](../../synthesis/geometry_of_ml.md)
-- [Regularization Across Models](../../synthesis/regularization_across_models.md)
+- [Bias–Variance](../synthesis/bias_variance_tradeoff.md)
+- [Geometry of ML](../synthesis/geometry_of_ml.md)
+- [Regularization Across Models](../synthesis/regularization_across_models.md)
 - [Linear Regression](../01_linear_regression/README.md)
 - [Gradient Descent](../02_gradient_descent/README.md)
 

@@ -1,7 +1,7 @@
 # Loss Functions Map — Cross-Topic Comparison
 
 > How loss functions connect across ML models.
-> See [INDEX.md](../INDEX.md) for the full curriculum index.
+> See [INDEX.md](../../INDEX.md) for the full curriculum index.
 
 ---
 
@@ -151,6 +151,6 @@ $$D_{\text{KL}}(p \mid q) = \sum_k p_k \log \frac{p_k}{q_k}$$
 
 ## Connections
 
-- **Topics:** [01 Linear Regression](../topics/01_linear_regression/README.md), [03 Regularization](../topics/03_regularization/README.md), [04 Logistic Regression](../topics/04_logistic_regression/README.md), [05 Decision Tree](../topics/05_decision_tree/README.md), [09 SVM](../topics/09_svm/README.md), [13 Neural Networks](../topics/13_neural_networks/README.md)
+- **Topics:** [01 Linear Regression](../01_linear_regression/README.md), [03 Regularization](../03_regularization/README.md), [04 Logistic Regression](../04_logistic_regression/README.md), [05 Decision Tree](../05_decision_tree/README.md), [09 SVM](../09_svm/README.md), [13 Neural Networks](../13_neural_networks/README.md)
 - **Foundations:** [Calculus & Optimization](https://github.com/hien078/applied-mathematics-foundation), [Information Theory](https://github.com/hien078/applied-mathematics-foundation)
-- **Maps:** [INDEX.md](../INDEX.md)
+- **Maps:** [INDEX.md](../../INDEX.md)

@@ -606,7 +606,7 @@ probability that the model ranks a random positive above a random negative (ties
   (Poisson regression, gamma regression) by varying $W_k$ and $z_k$.
 - [Probability](https://github.com/hien078/applied-mathematics-foundation)
 - [Gradient Descent](../02_gradient_descent/README.md)
-- [Loss Functions](../../synthesis/loss_functions_map.md)
+- [Loss Functions](../synthesis/loss_functions_map.md)
 
 ---
 

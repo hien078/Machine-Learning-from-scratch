@@ -336,7 +336,7 @@ Only the support vectors ($\alpha_i > 0$) contribute to the sum.
   L2 regularization. The SVM objective (6.2) is structurally identical to ridge-regularized
   logistic regression, just with a different loss function.
 
-- **[Geometry of ML](../../synthesis/geometry_of_ml.md).** SVM is the canonical geometric
+- **[Geometry of ML](../synthesis/geometry_of_ml.md).** SVM is the canonical geometric
   classifier — the margin is a geometric quantity (distance), and the dual reveals that
   only boundary points (support vectors) determine the solution.
 

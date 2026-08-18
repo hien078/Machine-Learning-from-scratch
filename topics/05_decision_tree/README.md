@@ -23,5 +23,5 @@ for ensemble methods.
 
 - **Prereqs:** [Information Theory](https://github.com/hien078/applied-mathematics-foundation)
 - **Builds on:** [04 Logistic Regression](../04_logistic_regression/README.md) (non-linear alternative)
-- **Synthesis:** [Bias–Variance Tradeoff](../../synthesis/bias_variance_tradeoff.md)
+- **Synthesis:** [Bias–Variance Tradeoff](../synthesis/bias_variance_tradeoff.md)
 - **Next:** [06 Ensemble Methods](../06_ensemble_methods/README.md) (bagging/boosting reduce tree variance)

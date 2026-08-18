@@ -14,7 +14,7 @@ Every completed topic must answer these questions in order:
 | HOW | How is the solution derived or computed? | Theory plus notebook checks |
 | BUILD | Can the core method be implemented from scratch? | `first_principles.ipynb`, then `src/` |
 | VERIFY | Does theory match simulation and a trusted reference? | `first_principles.ipynb`, `tests/` |
-| CONNECTIONS | What are its prerequisites, alternatives, and applications? | Both files and `synthesis/` |
+| CONNECTIONS | What are its prerequisites, alternatives, and applications? | Both files and `topics/synthesis/` |
 
 A title, file skeleton, imported estimator, or single successful plot does not satisfy a
 stage.
@@ -159,7 +159,7 @@ How this maps to the topic file pattern:
 | 4. Optimization method | `theory.md` + `first_principles.ipynb` |
 | 5–6. Implementation, verification | `first_principles.ipynb` |
 | 7. Failure cases | `first_principles.ipynb` |
-| 8. Connections | Both files and `synthesis/` |
+| 8. Connections | Both files and `topics/synthesis/` |
 
 ## 6. Reproducibility
 

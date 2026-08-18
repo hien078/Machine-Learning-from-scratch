@@ -2,7 +2,7 @@
 
 > Every regularizer is the same idea wearing a different costume: control effective
 > capacity so the model fits signal, not sample.
-> See [INDEX.md](../INDEX.md) for the full curriculum index.
+> See [INDEX.md](../../INDEX.md) for the full curriculum index.
 
 ---
 
@@ -43,7 +43,7 @@ negative log-prior:
 
 Tighter prior (smaller $\tau$ or $b$) = stronger penalty = smaller reachable region:
 the two lenses are one statement. Full derivations:
-[Regularization theory](../topics/03_regularization/theory.md); the MLE/MAP framing is
+[Regularization theory](../03_regularization/theory.md); the MLE/MAP framing is
 in [Probabilistic View of ML](probabilistic_view_of_ml.md).
 
 ---
@@ -83,7 +83,7 @@ values of $X$) first and slow directions later. Stopping at step $t$ therefore l
 low-signal directions near zero — the same directional shrinkage pattern as ridge, with
 $\lambda\sim 1/(\eta t)$ as the rough correspondence. Early stopping is a regularizer
 you get for free from the optimizer; its "hyperparameter" is the validation-based
-stopping time. See [Gradient Descent](../topics/02_gradient_descent/README.md).
+stopping time. See [Gradient Descent](../02_gradient_descent/README.md).
 
 ### Trees: structural constraints
 
@@ -96,7 +96,7 @@ R_\alpha(T)=R(T)+\alpha\,\vert T\vert,
 
 which is the penalized-objective template with $R(\theta)$ replaced by leaf count
 $\vert T\vert$. Depth limits act *before* fitting (pre-pruning), cost-complexity acts
-*after* (post-pruning). See [Decision Tree](../topics/05_decision_tree/README.md).
+*after* (post-pruning). See [Decision Tree](../05_decision_tree/README.md).
 
 ### Bagging: regularization by averaging
 
@@ -106,7 +106,7 @@ resampled fits, leaving bias untouched (the $\rho$-limited variance formula is i
 base learner is deliberately overfit (deep trees), which is exactly the random-forest
 recipe. Boosting's counterpart knob is shrinkage: scaling each round by a learning rate
 $\nu<1$ plus early stopping on rounds. See
-[Ensemble Methods](../topics/06_ensemble_methods/README.md).
+[Ensemble Methods](../06_ensemble_methods/README.md).
 
 ### Deep networks: decay, dropout, augmentation, smoothing
 
@@ -121,12 +121,12 @@ $\nu<1$ plus early stopping on rounds. See
 - **Data augmentation** is a prior over invariances expressed as data: if labels are
   invariant to a transform group (flips, crops, shifts), sampling that group constrains
   the learned function to respect it — capacity control in function space rather than
-  parameter space. See [CNN](../topics/14_cnn/README.md).
+  parameter space. See [CNN](../14_cnn/README.md).
 - **Label smoothing** replaces one-hot targets with
   $(1-\epsilon)\,y+\epsilon/K$, capping achievable confidence and shrinking logit
   magnitudes — an output-space analogue of weight shrinkage.
 
-See [Neural Networks](../topics/13_neural_networks/README.md).
+See [Neural Networks](../13_neural_networks/README.md).
 
 ---
 
@@ -159,6 +159,6 @@ them once on all data leaks validation information. Selection workflow:
 
 ## Connections
 
-- **Topics:** [02 Gradient Descent](../topics/02_gradient_descent/README.md), [03 Regularization](../topics/03_regularization/README.md), [05 Decision Tree](../topics/05_decision_tree/README.md), [06 Ensemble Methods](../topics/06_ensemble_methods/README.md), [13 Neural Networks](../topics/13_neural_networks/README.md), [14 CNN](../topics/14_cnn/README.md)
+- **Topics:** [02 Gradient Descent](../02_gradient_descent/README.md), [03 Regularization](../03_regularization/README.md), [05 Decision Tree](../05_decision_tree/README.md), [06 Ensemble Methods](../06_ensemble_methods/README.md), [13 Neural Networks](../13_neural_networks/README.md), [14 CNN](../14_cnn/README.md)
 - **Related synthesis:** [Bias–Variance Trade-off](bias_variance_tradeoff.md), [Geometry of ML](geometry_of_ml.md), [Probabilistic View of ML](probabilistic_view_of_ml.md), [Optimization Methods Compared](optimization_methods_compared.md), [Model Selection Guide](model_selection_guide.md)
-- **Maps:** [INDEX.md](../INDEX.md)
+- **Maps:** [INDEX.md](../../INDEX.md)

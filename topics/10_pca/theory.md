@@ -369,7 +369,7 @@ by raw loading values.
   spectral filter; principal-components regression and ridge shrink along the same
   eigen-directions.
 - [Linear Algebra Foundations](https://github.com/hien078/applied-mathematics-foundation) ·
-  [Geometry of ML](../../synthesis/geometry_of_ml.md)
+  [Geometry of ML](../synthesis/geometry_of_ml.md)
 
 ## 11. Verification Pointers
 

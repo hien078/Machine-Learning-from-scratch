@@ -604,7 +604,7 @@ $$\hat{\theta} = \Phi^+ y$$
 
 - **Related models:** [Polynomial Regression (above)](#10-polynomial-regression-extension), [03 Regularization](../03_regularization/README.md)
 - **Foundations used:** [Linear Algebra](https://github.com/hien078/applied-mathematics-foundation/tree/main/linear_algebra) (Projection), [Calculus](https://github.com/hien078/applied-mathematics-foundation/tree/main/calculus_optimization) (Derivatives)
-- **Synthesis:** [Optimization Methods](../../synthesis/optimization_methods_compared.md)
+- **Synthesis:** [Optimization Methods](../synthesis/optimization_methods_compared.md)
 - **Graph Map:** See [INDEX.md](../../INDEX.md)
 
 ---

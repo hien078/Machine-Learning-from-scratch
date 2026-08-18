@@ -1,7 +1,7 @@
 # Geometry of Machine Learning — Cross-Topic Synthesis
 
 > One curriculum, one picture: subspaces, distances, margins, norm balls, and cells.
-> See [INDEX.md](../INDEX.md) for the full curriculum index.
+> See [INDEX.md](../../INDEX.md) for the full curriculum index.
 
 ---
 
@@ -46,7 +46,7 @@ normal equations. Two useful corollaries:
 - Adding a column to $X$ enlarges the subspace, so training error can only decrease —
   the geometric root of overfitting in [Bias–Variance](bias_variance_tradeoff.md).
 
-Recall: [Linear Regression theory](../topics/01_linear_regression/theory.md).
+Recall: [Linear Regression theory](../01_linear_regression/theory.md).
 
 ---
 
@@ -66,7 +66,7 @@ region's *shape* decides the solution's character:
 Corners are low-dimensional faces where some $w_j=0$; because they protrude toward the
 loss contours, they are touched with positive probability — the entire geometric story
 of Lasso's sparsity. Full picture with figures:
-[Regularization theory](../topics/03_regularization/theory.md).
+[Regularization theory](../03_regularization/theory.md).
 
 ---
 
@@ -78,7 +78,7 @@ $y_i(w^\top x_i+b)\ge 1$ makes the margin width $2/\Vert w\Vert_2$, so *maximizi
 margin is minimizing a norm* — the same object as ridge's penalty, deployed as distance
 rather than shrinkage. Support vectors are exactly the points achieving the minimal
 distance; the boundary is determined by them alone, which is why the solution is a
-sparse combination of training points. Recall: [SVM theory](../topics/09_svm/theory.md).
+sparse combination of training points. Recall: [SVM theory](../09_svm/theory.md).
 
 ---
 
@@ -99,7 +99,7 @@ so minimizing the residual is maximizing the projection. Same projection machine
 least squares, but the roles differ: regression projects the *target* $y$ onto
 $\operatorname{col}(X)$ (errors measured vertically), PCA projects the *rows* of $X$
 onto a subspace of feature space (errors measured perpendicular to the subspace).
-Recall: [PCA theory](../topics/10_pca/theory.md).
+Recall: [PCA theory](../10_pca/theory.md).
 
 ---
 
@@ -119,8 +119,8 @@ $\lbrace x : \Vert x-c_j\Vert \le \Vert x-c_l\Vert \ \forall l\rbrace$:
 
 Distance-based methods inherit every decision made *before* distance is measured:
 units, scaling, and irrelevant dimensions reshape the Voronoi diagram without touching
-the algorithm. Recall: [KNN](../topics/07_knn/theory.md),
-[Clustering](../topics/11_clustering/theory.md).
+the algorithm. Recall: [KNN](../07_knn/theory.md),
+[Clustering](../11_clustering/theory.md).
 
 ---
 
@@ -138,8 +138,8 @@ so any algorithm expressible through distances or inner products — SVM, PCA, K
 ridge — can run in the implicit space. A linear hyperplane there pulls back to a curved
 boundary in input space: the kernel trick is a *geometry transplant*, not a new
 algorithm. The RBF kernel's width $\gamma$ sets how fast similarity decays, i.e. the
-resolution of the implicit geometry. Recall: [SVM theory](../topics/09_svm/theory.md),
-[Dimensionality Reduction](../topics/12_dimensionality_reduction/theory.md) (kernel PCA).
+resolution of the implicit geometry. Recall: [SVM theory](../09_svm/theory.md),
+[Dimensionality Reduction](../12_dimensionality_reduction/theory.md) (kernel PCA).
 
 ---
 
@@ -166,15 +166,15 @@ surface, and a hypercube's mass hides in its corners.
 | Density estimation | Exponentially many samples needed per unit volume |
 
 The practical escape is dimensionality reduction — projecting onto the low-dimensional
-structure real data usually has ([PCA](../topics/10_pca/README.md),
-[Autoencoders](../topics/17_autoencoder/README.md)) — or models that do not rely on raw
+structure real data usually has ([PCA](../10_pca/README.md),
+[Autoencoders](../17_autoencoder/README.md)) — or models that do not rely on raw
 distances (trees, linear models).
 
 ---
 
 ## Connections
 
-- **Topics:** [01 Linear Regression](../topics/01_linear_regression/README.md), [03 Regularization](../topics/03_regularization/README.md), [07 KNN](../topics/07_knn/README.md), [09 SVM](../topics/09_svm/README.md), [10 PCA](../topics/10_pca/README.md), [11 Clustering](../topics/11_clustering/README.md), [12 Dimensionality Reduction](../topics/12_dimensionality_reduction/README.md)
+- **Topics:** [01 Linear Regression](../01_linear_regression/README.md), [03 Regularization](../03_regularization/README.md), [07 KNN](../07_knn/README.md), [09 SVM](../09_svm/README.md), [10 PCA](../10_pca/README.md), [11 Clustering](../11_clustering/README.md), [12 Dimensionality Reduction](../12_dimensionality_reduction/README.md)
 - **Foundations:** [Linear Algebra](https://github.com/hien078/applied-mathematics-foundation)
 - **Related synthesis:** [Bias–Variance Trade-off](bias_variance_tradeoff.md), [Regularization Across Models](regularization_across_models.md)
-- **Maps:** [INDEX.md](../INDEX.md)
+- **Maps:** [INDEX.md](../../INDEX.md)

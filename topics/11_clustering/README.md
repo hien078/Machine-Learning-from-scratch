@@ -18,5 +18,5 @@ Unsupervised grouping of data points via three complementary approaches: K-Means
 
 - **Prereqs:** [Linear Algebra](https://github.com/hien078/applied-mathematics-foundation), [Probability & Statistics](https://github.com/hien078/applied-mathematics-foundation)
 - **Related:** [10 PCA](../10_pca/README.md) (dimensionality reduction before clustering), [07 KNN](../07_knn/README.md) (distance-based, supervised counterpart)
-- **Synthesis:** [Supervised vs. Unsupervised](../../synthesis/supervised_vs_unsupervised.md)
+- **Synthesis:** [Supervised vs. Unsupervised](../synthesis/supervised_vs_unsupervised.md)
 - **Next:** [12 Dimensionality Reduction](../12_dimensionality_reduction/README.md), [13 Neural Networks](../13_neural_networks/README.md)

@@ -2,7 +2,7 @@
 
 > How model flexibility, data size, noise, and regularization change expected
 > prediction error across model families.
-> See [INDEX.md](../INDEX.md) for the full curriculum index.
+> See [INDEX.md](../../INDEX.md) for the full curriculum index.
 
 ---
 
@@ -81,7 +81,7 @@ decomposition prices. There exists $\lambda>0$ whose ridge estimator beats OLS i
 expected error whenever variance dominates. Lasso makes the same trade with a
 selection twist: zeroed coefficients are maximal bias on those features, bought for
 variance reduction elsewhere. Full derivations:
-[Regularization theory](../topics/03_regularization/theory.md).
+[Regularization theory](../03_regularization/theory.md).
 
 ### Trees, forests, boosting
 
@@ -97,7 +97,7 @@ so bagging shrinks the second term while $\rho$ floors the first — random fore
 decorrelate trees (feature subsampling) precisely to lower $\rho$. Boosting moves in
 the opposite direction: each round reduces the bias of the current ensemble, so
 overfitting arrives through too many rounds rather than too deep a learner. See
-[Ensemble Methods](../topics/06_ensemble_methods/README.md).
+[Ensemble Methods](../06_ensemble_methods/README.md).
 
 ### KNN's $k$
 
@@ -112,7 +112,7 @@ regardless of $k$ — see [Geometry of ML](geometry_of_ml.md) on distance concen
 Large $C$ punishes margin violations hard: the boundary bends to fit individual points
 (low bias, high variance). Small $C$ tolerates violations for a wider margin (higher
 bias, lower variance). With RBF kernels, kernel width $\gamma$ is a second capacity
-dial acting the same way. See [SVM](../topics/09_svm/README.md).
+dial acting the same way. See [SVM](../09_svm/README.md).
 
 ### Neural networks and double descent
 
@@ -122,7 +122,7 @@ to fit training data exactly — the variance peak), test error can *decrease* a
 width grows, because among the many interpolating solutions, gradient descent finds
 low-norm, smooth ones. The classical decomposition still holds pointwise; what changes
 is that variance stops growing monotonically with parameter count. See
-[Neural Networks](../topics/13_neural_networks/README.md).
+[Neural Networks](../13_neural_networks/README.md).
 
 ---
 
@@ -161,6 +161,6 @@ Model choice from these diagnostics is covered in the
 
 ## Connections
 
-- **Topics:** [01 Linear Regression](../topics/01_linear_regression/README.md), [03 Regularization](../topics/03_regularization/README.md), [05 Decision Tree](../topics/05_decision_tree/README.md), [06 Ensemble Methods](../topics/06_ensemble_methods/README.md), [07 KNN](../topics/07_knn/README.md), [09 SVM](../topics/09_svm/README.md), [13 Neural Networks](../topics/13_neural_networks/README.md)
+- **Topics:** [01 Linear Regression](../01_linear_regression/README.md), [03 Regularization](../03_regularization/README.md), [05 Decision Tree](../05_decision_tree/README.md), [06 Ensemble Methods](../06_ensemble_methods/README.md), [07 KNN](../07_knn/README.md), [09 SVM](../09_svm/README.md), [13 Neural Networks](../13_neural_networks/README.md)
 - **Related synthesis:** [Model Selection Guide](model_selection_guide.md), [Regularization Across Models](regularization_across_models.md), [Geometry of ML](geometry_of_ml.md)
-- **Maps:** [INDEX.md](../INDEX.md)
+- **Maps:** [INDEX.md](../../INDEX.md)

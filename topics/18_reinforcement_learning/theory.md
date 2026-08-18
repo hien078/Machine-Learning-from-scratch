@@ -494,7 +494,7 @@ In competitive settings, an agent can learn robust strategies by playing against
 
 - **[02 Gradient Descent](../02_gradient_descent/theory.md):** The bedrock of Policy Gradient optimization and neural value function approximation.
 - **[13 Neural Networks](../13_neural_networks/theory.md):** Used as non-linear function approximators for $Q(s, a; w)$ in DQN and $\pi(a \mid s; \theta)$ in Policy Gradients, replacing tabular representations to handle continuous state spaces.
-- **[Optimization Methods Compared](../../synthesis/optimization_methods_compared.md):** RL can be viewed as stochastic optimization over policy spaces, often requiring specialized optimizers like Adam to handle noisy, non-stationary TD targets.
+- **[Optimization Methods Compared](../synthesis/optimization_methods_compared.md):** RL can be viewed as stochastic optimization over policy spaces, often requiring specialized optimizers like Adam to handle noisy, non-stationary TD targets.
 
 ## 15. References
 

@@ -24,5 +24,5 @@ The reusable, unit-tested reference implementations live in [`src/ml_first_princ
 ## Connections
 
 - **Prerequisites:** [Topic 13: Neural Networks](../13_neural_networks/README.md), [Topic 14: CNN](../14_cnn/README.md), [Topic 17: Autoencoder](../17_autoencoder/README.md)
-- **Related:** [Synthesis: Loss Functions Map](../../synthesis/loss_functions_map.md)
+- **Related:** [Synthesis: Loss Functions Map](../synthesis/loss_functions_map.md)
 - **Next:** [Topic 19: Generative Models](../19_generative_models/README.md) — generative pre-training complements contrastive representation learning

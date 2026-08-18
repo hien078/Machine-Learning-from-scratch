@@ -343,7 +343,7 @@ A small $\Vert\nabla L(\theta)\Vert$ does not guarantee that $L(\theta)$ is clos
 - **[03 Regularization](../03_regularization/README.md)** — Regularization modifies the loss landscape, improving the condition number $\kappa$.
 - **[04 Logistic Regression](../04_logistic_regression/README.md)** — No closed form; GD (or variants) is the standard solver.
 - **[13 Neural Networks](../13_neural_networks/README.md)** — Backpropagation computes gradients; SGD/Adam are the default optimizers.
-- **[Optimization Methods Compared](../../synthesis/optimization_methods_compared.md)** — Cross-topic comparison of optimization approaches.
+- **[Optimization Methods Compared](../synthesis/optimization_methods_compared.md)** — Cross-topic comparison of optimization approaches.
 
 ---
 

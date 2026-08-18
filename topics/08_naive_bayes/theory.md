@@ -257,7 +257,7 @@ Without smoothing, a single unseen feature-value pair produces $P(x_j \mid y = k
 - **[Probability & Statistics](https://github.com/hien078/applied-mathematics-foundation):** Bayes' theorem, MLE, MAP estimation — the mathematical foundation.
 - **[Logistic Regression](../04_logistic_regression/README.md):** The discriminative counterpart. Same posterior form (sigmoid/softmax), different parameter estimation (iterative vs. closed-form).
 - **[Information Theory](https://github.com/hien078/applied-mathematics-foundation):** Cross-entropy loss in logistic regression connects to KL divergence between the empirical and model distributions.
-- **[Probabilistic View](../../synthesis/probabilistic_view_of_ml.md):** Naive Bayes illustrates the generative modeling paradigm — model $P(x, y)$, then derive $P(y \mid x)$ via Bayes' rule.
+- **[Probabilistic View](../synthesis/probabilistic_view_of_ml.md):** Naive Bayes illustrates the generative modeling paradigm — model $P(x, y)$, then derive $P(y \mid x)$ via Bayes' rule.
 
 ---
 

@@ -279,7 +279,7 @@ K-Means can be viewed as a degenerate GMM where:
 - **Probability foundation:** [Probability & Statistics](https://github.com/hien078/applied-mathematics-foundation) — GMM builds on multivariate Gaussians and Bayes' rule.
 - **Dimensionality reduction:** [10 PCA](../10_pca/README.md) — often used as a pre-processing step before clustering; PCA + K-Means is a common pipeline.
 - **Distance-based supervised:** [07 KNN](../07_knn/README.md) — shares the Euclidean distance primitive; KNN is supervised while K-Means is unsupervised.
-- **Synthesis:** [Supervised vs. Unsupervised](../../synthesis/supervised_vs_unsupervised.md) — clustering is the prototypical unsupervised task.
+- **Synthesis:** [Supervised vs. Unsupervised](../synthesis/supervised_vs_unsupervised.md) — clustering is the prototypical unsupervised task.
 - **Graph Map:** See [INDEX.md](../../INDEX.md)
 
 ---

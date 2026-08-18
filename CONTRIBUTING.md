@@ -80,7 +80,7 @@ here, and their outcome is recorded in CHANGELOG.md.
 ## Open
 
 - **Phase 2 exit criterion — CI streak.** All 22 topics are Verified in INDEX.md and
-  `synthesis/` covers all 5 curriculum phases. What remains is the weekly notebook
+  `topics/synthesis/` covers all 5 curriculum phases. What remains is the weekly notebook
   execution job (`.github/workflows/ci.yml`, `notebooks`) staying green 3 consecutive
   weeks.
 

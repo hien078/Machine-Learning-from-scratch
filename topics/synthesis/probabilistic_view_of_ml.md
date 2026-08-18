@@ -1,7 +1,7 @@
 # Probabilistic View of ML — Cross-Topic Synthesis
 
 > One assumption — the data came from a distribution — generates most of the objectives in this repo.
-> See [INDEX.md](../INDEX.md) for the full curriculum index.
+> See [INDEX.md](../../INDEX.md) for the full curriculum index.
 
 ---
 
@@ -30,10 +30,10 @@ Given independent observations $\lbrace(x_i,y_i)\rbrace_{i=1}^n$, maximum likeli
 Minimizing the negative log-likelihood (NLL) gives the training loss. The key cases:
 Gaussian noise $y=f_\theta(x)+\varepsilon$ makes the NLL
 $\frac{1}{2\sigma^2}\sum_i(y_i-f_\theta(x_i))^2$ plus constants — least squares *is*
-Gaussian MLE ([Linear Regression](../topics/01_linear_regression/theory.md)); a
+Gaussian MLE ([Linear Regression](../01_linear_regression/theory.md)); a
 Bernoulli mean $\sigma(w^\top x)$ makes the NLL exactly BCE
-([Logistic Regression](../topics/04_logistic_regression/theory.md)); a categorical
-softmax makes it cross-entropy ([Neural Networks](../topics/13_neural_networks/theory.md)).
+([Logistic Regression](../04_logistic_regression/theory.md)); a categorical
+softmax makes it cross-entropy ([Neural Networks](../13_neural_networks/theory.md)).
 
 **Cross-entropy is KL minimization:** since $\mathrm{CE}(p,q)=H(p)+D_{\mathrm{KL}}(p\mid q)$
 and $H(p)$ does not depend on $\theta$, minimizing CE against the empirical label
@@ -71,7 +71,7 @@ normalization ($\frac{1}{n}$ vs $\frac{1}{2n}$ vs none), so objective convention
 be stated explicitly. Note also that Lasso's exact zeros are a property of the MAP
 *point estimate* (the Laplace prior is non-differentiable at 0); the full posterior mean
 under the same prior is not sparse. See
-[Regularization](../topics/03_regularization/theory.md) and
+[Regularization](../03_regularization/theory.md) and
 [Regularization Across Models](regularization_across_models.md).
 
 ---
@@ -81,7 +81,7 @@ under the same prior is not sparse. See
 Naive Bayes and Logistic Regression solve the same classification problem from opposite
 directions.
 
-| | Naive Bayes ([08](../topics/08_naive_bayes/theory.md)) | Logistic Regression ([04](../topics/04_logistic_regression/theory.md)) |
+| | Naive Bayes ([08](../08_naive_bayes/theory.md)) | Logistic Regression ([04](../04_logistic_regression/theory.md)) |
 |---|---|---|
 | Models | $p(x\mid y)\,p(y)$, then Bayes' rule | $p(y\mid x)$ directly |
 | Extra assumption | Conditional feature independence | None on $p(x)$ |
@@ -108,11 +108,11 @@ Both EM and the VAE work with the same decomposition:
 
 - **EM (GMM):** the E-step sets $q(z)=p_\theta(z\mid x)$ exactly (the responsibilities),
   making the bound tight; the M-step maximizes the ELBO over $\theta$ in closed form.
-  Monotone likelihood ascent follows ([Clustering](../topics/11_clustering/theory.md)).
+  Monotone likelihood ascent follows ([Clustering](../11_clustering/theory.md)).
 - **VAE:** the exact posterior is intractable, so $q_\phi(z\mid x)$ is an encoder network
   and the ELBO is maximized jointly over $(\theta,\phi)$ by stochastic gradients — EM with
-  an amortized, approximate E-step ([Autoencoder](../topics/17_autoencoder/theory.md),
-  [Generative Models](../topics/19_generative_models/theory.md)).
+  an amortized, approximate E-step ([Autoencoder](../17_autoencoder/theory.md),
+  [Generative Models](../19_generative_models/theory.md)).
 - **K-Means** is the hard-assignment, $\sigma^2\to 0$ limit of EM on spherical Gaussians.
 
 ---
@@ -121,23 +121,23 @@ Both EM and the VAE work with the same decomposition:
 
 | Model | Likelihood | Prior | Objective (NLL form) | Topic |
 |---|---|---|---|---|
-| Linear Regression | Gaussian $y\mid x$ | Flat | MSE | [01](../topics/01_linear_regression/README.md) |
-| Ridge | Gaussian $y\mid x$ | Gaussian on $w$ | MSE $+\lambda\Vert w\Vert_2^2$ | [03](../topics/03_regularization/README.md) |
-| Lasso | Gaussian $y\mid x$ | Laplace on $w$ | MSE $+\lambda\Vert w\Vert_1$ | [03](../topics/03_regularization/README.md) |
-| Logistic Regression | Bernoulli $y\mid x$ | Flat (or Gaussian) | BCE (+ $\ell_2$) | [04](../topics/04_logistic_regression/README.md) |
-| Softmax classifier / NN | Categorical $y\mid x$ | Flat (Gaussian = weight decay) | Cross-entropy | [13](../topics/13_neural_networks/README.md) |
-| Naive Bayes | Factorized $p(x\mid y)p(y)$ | Dirichlet (smoothing) | Joint NLL | [08](../topics/08_naive_bayes/README.md) |
-| GMM | Mixture, latent $z$ | Flat | Marginal NLL via EM | [11](../topics/11_clustering/README.md) |
-| K-Means | Spherical Gaussian, hard limit | — | Distortion | [11](../topics/11_clustering/README.md) |
-| Probabilistic PCA | Linear-Gaussian latent | $z\sim\mathcal{N}(0,I)$ | Gaussian NLL | [10](../topics/10_pca/README.md) |
-| VAE | $p_\theta(x\mid z)$, latent $z$ | $z\sim\mathcal{N}(0,I)$ | $-\mathrm{ELBO}$ | [17](../topics/17_autoencoder/README.md) |
-| Language model | Categorical next token | Flat | Cross-entropy | [16](../topics/16_transformer/README.md) |
+| Linear Regression | Gaussian $y\mid x$ | Flat | MSE | [01](../01_linear_regression/README.md) |
+| Ridge | Gaussian $y\mid x$ | Gaussian on $w$ | MSE $+\lambda\Vert w\Vert_2^2$ | [03](../03_regularization/README.md) |
+| Lasso | Gaussian $y\mid x$ | Laplace on $w$ | MSE $+\lambda\Vert w\Vert_1$ | [03](../03_regularization/README.md) |
+| Logistic Regression | Bernoulli $y\mid x$ | Flat (or Gaussian) | BCE (+ $\ell_2$) | [04](../04_logistic_regression/README.md) |
+| Softmax classifier / NN | Categorical $y\mid x$ | Flat (Gaussian = weight decay) | Cross-entropy | [13](../13_neural_networks/README.md) |
+| Naive Bayes | Factorized $p(x\mid y)p(y)$ | Dirichlet (smoothing) | Joint NLL | [08](../08_naive_bayes/README.md) |
+| GMM | Mixture, latent $z$ | Flat | Marginal NLL via EM | [11](../11_clustering/README.md) |
+| K-Means | Spherical Gaussian, hard limit | — | Distortion | [11](../11_clustering/README.md) |
+| Probabilistic PCA | Linear-Gaussian latent | $z\sim\mathcal{N}(0,I)$ | Gaussian NLL | [10](../10_pca/README.md) |
+| VAE | $p_\theta(x\mid z)$, latent $z$ | $z\sim\mathcal{N}(0,I)$ | $-\mathrm{ELBO}$ | [17](../17_autoencoder/README.md) |
+| Language model | Categorical next token | Flat | Cross-entropy | [16](../16_transformer/README.md) |
 
 ---
 
 ## Connections
 
-- **Topics:** [01 Linear Regression](../topics/01_linear_regression/README.md), [03 Regularization](../topics/03_regularization/README.md), [04 Logistic Regression](../topics/04_logistic_regression/README.md), [08 Naive Bayes](../topics/08_naive_bayes/README.md), [11 Clustering](../topics/11_clustering/README.md), [17 Autoencoder](../topics/17_autoencoder/README.md), [19 Generative Models](../topics/19_generative_models/README.md)
+- **Topics:** [01 Linear Regression](../01_linear_regression/README.md), [03 Regularization](../03_regularization/README.md), [04 Logistic Regression](../04_logistic_regression/README.md), [08 Naive Bayes](../08_naive_bayes/README.md), [11 Clustering](../11_clustering/README.md), [17 Autoencoder](../17_autoencoder/README.md), [19 Generative Models](../19_generative_models/README.md)
 - **Foundations:** [Probability and Statistics](https://github.com/hien078/applied-mathematics-foundation)
 - **Related synthesis:** [Loss Functions Map](loss_functions_map.md), [Regularization Across Models](regularization_across_models.md)
-- **Maps:** [INDEX.md](../INDEX.md)
+- **Maps:** [INDEX.md](../../INDEX.md)

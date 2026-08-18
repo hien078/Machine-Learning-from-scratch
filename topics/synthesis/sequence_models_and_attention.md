@@ -1,7 +1,7 @@
 # Sequence Models and Attention — Cross-Topic Synthesis
 
 > The arc from RNN to LSTM to attention to Transformer to LLM engineering (topics 15, 16, 21).
-> See [INDEX.md](../INDEX.md) for the full curriculum index.
+> See [INDEX.md](../../INDEX.md) for the full curriculum index.
 
 ---
 
@@ -18,10 +18,10 @@ parallelism, memory, and how order is represented.
 
 | Step | Wall it hit | What the next step solved |
 |---|---|---|
-| [Vanilla RNN (15)](../topics/15_rnn_lstm/theory.md) | Gradients vanish/explode as $(\gamma \lambda_{\max})^{T-t}$; unusable for $T \gtrsim 20$ | LSTM: additive cell state, gated gradient highway |
-| [LSTM/GRU (15)](../topics/15_rnn_lstm/theory.md) | Still sequential ($h_t$ needs $h_{t-1}$); fixed-size $h_t$ bottleneck; decays past $T \approx 500$ | Attention: direct access to all past states |
-| [Attention + Transformer (16)](../topics/16_transformer/theory.md) | Needs order injected externally; $O(n^2)$ cost; parameter-hungry | Scale: pre-train once on raw text, adapt cheaply |
-| [LLM engineering (21)](../topics/21_llm_engineering/theory.md) | Full fine-tuning and RL alignment too expensive/unstable | BPE, LoRA, DPO — the engineering layer |
+| [Vanilla RNN (15)](../15_rnn_lstm/theory.md) | Gradients vanish/explode as $(\gamma \lambda_{\max})^{T-t}$; unusable for $T \gtrsim 20$ | LSTM: additive cell state, gated gradient highway |
+| [LSTM/GRU (15)](../15_rnn_lstm/theory.md) | Still sequential ($h_t$ needs $h_{t-1}$); fixed-size $h_t$ bottleneck; decays past $T \approx 500$ | Attention: direct access to all past states |
+| [Attention + Transformer (16)](../16_transformer/theory.md) | Needs order injected externally; $O(n^2)$ cost; parameter-hungry | Scale: pre-train once on raw text, adapt cheaply |
+| [LLM engineering (21)](../21_llm_engineering/theory.md) | Full fine-tuning and RL alignment too expensive/unstable | BPE, LoRA, DPO — the engineering layer |
 
 ---
 
@@ -55,7 +55,7 @@ X_{\text{input}} = X_{\text{embed}} + \text{PE},
 
   Sinusoidal PE makes relative offsets a linear map; learned embeddings fit better but
   cannot extrapolate; RoPE rotates $q, k$ by position and dominates modern LLMs
-  ([16 §4](../topics/16_transformer/theory.md)).
+  ([16 §4](../16_transformer/theory.md)).
 - **Causality:** the RNN is causal for free; the Transformer decoder must *enforce* it
   with the mask $M_{ij} = -\infty$ for $j > i$. Forgetting the mask is the classic
   silent bug — training looks fine, inference fails.
@@ -97,7 +97,7 @@ first two:
    task by prompting or light fine-tuning.
 
 Result: the modern pipeline — pre-train → SFT → alignment
-([21 §1](../topics/21_llm_engineering/theory.md)).
+([21 §1](../21_llm_engineering/theory.md)).
 
 ---
 
@@ -113,7 +113,7 @@ Each technique patches a specific cost of scale:
 
 Note the continuity: BPE trades sequence length against vocabulary size *because* of
 attention's $O(n^2)$; LoRA targets exactly the attention projections $W^Q, W^V$; DPO
-replaces the RL machinery of [topic 18](../topics/18_reinforcement_learning/theory.md)
+replaces the RL machinery of [topic 18](../18_reinforcement_learning/theory.md)
 with the supervised losses this curriculum started from.
 
 ---
@@ -133,6 +133,6 @@ Sequence task?
 
 ## Connections
 
-- **Topics:** [15 RNN/LSTM](../topics/15_rnn_lstm/theory.md), [16 Transformer](../topics/16_transformer/theory.md), [21 LLM Engineering](../topics/21_llm_engineering/theory.md), [18 Reinforcement Learning](../topics/18_reinforcement_learning/theory.md) (RLHF), [20 GNN](../topics/20_graph_neural_networks/theory.md) (GAT reuses attention on graphs)
+- **Topics:** [15 RNN/LSTM](../15_rnn_lstm/theory.md), [16 Transformer](../16_transformer/theory.md), [21 LLM Engineering](../21_llm_engineering/theory.md), [18 Reinforcement Learning](../18_reinforcement_learning/theory.md) (RLHF), [20 GNN](../20_graph_neural_networks/theory.md) (GAT reuses attention on graphs)
 - **Related synthesis:** [Deep Learning Building Blocks](deep_learning_building_blocks.md) (inductive-bias view of the same architectures), [Generative and Self-Supervised Learning](generative_and_self_supervised.md) (next-token prediction as self-supervision), [Loss Functions Map](loss_functions_map.md)
-- **Maps:** [INDEX.md](../INDEX.md)
+- **Maps:** [INDEX.md](../../INDEX.md)

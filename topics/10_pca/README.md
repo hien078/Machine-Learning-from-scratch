@@ -18,5 +18,5 @@ reconstruction error, explained variance ratio, standardization effects.
 ## Connections
 
 - **Prereqs:** [Linear Algebra](https://github.com/hien078/applied-mathematics-foundation), [Probability & Statistics](https://github.com/hien078/applied-mathematics-foundation)
-- **Synthesis:** [Geometry of ML](../../synthesis/geometry_of_ml.md)
+- **Synthesis:** [Geometry of ML](../synthesis/geometry_of_ml.md)
 - **Next:** [12 Dimensionality Reduction](../12_dimensionality_reduction/README.md), [17 Autoencoder](../17_autoencoder/README.md)

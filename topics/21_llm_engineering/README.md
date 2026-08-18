@@ -24,5 +24,5 @@ The reusable, unit-tested reference implementations live in [`src/ml_first_princ
 ## Connections
 
 - **Prereqs:** [13 Neural Networks](../13_neural_networks/README.md), [16 Transformer](../16_transformer/README.md)
-- **Synthesis:** Connections to [Optimization Methods Compared](../../synthesis/optimization_methods_compared.md)
+- **Synthesis:** Connections to [Optimization Methods Compared](../synthesis/optimization_methods_compared.md)
 - **Next:** Advanced inference optimization (KV caching, speculative decoding, continuous batching)
