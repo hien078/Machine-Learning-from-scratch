@@ -44,7 +44,7 @@ Machine-Learning-from-scratch/
 ├── tests/                     # Unit tests & numerical regression suites
 ├── scripts/                   # Quality gate runner & notebook tooling
 ├── INDEX.md                   # Full curriculum index & prerequisite DAG
-├── ROADMAP.md                 # Ecosystem phases, milestones & decisions log
+├── CONTRIBUTING.md            # Process, quality gates, roadmap & decisions log
 ├── NOTEBOOK_STANDARDS.md      # Writing & coding standards
 ├── pyproject.toml             # Package metadata, dev extras, lint & test config
 └── README.md

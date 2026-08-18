@@ -1,0 +1,11 @@
+# Six notebooks with a deliberate progression, so the order is stated explicitly
+# rather than inherited from the reverse-filename rule in ../.nav.yml.
+nav:
+  - README.md
+  - theory.md
+  - first_principles.ipynb
+  - bandits_and_exploration.ipynb
+  - monte_carlo_and_td.ipynb
+  - policy_gradient_methods.ipynb
+  - deep_rl_advances.ipynb
+  - exercises.ipynb

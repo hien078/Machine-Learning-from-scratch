@@ -1,0 +1,12 @@
+# Top-level site navigation. Everything below a section is generated from the
+# directory tree by mkdocs-awesome-nav, so adding a topic, a synthesis document,
+# or a project needs no navigation edit.
+nav:
+  - Home: README.md
+  - Curriculum Index: INDEX.md
+  - Topics: topics
+  - Synthesis: synthesis
+  - Projects: projects
+  - Standards: NOTEBOOK_STANDARDS.md
+  - Process & Roadmap: CONTRIBUTING.md
+  - Changelog: CHANGELOG.md

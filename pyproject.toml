@@ -41,6 +41,7 @@ deep-learning = [
 docs = [
     "mkdocs-material>=9.5",
     "mkdocs-jupyter>=0.25",
+    "mkdocs-awesome-nav>=3.0",
 ]
 
 [tool.pytest.ini_options]
@@ -61,7 +62,7 @@ warn_unused_ignores = true
 warn_redundant_casts = true
 no_implicit_optional = true
 check_untyped_defs = true
-# Ratchet plan (ROADMAP Phase 5): enable disallow_untyped_defs, then strict,
+# Ratchet plan (CONTRIBUTING.md Phase 5): enable disallow_untyped_defs, then strict,
 # module by module as the codebase is annotated.
 
 [[tool.mypy.overrides]]

@@ -21,4 +21,4 @@ pytest projects   # fast test suite for all projects
 ```
 
 API friction discovered here is filed in [CHANGELOG.md](../CHANGELOG.md) `[Unreleased]`
-and drives the library's v0.2.0 scope ([ROADMAP.md](../ROADMAP.md) Phase 5).
+and drives the library's v0.2.0 scope ([CONTRIBUTING.md](../CONTRIBUTING.md) Phase 5).

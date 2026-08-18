@@ -23,16 +23,10 @@ from nbclient.exceptions import CellExecutionError
 
 
 def find_notebooks() -> list[str]:
-    patterns = [
-        "topics/**/*.ipynb",
-        "_template_first_principles.ipynb",
-    ]
-    notebooks = []
-    for pattern in patterns:
-        for path in glob.glob(pattern, recursive=True):
-            if os.path.isfile(path) and not path.startswith("."):
-                notebooks.append(path)
-    return sorted(set(notebooks))
+    # topics/ holds every notebook, including the authoring template.
+    return sorted(
+        path for path in glob.glob("topics/**/*.ipynb", recursive=True) if os.path.isfile(path)
+    )
 
 
 def run_notebook(path: str, write: bool) -> tuple[bool, str]:

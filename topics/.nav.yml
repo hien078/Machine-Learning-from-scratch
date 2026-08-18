@@ -1,0 +1,39 @@
+# Curriculum phase grouping and topic titles — the two things the folder tree
+# cannot express. Within each topic folder, files are sorted by reverse filename,
+# which is exactly the reading order: theory.md -> first_principles.ipynb ->
+# exercises.ipynb (README.md is the folder index). Topic 18 overrides this in its
+# own .nav.yml.
+sort:
+  direction: desc
+
+ignore:
+  - _template.ipynb
+
+nav:
+  - Phase 1 — Core Mathematical ML:
+      - 01 Linear Regression: 01_linear_regression
+      - 02 Gradient Descent: 02_gradient_descent
+      - 03 Regularization: 03_regularization
+      - 04 Logistic Regression: 04_logistic_regression
+      - 10 PCA: 10_pca
+  - Phase 2 — Classical ML:
+      - 05 Decision Tree: 05_decision_tree
+      - 06 Ensemble Methods: 06_ensemble_methods
+      - 07 KNN: 07_knn
+      - 08 Naive Bayes: 08_naive_bayes
+      - 09 SVM: 09_svm
+      - 11 Clustering: 11_clustering
+      - 12 Dimensionality Reduction: 12_dimensionality_reduction
+  - Phase 3 — Deep Learning:
+      - 13 Neural Networks: 13_neural_networks
+      - 14 CNN: 14_cnn
+      - 15 RNN/LSTM: 15_rnn_lstm
+      - 17 Autoencoder: 17_autoencoder
+  - Phase 4 — Transformers:
+      - 16 Transformer: 16_transformer
+  - Phase 5 — Modern AI:
+      - 18 Reinforcement Learning: 18_reinforcement_learning
+      - 19 Generative Models: 19_generative_models
+      - 20 Graph Neural Networks: 20_graph_neural_networks
+      - 21 LLM Engineering: 21_llm_engineering
+      - 22 Self-Supervised Learning: 22_self_supervised_learning

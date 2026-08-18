@@ -1,0 +1,13 @@
+# Only the write-ups belong on the site. Source, tests, and the data/notebooks
+# placeholders are ignored so they are not published as documentation pages.
+ignore:
+  - "*.py"
+  - data
+  - notebooks
+
+nav:
+  - README.md
+  - Tabular Benchmark: tabular_benchmark
+  - Char Transformer Tiny: char_transformer_tiny
+  - Digits Autoencoder: digits_autoencoder
+  - RL Gridworld: rl_gridworld

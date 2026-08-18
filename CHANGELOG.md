@@ -6,7 +6,26 @@ versions follow [SemVer](https://semver.org/).
 
 ## [Unreleased]
 
-Nothing yet.
+### Changed
+- Workspace de-duplication: every fact that existed in 2–4 hand-synced copies now
+  has one owner. `CLAUDE.md` imports `AGENTS.md` instead of mirroring it; the
+  22-topic list lives only in `INDEX.md`; `ROADMAP.md` merged into
+  `CONTRIBUTING.md`; `_template_first_principles.ipynb` moved to
+  `topics/_template.ipynb`.
+- Site navigation is generated from the directory tree by `mkdocs-awesome-nav`
+  (new `docs` extra). `mkdocs.yml` drops from 211 to 60 lines; the hand-written
+  parts are `docs/.nav.yml`, `topics/.nav.yml`, `projects/.nav.yml`, and topic
+  18's notebook order.
+
+### Added
+- `scripts/check.py`: runs all six quality gates in CI order. CI invokes it, so
+  the local and CI contracts cannot drift.
+- Tests asserting `__version__` matches `pyproject.toml` and that
+  `requirements.txt` pins exactly the declared runtime dependency set.
+
+### Removed
+- `scripts/check_environment.py`: unreferenced, and a third copy of the
+  dependency list.
 
 ## [0.3.0] - 2026-08-17
 
