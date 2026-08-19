@@ -115,7 +115,19 @@ $$\boxed{\alpha < \frac{2}{M}}$$
 > L(\theta_T) - L(\theta^\ast) \le \frac{M\|\theta_0 - \theta^\ast\|^2}{2T}
 > ```
 
-**Proof sketch.** From the descent lemma with $\alpha = 1/M$: each step gives $L(\theta_{t+1}) \le L(\theta_t) - \frac{1}{2M}\Vert\nabla L(\theta_t)\Vert^2$. Summing telescopically and using convexity $(L(\theta_t) - L(\theta^\ast) \le \nabla L(\theta_t)^\top(\theta_t - \theta^\ast))$, the bound follows by averaging.
+**Proof sketch.** From the descent lemma with $\alpha = 1/M$, each step gives
+
+```math
+L(\theta_{t+1}) \le L(\theta_t) - \frac{1}{2M}\Vert\nabla L(\theta_t)\Vert^2
+```
+
+Now sum telescopically and use convexity:
+
+```math
+L(\theta_t) - L(\theta^\ast) \le \nabla L(\theta_t)^\top(\theta_t - \theta^\ast)
+```
+
+The bound then follows by averaging.
 
 **Result:** Convex, smooth GD converges at rate $O(1/T)$. To halve the error, double the iterations.
 
@@ -277,6 +289,8 @@ Multiply the learning rate by a factor $\gamma < 1$ every $k$ epochs:
 
 $$\alpha_t = \alpha_0 \cdot \gamma^{\lfloor t/k \rfloor}$$
 
+The rate is held constant inside each block of $k$ epochs and multiplied by $\gamma$ at every block boundary.
+
 ### 7.2 Cosine annealing
 
 Smoothly decrease the learning rate following a cosine curve:
@@ -315,11 +329,15 @@ When $\kappa = M/\mu \gg 1$, the loss surface is an elongated ellipsoid. GD osci
 
 ### 8.4 Saddle points (non-convex)
 
-In high-dimensional non-convex problems (e.g., neural networks), saddle points are more common than local minima. At a saddle, $\nabla L = 0$ but the Hessian has both positive and negative eigenvalues. Standard GD can get stuck near saddle points because the gradient is nearly zero. Adding noise (SGD) or second-order information helps escape.
+In high-dimensional non-convex problems (e.g., neural networks), saddle points are more common than local minima. At a saddle, $\nabla L = 0$ but the Hessian has both positive and negative eigenvalues.
+
+Standard GD can get stuck near saddle points because the gradient is nearly zero. Adding noise (SGD) or second-order information helps escape.
 
 ### 8.5 Adam convergence issues
 
-Adam does not converge on all convex problems. Reddi et al. (2018) showed a simple counterexample. Fixes include AMSGrad (using the maximum of past second moments). In practice, Adam usually works but may generalize worse than SGD with momentum on some tasks.
+Adam does not converge on all convex problems. Reddi et al. (2018) showed a simple counterexample.
+
+Fixes include AMSGrad (using the maximum of past second moments). In practice, Adam usually works but may generalize worse than SGD with momentum on some tasks.
 
 ### 8.6 Small gradient ≠ small loss gap
 

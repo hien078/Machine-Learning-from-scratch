@@ -25,10 +25,11 @@ are natural logarithm.
 ## 1. WHY — When Strong Assumptions Beat Flexible Models
 
 Consider classifying emails as spam vs. not-spam. Each email is described by
-thousands of word features. With limited training data relative to the feature
-dimensionality, flexible models (logistic regression, neural networks) risk
-overfitting. A model with a *strong structural assumption* can trade bias for
-dramatically lower variance.
+thousands of word features.
+
+With limited training data relative to the feature dimensionality, flexible
+models (logistic regression, neural networks) risk overfitting. A model with a
+*strong structural assumption* can trade bias for dramatically lower variance.
 
 Naive Bayes takes the strongest possible assumption: **every feature is
 conditionally independent of every other feature, given the class label**.
@@ -65,6 +66,8 @@ Since $P(x)$ is the same for all classes, the classification rule only needs:
 ```math
 \hat{y} = \arg\max_k \; P(x \mid y = k) \, P(y = k). \qquad (2.2)
 ```
+
+Classification therefore needs only the joint score $P(x \mid y = k) P(y = k)$, never the normalized posterior itself.
 
 ### 2.2 The Naive Conditional Independence Assumption
 
@@ -130,9 +133,13 @@ with class-specific mean $\mu_{kj}$ and variance $\sigma^2_{kj}$:
 P(x_j \mid y = k) = \frac{1}{\sqrt{2\pi \sigma^2_{kj}}} \exp\!\left( -\frac{(x_j - \mu_{kj})^2}{2\sigma^2_{kj}} \right). \qquad (4.1)
 ```
 
+Each (class, feature) pair therefore carries its own centre and spread, so a feature can separate classes through its mean, its variance, or both.
+
 ### 4.2 Log-Likelihood Contribution
 
 $$\log P(x_j \mid y = k) = -\frac{1}{2} \log(2\pi \sigma^2_{kj}) - \frac{(x_j - \mu_{kj})^2}{2\sigma^2_{kj}}. \qquad (4.2)$$
+
+In log space each feature contributes a constant plus a squared distance from the class mean, weighted by that class's variance.
 
 ### 4.3 Parameter Estimation (MAP)
 
@@ -174,7 +181,13 @@ $P(x \mid y = k) = 0$ — one missing word kills the entire class probability.
 
 $$\hat{\theta}_{kj} = \frac{N_{kj} + \alpha}{N_k + \alpha \cdot d}, \qquad \alpha > 0. \qquad (5.2)$$
 
-**Why $\alpha \cdot d$ in the denominator?** Adding $\alpha$ pseudo-counts to each of the $d$ feature categories increases the total count in class $k$ by $\sum_{j=1}^d \alpha = \alpha \cdot d$. This exact normalization guarantees that the parameters form a valid probability distribution summing to 1: $\sum_{j=1}^d \hat\theta_{kj} = \frac{\sum_{j=1}^d (N_{kj} + \alpha)}{N_k + \alpha d} = \frac{N_k + \alpha d}{N_k + \alpha d} = 1$.
+**Why $\alpha \cdot d$ in the denominator?** Adding $\alpha$ pseudo-counts to each of the $d$ feature categories increases the total count in class $k$ by $\sum_{j=1}^d \alpha = \alpha \cdot d$.
+
+This exact normalization guarantees that the parameters form a valid probability distribution summing to 1:
+
+```math
+\sum_{j=1}^d \hat\theta_{kj} = \frac{\sum_{j=1}^d (N_{kj} + \alpha)}{N_k + \alpha d} = \frac{N_k + \alpha d}{N_k + \alpha d} = 1
+```
 
 With $\alpha = 1$ (Laplace smoothing), this is equivalent to placing a symmetric Dirichlet prior $\text{Dir}(\alpha, \dots, \alpha)$ on $\theta_k$ and computing the MAP estimate.
 

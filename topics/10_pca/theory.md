@@ -29,6 +29,7 @@ PCA is an **optimization over subspaces**: choose an orthonormal basis $W_k$ to
 maximize projected variance (§3), which the Pythagorean decomposition (§4) shows is
 the same as minimizing squared reconstruction error. Both objectives are quadratic in
 the data, which is why the solution is spectral (eigenvectors) rather than iterative.
+
 A probabilistic reading exists — probabilistic PCA, §10 — but is not needed to derive
 the method.
 
@@ -48,9 +49,10 @@ the method.
 | $\sigma_j$ | scalar | $j$-th singular value of $X_c$, $\lambda_j = \sigma_j^2 / n$ |
 
 **Variables vs parameters.** The data $X$ is given and fixed. The quantities *learned*
-from it are $\mu$, $W_k$, and the spectrum $\lbrace \lambda_j \rbrace$. The only free
-*hyperparameter* is the number of retained components $k$ (§6) — no learning rate, no
-regularization strength, no iterative fitting in the exact form.
+from it are $\mu$, $W_k$, and the spectrum $\lbrace \lambda_j \rbrace$.
+
+The only free *hyperparameter* is the number of retained components $k$ (§6) — no
+learning rate, no regularization strength, no iterative fitting in the exact form.
 
 **Objective.** Find an orthonormal $W_k$ maximizing $\operatorname{tr}(W_k^\top S W_k)$,
 the total variance of the projected data; §3 derives this form and its solution.
@@ -60,9 +62,15 @@ the total variance of the projected data; §3 derives this form and its solution
 ### 3.1 One-component problem
 
 Project each centered row $x_i$ onto a candidate direction $v \in \mathbb{R}^d$. The
-scalar coordinate of the projection is $x_i^\top v$. Because the data are centered, the
-coordinates have zero mean: $\frac{1}{n}\sum_i x_i^\top v = \bigl(\frac{1}{n}\sum_i x_i\bigr)^\top v = 0$
-(linearity of the inner product). The sample variance of the projected data is therefore
+scalar coordinate of the projection is $x_i^\top v$.
+
+Because the data are centered, the coordinates have zero mean:
+
+```math
+\frac{1}{n}\sum_i x_i^\top v = \bigl(\frac{1}{n}\sum_i x_i\bigr)^\top v = 0
+```
+
+by linearity of the inner product. The sample variance of the projected data is therefore
 
 ```math
 \text{Var}_v = \frac{1}{n}\sum_{i=1}^{n} (x_i^\top v)^2
@@ -105,7 +113,9 @@ the variance captured is $\lambda_1$.
 ### 3.2 Global optimality via the spectral theorem
 
 The Lagrangian argument finds stationary points; the spectral theorem confirms the
-global maximum directly. $S$ is symmetric, so it admits an orthonormal eigenbasis
+global maximum directly.
+
+$S$ is symmetric, so it admits an orthonormal eigenbasis
 $v_1, \ldots, v_d$ with real eigenvalues $\lambda_1 \ge \cdots \ge \lambda_d \ge 0$
 (PSD because $v^\top S v = \frac{1}{n}\|X_c v\|_2^2 \ge 0$). Expand any unit vector as
 $v = \sum_j c_j v_j$ with $\sum_j c_j^2 = 1$. Then
@@ -132,10 +142,11 @@ multiplier $\beta_i$ per orthogonality constraint:
 Left-multiply the stationarity condition by $v_i^\top$ (for $i < j$): the terms
 $v_i^\top v = 0$ and $v_i^\top v_{i'} = \delta_{ii'}$ (orthonormality) leave
 $2 v_i^\top S v = \beta_i$. But $v_i^\top S v = (S v_i)^\top v = \lambda_i v_i^\top v = 0$
-(symmetry of $S$, then the eigen-relation, then the constraint). Hence every
-$\beta_i = 0$ and the condition reduces to $Sv = \alpha v$ again — an eigenvector
-problem restricted to the orthogonal complement of $\operatorname{span}(v_1, \ldots, v_{j-1})$,
-whose best eigenvalue is $\lambda_j$.
+(symmetry of $S$, then the eigen-relation, then the constraint).
+
+Hence every $\beta_i = 0$ and the condition reduces to $Sv = \alpha v$ again — an
+eigenvector problem restricted to the orthogonal complement of
+$\operatorname{span}(v_1, \ldots, v_{j-1})$, whose best eigenvalue is $\lambda_j$.
 
 Equivalently, for all $k$ components at once: maximize
 $\operatorname{tr}(W_k^\top S W_k)$ subject to $W_k^\top W_k = I_k$. By the
@@ -176,8 +187,13 @@ using symmetry then idempotence of $P$. So $\|x\|_2^2 = \|Px\|_2^2 + \|(I-P)x\|_
 \; + \; \underbrace{\|X_c - X_c W_k W_k^\top\|_F^2}_{\text{residual}}.
 ```
 
-The left side is a constant of the data: $\|X_c\|_F^2 = n \operatorname{tr}(S) = n \sum_{j=1}^{d} \lambda_j$
-(trace equals the sum of eigenvalues, by the spectral theorem). The captured term
+The left side is a constant of the data:
+
+```math
+\|X_c\|_F^2 = n \operatorname{tr}(S) = n \sum_{j=1}^{d} \lambda_j
+```
+
+The trace equals the sum of eigenvalues, by the spectral theorem. The captured term
 equals the projected-variance objective of §3.3:
 
 ```math
@@ -197,6 +213,10 @@ optimum (§3.3, Ky Fan) the captured term is $n \sum_{j \le k} \lambda_j$, so
 \min_{W_k^\top W_k = I_k} \|X_c - X_c W_k W_k^\top\|_F^2
 = n \sum_{j=k+1}^{d} \lambda_j.
 ```
+
+The unavoidable reconstruction error is exactly the variance carried by the discarded
+directions, summed over all $n$ points — so a fast-decaying spectrum makes truncation
+cheap.
 
 ### 4.3 Eckart–Young
 
@@ -246,11 +266,12 @@ Forming $S = \frac{1}{n} X_c^\top X_c$ **squares the condition number**:
 Consequence in floating point: a direction with
 $\sigma_j / \sigma_1 < \sqrt{\varepsilon_{\text{mach}}}$ (about $10^{-8}$ in double
 precision) contributes $\lambda_j / \lambda_1 < \varepsilon_{\text{mach}}$ to $S$ —
-below the relative rounding error of the dominant entries. Once $S$ is formed, that
-component is numerically indistinguishable from zero and no eigensolver can recover
-it: the damage happens in the matrix product, before any decomposition runs. A
-backward-stable SVD of $X_c$ works with the singular values directly and resolves
-ratios down to $\varepsilon_{\text{mach}} \approx 10^{-16}$.
+below the relative rounding error of the dominant entries.
+
+Once $S$ is formed, that component is numerically indistinguishable from zero and no
+eigensolver can recover it: the damage happens in the matrix product, before any
+decomposition runs. A backward-stable SVD of $X_c$ works with the singular values
+directly and resolves ratios down to $\varepsilon_{\text{mach}} \approx 10^{-16}$.
 
 Trade-off: when $d$ is small and conditioning mild, forming the $d \times d$
 covariance costs $O(nd^2)$ once and a symmetric eigendecomposition suffices. When
@@ -325,22 +346,25 @@ by raw loading values.
 
 1. **Scale dominance.** If one feature is measured in meters and another in millimeters,
    the large-unit feature dominates variance. PCA without standardization reflects
-   units, not structure. Standardizing first (correlation-matrix PCA) is a modeling
-   choice, not a fix-all: it also equalizes genuinely different signal strengths.
+   units, not structure.
 
-2. **Outlier sensitivity.** PCA uses $\ell_2$ (squared) distances. A single extreme
+2. **Standardization is a choice.** Standardizing first (correlation-matrix PCA) is a
+   modeling choice, not a fix-all: it also equalizes genuinely different signal
+   strengths.
+
+3. **Outlier sensitivity.** PCA uses $\ell_2$ (squared) distances. A single extreme
    observation can rotate the first PC toward itself. Robust variants (e.g. robust
    covariance estimates) trade efficiency for resistance.
 
-3. **Linearity.** PCA finds a linear subspace. If the data lie on a curved manifold
+4. **Linearity.** PCA finds a linear subspace. If the data lie on a curved manifold
    (e.g. a Swiss roll), PCA may fail to capture the intrinsic low-dimensional structure.
    Nonlinear extensions: kernel PCA, t-SNE, UMAP, autoencoders (§10).
 
-4. **Variance ≠ relevance.** PCA is unsupervised. The directions of maximum variance
+5. **Variance ≠ relevance.** PCA is unsupervised. The directions of maximum variance
    need not align with class-discriminative directions — a low-variance direction may
    separate the classes perfectly. LDA (topic 12) optimizes separation instead.
 
-5. **Sample size.** With $n < d$, at most $n - 1$ eigenvalues are nonzero. Estimated
+6. **Sample size.** With $n < d$, at most $n - 1$ eigenvalues are nonzero. Estimated
    eigenvalues are biased: the largest are overestimated, the smallest underestimated,
    and the estimated directions fluctuate strongly when adjacent eigenvalues are close
    (§8).
@@ -350,9 +374,10 @@ by raw loading values.
 - **[Autoencoders](../17_autoencoder/README.md).** A *linear* autoencoder with squared
   reconstruction loss learns exactly the principal subspace: Baldi & Hornik (1989)
   showed its loss surface has no spurious local minima and every minimum projects onto
-  $\operatorname{span}(v_1, \ldots, v_k)$ — though the learned basis need not be
-  orthonormal or eigenvalue-ordered. Nonlinear autoencoders generalize the
-  reconstruction view of §4 beyond linear subspaces.
+  $\operatorname{span}(v_1, \ldots, v_k)$.
+- **Basis and nonlinear extensions.** The learned basis need not be orthonormal or
+  eigenvalue-ordered. Nonlinear autoencoders generalize the reconstruction view of §4
+  beyond linear subspaces.
 - **[LDA and t-SNE](../12_dimensionality_reduction/README.md).** LDA replaces
   "maximize variance" with "maximize between-class over within-class scatter" —
   supervised where PCA is unsupervised. t-SNE abandons linearity and global structure
@@ -363,8 +388,9 @@ by raw loading values.
 - **Probabilistic PCA.** Tipping & Bishop (1999): the latent linear-Gaussian model
   $x = Wz + \mu + \varepsilon$ with $z \sim \mathcal{N}(0, I_k)$,
   $\varepsilon \sim \mathcal{N}(0, \sigma^2 I_d)$ has a maximum-likelihood solution
-  whose $W$ spans the principal subspace; classical PCA is the $\sigma^2 \to 0$ limit.
-  This bridges PCA to [generative models](../19_generative_models/README.md).
+  whose $W$ spans the principal subspace.
+- **Zero-noise limit.** Classical PCA is the $\sigma^2 \to 0$ limit. This bridges PCA
+  to [generative models](../19_generative_models/README.md).
 - **[Regularization](../03_regularization/README.md).** Truncated reconstruction is a
   spectral filter; principal-components regression and ridge shrink along the same
   eigen-directions.

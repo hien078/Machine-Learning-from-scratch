@@ -24,9 +24,10 @@ All symbols used below — defined once.
 | $\alpha$ | scalar $\ge 0$ | cost-complexity pruning parameter |
 | $\vert T\vert $ | scalar | number of leaf nodes in tree $T$ |
 
-**Convention.** All logarithms are base-2 ($\log_2$) unless stated otherwise. For entropy
-in nats, use $\ln$; the formulas are identical up to a constant factor. We define
-$0 \log 0 := 0$ by continuity.
+**Convention.** All logarithms are base-2 ($\log_2$) unless stated otherwise.
+
+For entropy in nats, use $\ln$; the formulas are identical up to a constant factor. We
+define $0 \log 0 := 0$ by continuity.
 
 ---
 
@@ -45,7 +46,7 @@ splitting the feature space along one feature at a time. Each split creates two 
 each leaf returns a constant prediction (majority class or mean target value). The result
 is a set of axis-aligned rectangles, each with its own prediction.
 
-**Key properties.**
+### 1.1 Key properties
 
 1. **No feature scaling needed** — splits depend only on sort order.
 2. **Handles mixed types** — continuous and categorical features coexist naturally.
@@ -76,10 +77,17 @@ label. $H = 0$ for a pure node; $H = \log_2 K$ when all classes are equally like
 ### 2.3 Regression: Mean Squared Error
 
 For a regression tree, each leaf predicts the mean of its targets:
-$\hat y_{\mathcal{R}} = \frac{1}{|\mathcal{R}|} \sum_{i \in \mathcal{R}} y_i$. The
-impurity of a node is the variance of the targets:
+
+```math
+\hat y_{\mathcal{R}} = \frac{1}{|\mathcal{R}|} \sum_{i \in \mathcal{R}} y_i
+```
+
+The impurity of a node is the variance of the targets:
 
 $$\text{MSE}(\mathcal{R}) = \frac{1}{|\mathcal{R}|} \sum_{i \in \mathcal{R}} (y_i - \hat{y}_{\mathcal{R}})^2. \qquad (2.3)$$
+
+A node's impurity is therefore the average squared deviation of its targets from the
+leaf's own prediction, and it vanishes exactly when every target in the node is equal.
 
 ### 2.4 Information Gain
 
@@ -98,16 +106,16 @@ the split $(j, t)$ that **maximises** $\Delta I$.
 
 At each node $\mathcal{R}$:
 
-1. **For each feature** $j \in \lbrace1, \dots, d\rbrace$:
-   a. Sort the distinct values of $x_j$ in $\mathcal{R}$.
-   b. For each candidate threshold $t$ (midpoint between consecutive sorted values):
-      - Partition $\mathcal{R}$ into $\mathcal R_L = \lbrace i : x_{ij} < t\rbrace$ and
-        $\mathcal R_R = \lbrace i : x_{ij} \ge t\rbrace$.
-      - Compute the weighted impurity
-        $\frac{|\mathcal{R}_L|}{|\mathcal{R}|} I(\mathcal{R}_L) + \frac{|\mathcal{R}_R|}{|\mathcal{R}|} I(\mathcal{R}_R)$.
-2. **Pick** the $(j^\ast, t^\ast)$ that minimises the weighted child impurity (equivalently,
+1. **For each feature** $j \in \lbrace1, \dots, d\rbrace$, sort the distinct values of
+   $x_j$ in $\mathcal{R}$.
+2. **For each candidate threshold** $t$ (midpoint between consecutive sorted values):
+   - Partition $\mathcal{R}$ into $\mathcal R_L = \lbrace i : x_{ij} < t\rbrace$ and
+     $\mathcal R_R = \lbrace i : x_{ij} \ge t\rbrace$.
+   - Compute the weighted impurity
+     $\frac{|\mathcal{R}_L|}{|\mathcal{R}|} I(\mathcal{R}_L) + \frac{|\mathcal{R}_R|}{|\mathcal{R}|} I(\mathcal{R}_R)$.
+3. **Pick** the $(j^\ast, t^\ast)$ that minimises the weighted child impurity (equivalently,
    maximises information gain).
-3. **Recurse** on $\mathcal{R}_L$ and $\mathcal{R}_R$.
+4. **Recurse** on $\mathcal{R}_L$ and $\mathcal{R}_R$.
 
 **The algorithm is greedy:** it optimises each split independently without look-ahead.
 Finding the globally optimal tree (minimising total leaves or error) is NP-hard.
@@ -125,7 +133,9 @@ Finding the globally optimal tree (minimising total leaves or error) is NP-hard.
 concave on $[0, 1]$.
 
 **Entropy:** $H(p) = -p \log p - (1-p) \log(1-p)$. Second derivative:
-$H''(p) = -\frac{1}{p(1-p) \ln 2} < 0$ for $p \in (0, 1)$. Strictly concave. $\blacksquare$
+$H''(p) = -\frac{1}{p(1-p) \ln 2} < 0$ for $p \in (0, 1)$.
+
+Strictly concave. $\blacksquare$
 
 **Consequence.** By Jensen's inequality applied to the concave function $I$:
 
@@ -134,9 +144,11 @@ I\!\left(\frac{|\mathcal{R}_L|}{|\mathcal{R}|} \mathbf{p}_L + \frac{|\mathcal{R}
 ```
 
 where $\mathbf{p}_L, \mathbf{p}_R$ are the class-proportion vectors of the children.
-The left side is the parent's impurity (since proportions mix linearly). Equality holds
-only when $\mathbf{p}_L = \mathbf{p}_R$ — a useless split. The largest gap (maximum
-information gain) occurs when the children are most "separated" in class composition.
+The left side is the parent's impurity (since proportions mix linearly).
+
+Equality holds only when $\mathbf{p}_L = \mathbf{p}_R$ — a useless split. The largest gap
+(maximum information gain) occurs when the children are most "separated" in class
+composition.
 
 **Result:** Both Gini and entropy are concave functions of class proportions; the
 information gain is always non-negative and is maximised by splits that separate classes.
@@ -206,8 +218,9 @@ controls the trade-off:
 
    $$\alpha_{\text{eff}}(t) = \frac{R(t) - R(T_t)}{|T_t| - 1},$$
 
-   where $R(t)$ is the impurity of node $t$ treated as a leaf and $R(T_t)$ is the
-   total impurity of the subtree rooted at $t$.
+where $R(t)$ is the impurity of node $t$ treated as a leaf and $R(T_t)$ is the
+total impurity of the subtree rooted at $t$.
+
 3. Collapse the weakest link to a leaf. Repeat to generate a nested sequence
    $T_{\max} \supset T_1 \supset T_2 \supset \cdots \supset \lbrace root\rbrace$.
 4. Select the best $\alpha$ (and corresponding tree) by cross-validation.

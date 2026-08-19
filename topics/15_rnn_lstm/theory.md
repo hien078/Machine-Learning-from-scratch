@@ -114,9 +114,11 @@ of Jacobians:
 
 The weight gradient w.r.t. $W_{hh}$ accumulates contributions from all time steps:
 
-$$\frac{\partial \mathcal{L}}{\partial W_{hh}}
+```math
+\frac{\partial \mathcal{L}}{\partial W_{hh}}
 = \sum_{t=1}^{T} \frac{\partial \mathcal{L}}{\partial h_t}
-  \odot \tanh'(z_t) \cdot h_{t-1}^\top$$
+\odot \tanh'(z_t) \cdot h_{t-1}^\top
+```
 
 **Result:** BPTT computes gradients by unrolling the recurrence and applying the chain
 rule backward through all $T$ steps. The computational cost is $O(T)$ in both time

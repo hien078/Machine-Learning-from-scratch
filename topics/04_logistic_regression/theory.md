@@ -28,7 +28,9 @@ absorbed into $\theta_0$. Penalties (when added in §10) act on $\theta_1, \dots
 only, not on the intercept.
 
 **Vector convention.** All vectors are column vectors. Lowercase Latin / Greek = vector;
-uppercase = matrix. Norms carry explicit subscripts: $\Vert\theta\Vert_1$, $\Vert\theta\Vert_2^2$.
+uppercase = matrix.
+
+Norms carry explicit subscripts: $\Vert\theta\Vert_1$, $\Vert\theta\Vert_2^2$.
 
 ---
 
@@ -111,6 +113,9 @@ The full data likelihood is the product:
 
 $$\mathcal{L}(\theta) = \prod_{i=1}^n p_i^{y_i} (1 - p_i)^{1 - y_i}.$$
 
+The exponents act as a switch: example $i$ contributes the factor $p_i$ when $y_i = 1$,
+and the factor $1 - p_i$ when $y_i = 0$.
+
 ### 3.3 Negative log-likelihood — the cross-entropy loss
 
 Take the negative log of the likelihood and divide by $n$:
@@ -129,8 +134,10 @@ Three key observations:
    probability on the *true* class.
 3. **Blows up on confident wrong predictions.** If $y_i = 1$ but $p_i \to 0$,
    then $-\log p_i \to +\infty$: the per-example loss is *unbounded* (the sigmoid saturates;
-   the loss does not). Cross-entropy *aggressively* punishes confident-but-wrong
-   predictions — precisely why softmax + cross-entropy is the default loss in deep learning.
+   the loss does not).
+
+Cross-entropy *aggressively* punishes confident-but-wrong
+predictions — precisely why softmax + cross-entropy is the default loss in deep learning.
 
 ### 3.4 Rewriting the loss with $z_i$ — the margin form
 
@@ -145,13 +152,25 @@ into a clean unified form:
 \ell_i(\theta) = \log(1 + e^{-y_i' z_i}) \quad \text{where } y_i' := 2 y_i - 1 \in \{-1, +1\}. \qquad (3.2)
 ```
 
-**Proof.** For $y_i = 1$: $-\log \sigma(z_i) = \log(1 + e^{-z_i}) = \log(1 + e^{-y_i' z_i})$
-with $y_i' = +1$. For $y_i = 0$: $-\log \sigma(-z_i) = \log(1 + e^{z_i}) = \log(1 + e^{-y_i' z_i})$
-with $y_i' = -1$. $\blacksquare$
+**Proof.** For $y_i = 1$, so that $y_i' = +1$:
+
+```math
+-\log \sigma(z_i) = \log(1 + e^{-z_i}) = \log(1 + e^{-y_i' z_i})
+```
+
+For $y_i = 0$, so that $y_i' = -1$:
+
+```math
+-\log \sigma(-z_i) = \log(1 + e^{z_i}) = \log(1 + e^{-y_i' z_i})
+```
+
+$\blacksquare$
 
 **Result:** The cross-entropy loss is a smooth, monotone function of the *margin* $y_i' z_i$.
 A large positive margin (correct sign, high magnitude) → small loss. A large negative
-margin (wrong sign) → large loss. This is the same *margin* concept that drives SVMs, but
+margin (wrong sign) → large loss.
+
+This is the same *margin* concept that drives SVMs, but
 with the smooth log-loss instead of the kinked hinge loss.
 
 ---
@@ -220,7 +239,9 @@ $p$ depends on $\theta$ through the sigmoid, so (4.2) is a *non-linear* equation
 > where $W \in \mathbb{R}^{n \times n}$ is the diagonal matrix with entries $W_{ii} = p_i (1 - p_i)$.
 
 **Proof.** Differentiate (4.1) once more. Each gradient entry is
-$\frac{1}{n} \sum_i (p_i - y_i) x_{ij}$. The derivative of $p_i$ with respect to
+$\frac{1}{n} \sum_i (p_i - y_i) x_{ij}$.
+
+The derivative of $p_i$ with respect to
 $\theta_k$ is $\sigma'(z_i) \cdot x_{ik} = p_i(1 - p_i) x_{ik}$ by (I2). So
 
 $$\frac{\partial^2 L}{\partial \theta_j \partial \theta_k} = \frac{1}{n} \sum_i p_i(1 - p_i) x_{ij} x_{ik}.$$
@@ -265,6 +286,7 @@ kind of separation is present.
 **Cure:** Add a *coercive* penalty such as the ridge term $\lambda \Vert\theta\Vert_2^2$ (§10). The
 penalised loss then tends to $+\infty$ as $\Vert\theta\Vert_2 \to \infty$, so a finite minimiser exists
 even on perfectly separable data — and it is unique, since the ridge term is strictly convex.
+
 (Strict convexity alone would *not* be enough: it guarantees uniqueness, not existence;
 coercivity is what restores existence.)
 
@@ -310,8 +332,9 @@ What varies across space is how *confident* the model is — not the *shape* of 
 - Right *on* the hyperplane, probability is 0.5.
 - The transition band where the probability swings from 0.1 to 0.9 has a width
   proportional to $1 / \Vert w\Vert_2$, where $w := (\theta_1, \dots, \theta_d)$ is the weight part of
-  $\theta$ (the intercept $\theta_0$ shifts the boundary but not its sharpness) — a larger
-  $\Vert w\Vert_2$ means a sharper transition.
+  $\theta$.
+- The intercept $\theta_0$ shifts the boundary but not its sharpness.
+- A larger $\Vert w\Vert_2$ means a sharper transition.
 
 **Practical consequence.** Logistic regression cannot separate XOR-shaped data with a
 single boundary. When a non-linear classifier is needed, either engineer non-linear
@@ -393,7 +416,12 @@ weights depend on $\theta_k$, so we *re-weight* and re-solve at every iteration 
 **iteratively reweighted least squares** (IRLS).
 
 **Convergence.** *Locally* quadratic — once $\theta_k$ is close enough to $\theta^\ast$:
-$\Vert\theta_{k+1} - \theta^\ast\Vert_2 \le C \cdot \Vert\theta_k - \theta^\ast\Vert_2^2$, so the number of
+
+```math
+\Vert\theta_{k+1} - \theta^\ast\Vert_2 \le C \cdot \Vert\theta_k - \theta^\ast\Vert_2^2
+```
+
+So the number of
 correct digits roughly *doubles* per iteration. (Far from the optimum, a damped / line-search
 Newton step is used to guarantee progress.) 5–15 iterations reach machine precision on
 typical problems.
@@ -457,7 +485,12 @@ data — the regulariser fixes the failure case of §5.3.
 > - $\theta_j \sim \text{Laplace}(0, b)$ independently → MAP equals L1-regularised
 >   logistic regression with $\lambda = 1 / (n b)$.
 
-**Proof sketch.** Bayes' rule: $\log p(\theta \mid y, X) = \log \mathcal{L}(\theta) + \log p(\theta) + \text{const}$.
+**Proof sketch.** Bayes' rule:
+
+```math
+\log p(\theta \mid y, X) = \log \mathcal{L}(\theta) + \log p(\theta) + \text{const}
+```
+
 Negate and divide by $n$ — the data term is $L(\theta)$, and the prior adds
 $\frac{1}{2 n \tau^2} \Vert\theta\Vert_2^2$ (Normal) or $\frac{1}{n b} \Vert\theta\Vert_1$ (Laplace).
 Identifying the multiplier with $\lambda$ gives the claim. $\blacksquare$
@@ -466,8 +499,8 @@ Identifying the multiplier with $\lambda$ gives the claim. $\blacksquare$
 
 - **L2.** $\nabla L_{\text{ridge}}(\theta) = \frac{1}{n} X^T (p - y) + 2 \lambda \theta$.
 - **L1.** $L_{\text{lasso}}$ is not differentiable where any $\theta_j = 0$; work with the *subdifferential*
-  $\partial L_{\text{lasso}}(\theta) = \big\lbrace \frac{1}{n} X^T (p - y) + \lambda s \thinspace:\thinspace s \in \partial \Vert\theta\Vert_1 \big\rbrace$,
-  where $s_j = \operatorname{sign}(\theta_j)$ if $\theta_j \ne 0$ and $s_j \in [-1, 1]$ if $\theta_j = 0$.
+  $\partial L_{\text{lasso}}(\theta) = \big\lbrace \frac{1}{n} X^T (p - y) + \lambda s \thinspace:\thinspace s \in \partial \Vert\theta\Vert_1 \big\rbrace$.
+- **Subgradient entries.** Here $s_j = \operatorname{sign}(\theta_j)$ if $\theta_j \ne 0$ and $s_j \in [-1, 1]$ if $\theta_j = 0$.
 
 ### 10.4 Algorithmic changes
 
@@ -484,7 +517,9 @@ applies unchanged.
 
 **Result:** L1 logistic regression produces sparse coefficients (variable selection for
 classification). L2 logistic regression shrinks coefficients smoothly and is the default
-in most software. In scikit-learn's `LogisticRegression`, `C` is the *inverse* regularisation
+in most software.
+
+In scikit-learn's `LogisticRegression`, `C` is the *inverse* regularisation
 strength (larger `C` = weaker penalty); it minimises
 $\frac{1}{2}\Vert w\Vert_2^2 + C \sum_i \log(1 + e^{-y_i' z_i})$, so under the conventions of (10.1)
 the exact correspondence is $C = 1/(2 n \lambda)$.
@@ -511,12 +546,18 @@ One parameter vector $\theta_k \in \mathbb{R}^p$ per class. Stack as $\Theta \in
 
 $$P(y_i = k \mid x_i, \Theta) = \text{softmax}(\Theta x_i)_k = \frac{e^{\theta_k^T x_i}}{\sum_{j=1}^K e^{\theta_j^T x_i}}.$$
 
+Each class carries its own parameter vector, and the softmax turns the $K$ scores
+$\theta_k^T x_i$ into probabilities that sum to one across classes.
+
 ### 11.3 Loss
 
 Encode each label as a one-hot vector $y_i \in \lbrace0, 1\rbrace^K$. The **multinomial
 cross-entropy** loss is:
 
 $$L(\Theta) = -\frac{1}{n} \sum_{i=1}^n \sum_{k=1}^K y_{ik} \log P(y_i = k \mid x_i, \Theta). \qquad (11.1)$$
+
+One-hot encoding kills every term but the one for the true class, so the loss is the
+average negative log-probability assigned to the correct label.
 
 ### 11.4 Gradient
 
@@ -575,6 +616,9 @@ The model outputs $p(x) = P(y = 1 \mid x)$. To produce a class label, pick thres
 
 $$\tau^\ast = \frac{c_{10}}{c_{10} + c_{01}}.$$
 
+A costlier false positive pushes $\tau^\ast$ up, so the model must be more confident before
+it predicts class 1; equal costs give back the 0-1 threshold $\tau = 0.5$.
+
 ### 12.5 Calibration
 
 A classifier is **calibrated** if $P(y = 1 \mid p(x) = q) = q$ for every $q \in (0, 1)$.
@@ -584,7 +628,9 @@ Logistic regression is usually well-calibrated when the model is correctly speci
 ### 12.6 ROC and AUC
 
 Sweep $\tau$ from 1 to 0. At each $\tau$: TPR = $P(\hat{y}=1 \mid y=1)$,
-FPR = $P(\hat{y}=1 \mid y=0)$. The ROC curve plots TPR vs FPR. **AUC** (Area Under the
+FPR = $P(\hat{y}=1 \mid y=0)$. The ROC curve plots TPR vs FPR.
+
+**AUC** (Area Under the
 Curve) is threshold-free and equals $P(p(x_+) > p(x_-)) + \tfrac{1}{2} P(p(x_+) = p(x_-))$ — the
 probability that the model ranks a random positive above a random negative (ties count half).
 
@@ -597,7 +643,8 @@ probability that the model ranks a random positive above a random negative (ties
 - **Ridge / Lasso regression.** Same penalty terms, same Bayesian interpretation; only
   the data term changes from squared error to cross-entropy.
 - **Smallest neural network.** A logistic regression model is exactly one linear layer →
-  sigmoid activation → output. Stack two and you have a 2-layer MLP. The training
+  sigmoid activation → output. Stack two and you have a 2-layer MLP.
+- **Training algorithm.** The training
   algorithm (gradient descent on cross-entropy) is the *same* algorithm used to train
   every modern deep network.
 - **Support vector machines.** Same margin concept ($y' z$), but with the smooth log-loss

@@ -96,6 +96,15 @@ The test: every changed line should trace directly to the user's request.
 
 **Derivation:** show work, no skipping steps; cite theorem/rule at each step; conclude with **Result:** (expression). Multiple approaches → pick shortest, mention alternatives in 1 line.
 
+**Presentation (`theory.md`):** one idea per block. Paragraph ≤ 3 sentences and ≤ 60 words; bullet ≤ 40 words; split rather than run on.
+
+- **Sub-headings are `###`**, never a paragraph of bold text, and never skip a level (`##` → `####`).
+- **Displayed equations use ```` ```math ```` fences** — the one form GitHub, MkDocs/arithmatex and the mlfp-learn reader all parse. Never glue a delimiter to content: `$$\begin{aligned}` opens a fence that never closes, and every parser except the app's normaliser swallows the rest of the file.
+- **Inline vs displayed:** a *term* that names an object (`$X^\top X$`, `$\varepsilon \sim \mathcal N(0,\sigma^2 I)$`) stays inline at any length. A *statement* — it contains `=`, `\le`, `\subseteq` — longer than ~60 characters goes in a block.
+- **Every displayed equation is followed by a sentence saying what it means**, before the next heading.
+
+Check with `node scripts/check-prose.mjs <path to this repo>` from the mlfp-learn app; it reports file:line for each of the above.
+
 **Reproducibility:** seed `random`/`numpy`/`torch`(+`cuda`)/`tf`. Pin `requirements.txt`. Log: hparams, metrics, git hash, dataset hash, seed.
 
 **Layer separation:** `data/` (loading only, no model imports). `models/` (pure architecture, no hardcoded hparams). `train.py`/`evaluate.py` read config YAML. Checkpoints include `{epoch, loss, config_hash, git_sha, timestamp}`.

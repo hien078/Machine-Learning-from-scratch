@@ -67,6 +67,8 @@ The InfoNCE loss is defined as the negative log-likelihood of selecting the true
 
 $$ \mathcal{L}_{\text{InfoNCE}} = -\mathbb{E} \left[ \log \frac{\exp(f(x, y^+))}{\exp(f(x, y^+)) + \sum_{k=1}^K \exp(f(x, y_k))} \right] $$
 
+Minimising this loss is exactly training a $(K+1)$-way classifier to pick the true positive out of the candidate set.
+
 #### Deriving the Mutual Information Lower Bound (Oord et al., 2018)
 
 We prove that minimizing $\mathcal{L}_{\text{InfoNCE}}$ maximizes a lower bound on the mutual information $I(X; Y)$ between positive views.
@@ -86,23 +88,29 @@ We prove that minimizing $\mathcal{L}_{\text{InfoNCE}}$ maximizes a lower bound 
 
    $$\mathcal{L}_ {\text{InfoNCE}} = -\mathbb{E} \left[ \log \frac{\frac{p(y^+ \mid x)}{p(y^+)}}{\frac{p(y^+ \mid x)}{p(y^+)} + \sum_{k=1}^K \frac{p(y_k \mid x)}{p(y_k)}} \right]$$
 
-   Take the expectation over negative samples $y_k \sim p(y)$:
+Take the expectation over negative samples $y_k \sim p(y)$:
 
-   $$\mathbb{E}_ {y_k \sim p(y)} \left[ \sum_{k=1}^K \frac{p(y_k \mid x)}{p(y_k)} \right] = \sum_{k=1}^K \mathbb{E}_ {y_k \sim p(y)} \left[ \frac{p(y_k \mid x)}{p(y_k)} \right] = \sum_{k=1}^K \int p(y_k) \frac{p(y_k \mid x)}{p(y_k)} dy_k = K$$
+$$\mathbb{E}_ {y_k \sim p(y)} \left[ \sum_{k=1}^K \frac{p(y_k \mid x)}{p(y_k)} \right] = \sum_{k=1}^K \mathbb{E}_ {y_k \sim p(y)} \left[ \frac{p(y_k \mid x)}{p(y_k)} \right] = \sum_{k=1}^K \int p(y_k) \frac{p(y_k \mid x)}{p(y_k)} dy_k = K$$
 
-   Using Jensen's Inequality on the convex function $-\log(\cdot)$:
+Using Jensen's Inequality on the convex function $-\log(\cdot)$:
 
-   $$\mathcal{L}_ {\text{InfoNCE}} \ge -\mathbb{E}_ {x, y^+} \left[ \log \frac{\frac{p(y^+ \mid x)}{p(y^+)}}{\frac{p(y^+ \mid x)}{p(y^+)} + K} \right]$$
+$$\mathcal{L}_ {\text{InfoNCE}} \ge -\mathbb{E}_ {x, y^+} \left[ \log \frac{\frac{p(y^+ \mid x)}{p(y^+)}}{\frac{p(y^+ \mid x)}{p(y^+)} + K} \right]$$
 
-   For large $K$, $\frac{p(y^+ \mid x)}{p(y^+)} + K \approx K$, so:
+For large $K$, $\frac{p(y^+ \mid x)}{p(y^+)} + K \approx K$, so:
 
-   $$\mathcal{L}_ {\text{InfoNCE}} \ge -\mathbb{E}_ {x, y^+} \left[ \log \frac{p(y^+ \mid x)}{p(y^+)} \right] + \log(K) = -I(X; Y) + \log(K)$$
+$$\mathcal{L}_ {\text{InfoNCE}} \ge -\mathbb{E}_ {x, y^+} \left[ \log \frac{p(y^+ \mid x)}{p(y^+)} \right] + \log(K) = -I(X; Y) + \log(K)$$
 
-   Rearranging terms yields the lower bound:
+Rearranging terms yields the lower bound:
 
-   $$I(X; Y) \ge \log(K) - \mathcal{L}_ {\text{InfoNCE}}$$
+$$I(X; Y) \ge \log(K) - \mathcal{L}_ {\text{InfoNCE}}$$
 
-**Result:** $\displaystyle I(X; Y) \ge \log(K) - \mathcal{L}_{\text{InfoNCE}}$
+**Result:** The InfoNCE loss bounds the mutual information from below:
+
+```math
+\displaystyle I(X; Y) \ge \log(K) - \mathcal{L}_{\text{InfoNCE}}
+```
+
+Minimising the loss therefore pushes this bound up, and because the loss is non-negative the bound can never exceed $\log(K)$.
 
 ---
 
@@ -122,10 +130,17 @@ The gradient with respect to similarity $s_{i,k}$ of a negative candidate $k$ is
 \frac{\partial \ell_i}{\partial (z_i^T z_k)} = \frac{1}{\tau} P(k \mid i) = \frac{1}{\tau} \frac{\exp(z_i^T z_k / \tau)}{\sum_{m \neq i} \exp(z_i^T z_m / \tau)}
 ```
 
-- **Small $\tau$ ($\tau \to 0$):** $P(k \mid i)$ acts as a hard `max`. The gradient is dominated entirely by the hardest negative (the sample closest to $z_i$). This forces tight separation but can cause instability if negative samples contain false negatives (same class).
+- **Small $\tau$ ($\tau \to 0$):** $P(k \mid i)$ acts as a hard `max`. The gradient is dominated entirely by the hardest negative (the sample closest to $z_i$).
+- **Risk of small $\tau$:** This forces tight separation but can cause instability if negative samples contain false negatives (same class).
 - **Large $\tau$ ($\tau \to \infty$):** $P(k \mid i) \to \frac{1}{K}$. Gradients become uniform across all negative samples, leading to slow feature convergence.
 
-**Result:** $\displaystyle \frac{\partial \ell_i}{\partial (z_i^T z_k)} = \frac{1}{\tau} \frac{\exp(z_i^T z_k / \tau)}{\sum_{m \neq i} \exp(z_i^T z_m / \tau)}$
+**Result:** The gradient on a negative pair is its softmax weight, scaled by $1/\tau$:
+
+```math
+\displaystyle \frac{\partial \ell_i}{\partial (z_i^T z_k)} = \frac{1}{\tau} \frac{\exp(z_i^T z_k / \tau)}{\sum_{m \neq i} \exp(z_i^T z_m / \tau)}
+```
+
+Temperature therefore acts twice: it sets the overall gradient scale and decides how sharply the negatives compete for it.
 
 ---
 
@@ -134,7 +149,9 @@ The gradient with respect to similarity $s_{i,k}$ of a negative candidate $k$ is
 **SimCLR (Chen et al., 2020)** uses a batch size of $N$ to create $2N$ augmented views. For each positive pair $(i, j)$, all other $2(N-1)$ views in the batch act as negative samples (NT-Xent loss).
 
 **Why use a projection head $g_\phi$?**
-The contrastive loss explicitly removes task-irrelevant information (e.g., orientation or exact background color) to maintain augmentation invariance. If loss is applied directly to representation $h$, useful visual details are irreversibly erased. By applying loss to $z = g_\phi(h)$, $z$ discards nuisance features while $h$ retains rich downstream information.
+The contrastive loss explicitly removes task-irrelevant information (e.g., orientation or exact background color) to maintain augmentation invariance.
+
+If loss is applied directly to representation $h$, useful visual details are irreversibly erased. By applying loss to $z = g_\phi(h)$, $z$ discards nuisance features while $h$ retains rich downstream information.
 
 ---
 
@@ -182,7 +199,13 @@ $$ \mathcal{L}_{\text{Barlow}} = \sum_i (1 - \mathcal{C}_{ii})^2 + \lambda \sum_
 - **Invariance Term ($\mathcal{C}_{ii} \to 1$):** Forces representations of positive views to correlate perfectly.
 - **Redundancy Reduction ($\mathcal{C}_{ij} \to 0$):** Forces off-diagonal feature dimensions to be uncorrelated, ensuring each vector component captures independent information.
 
-**Result:** $\displaystyle \mathcal L_{\text{Barlow}} = \sum_i (1 - \mathcal C_{ii})^2 + \lambda \sum_i \sum_{j \neq i} \mathcal C_{ij}^2$
+**Result:** The two terms combine into a single objective:
+
+```math
+\displaystyle \mathcal L_{\text{Barlow}} = \sum_i (1 - \mathcal C_{ii})^2 + \lambda \sum_i \sum_{j \neq i} \mathcal C_{ij}^2
+```
+
+The diagonal term drives the two views to agree, the off-diagonal term forbids two feature dimensions from carrying the same information, and $\lambda$ trades one against the other.
 
 ---
 

@@ -6,10 +6,11 @@
 
 Linear and logistic regression fit a single hyperplane. Many real relationships —
 XOR-style interactions, curved boundaries, feature interactions of unknown form — are
-not representable by any hyperplane in the raw features. The classical fix is manual
-feature engineering (products, polynomial terms, kernels). A neural network instead
-**learns the features**: it composes simple parametric maps and lets gradient descent
-choose them.
+not representable by any hyperplane in the raw features.
+
+The classical fix is manual feature engineering (products, polynomial terms, kernels). A
+neural network instead **learns the features**: it composes simple parametric maps and
+lets gradient descent choose them.
 
 ### 1.2 Why nonlinearity is necessary — composition of affine maps is affine
 
@@ -28,17 +29,21 @@ f(x) = (W_2 W_1)\, x + (W_2 b_1 + b_2) = W' x + b' ,
 
 **Result:** by induction, any depth-$L$ stack of purely affine layers collapses to a
 *single* affine map — exactly the expressive power of linear regression, regardless of
-depth or width. Inserting a nonlinear activation $\phi$ between layers breaks the
-collapse: $W_2\,\phi(W_1 x + b_1) + b_2$ is no longer affine in $x$, and the class of
-representable functions grows with width (§8).
+depth or width.
+
+Inserting a nonlinear activation $\phi$ between layers breaks the collapse:
+$W_2\,\phi(W_1 x + b_1) + b_2$ is no longer affine in $x$, and the class of representable
+functions grows with width (§8).
 
 ### 1.3 The canonical example: XOR
 
 Assign class 1 to points where $x_1 x_2 > 0$ and class 0 otherwise. No single hyperplane
 separates the classes (Minsky & Papert, 1969), but a two-layer network with 2 hidden
 units does: each hidden unit carves one half-plane, and the output layer combines the
-two indicators. The hidden layer *re-represents* the data so that the final linear layer
-succeeds — the core mechanism of all deep learning.
+two indicators.
+
+The hidden layer *re-represents* the data so that the final linear layer succeeds — the
+core mechanism of all deep learning.
 
 ### 1.4 First-principles summary
 
@@ -128,6 +133,10 @@ With weight decay (L2 regularization on weights, not biases):
 \mathcal{L} = \mathcal{L}_{\text{data}}
 + \frac{\lambda}{2}\bigl(\Vert W_1\Vert_F^2 + \Vert W_2\Vert_F^2\bigr)
 ```
+
+This is the objective actually minimized during training: $\lambda$ sets how strongly
+large weights are penalized against fit to the data, and $\lambda = 0$ recovers
+$\mathcal{L}_{\text{data}}$.
 
 ## 4. Backpropagation
 
@@ -238,9 +247,11 @@ softmax, log). The chain rule can be accumulated through the graph in two direct
 A training loss is a **scalar**: one output, millions of parameters. Reverse mode
 delivers the whole gradient in one backward sweep at a small constant multiple of the
 forward cost; forward mode would need one sweep per parameter. This asymmetry is why
-deep learning is computationally feasible. The price is **memory**: the backward sweep
-needs the forward intermediates ($Z_1$, $H$, $P$ in §4) — why the from-scratch
-implementation returns a cache, and why frameworks record a "tape" of operations.
+deep learning is computationally feasible.
+
+The price is **memory**: the backward sweep needs the forward intermediates ($Z_1$, $H$,
+$P$ in §4) — why the from-scratch implementation returns a cache, and why frameworks
+record a "tape" of operations.
 
 ## 6. Initialization
 
@@ -249,8 +260,11 @@ implementation returns a cache, and why frameworks record a "tape" of operations
 Initialize $W_1 = 0$. Every hidden unit then computes the same pre-activation
 ($Z_1 = \mathbf{1}b_1^\top$), so all columns of $H$ are identical; by §4.5 the gradient
 $X^\top G_{Z_1}$ has identical columns too, so the units *remain* identical after every
-gradient step (induction on the update rule). The network behaves as if it had one
-hidden unit — width is wasted. The same holds whenever two units start exactly equal.
+gradient step (induction on the update rule).
+
+The network behaves as if it had one hidden unit — width is wasted. The same holds
+whenever two units start exactly equal.
+
 **Random initialization exists to break this symmetry**; the scale of the randomness is
 the next question.
 
@@ -305,17 +319,21 @@ and zero keeps activations centered at the start.
 
 Two opposite pathologies dominate the choice:
 
-- **Saturation (sigmoid, tanh).** Once $\vert z\vert \gg 1$ the derivative is
-  exponentially small, and by §4.4 the backward signal is multiplied by it — gradients
-  through saturated units vanish. Worse, the sigmoid derivative is at most $1/4$
-  *everywhere*, so a deep sigmoid stack shrinks gradients by at least $4^{-L}$: the
-  classical vanishing-gradient problem. Tanh is preferred for hidden layers because it
-  is zero-centered and its derivative reaches $1$.
-- **Dead units (ReLU).** For $z > 0$ the derivative is exactly $1$ — no saturation,
-  which is why deep ReLU networks train at all. But for $z < 0$ it is exactly $0$: a
-  unit whose pre-activations go negative for *every* input (e.g. after one large
-  gradient step) receives zero gradient forever and is permanently dead. Leaky ReLU's
-  small negative slope $\alpha$ lets such units recover.
+**Saturation (sigmoid, tanh).** Once $\vert z\vert \gg 1$ the derivative is
+exponentially small, and by §4.4 the backward signal is multiplied by it — gradients
+through saturated units vanish.
+
+Worse, the sigmoid derivative is at most $1/4$ *everywhere*, so a deep sigmoid stack
+shrinks gradients by at least $4^{-L}$: the classical vanishing-gradient problem. Tanh
+is preferred for hidden layers because it is zero-centered and its derivative reaches
+$1$.
+
+**Dead units (ReLU).** For $z > 0$ the derivative is exactly $1$ — no saturation,
+which is why deep ReLU networks train at all.
+
+But for $z < 0$ it is exactly $0$: a unit whose pre-activations go negative for *every*
+input (e.g. after one large gradient step) receives zero gradient forever and is
+permanently dead. Leaky ReLU's small negative slope $\alpha$ lets such units recover.
 
 The trade-off is asymmetric: dead ReLU units waste capacity, but saturated sigmoids
 block learning through the *whole depth*. ReLU (or a smooth relative such as GELU, used
@@ -335,6 +353,7 @@ accuracy $\varepsilon$, the way a Riemann sum tiles an integral. Width buys reso
 **Caveats.** The theorem proves *existence*, not learnability: it bounds neither the
 required width (possibly exponential in $d$), nor guarantees that gradient descent finds
 the approximating weights, nor says anything about generalization from finite samples.
+
 Depth matters in practice because some functions computable by a deep network of modest
 width need exponentially many units in one hidden layer — depth compresses width.
 
@@ -342,10 +361,11 @@ width need exponentially many units in one hidden layer — depth compresses wid
 
 Unlike every convex model earlier in this curriculum (linear, logistic, SVM), the MLP
 loss is **non-convex**: parameters enter through the composition $\phi(XW_1)W_2$, and
-products of parameters destroy convexity. Concretely, permuting the $h$ hidden units
-(with the matching rows of $W_2$) leaves the function unchanged, so every minimum comes
-in at least $h!$ symmetric copies — and a convex function cannot have multiple isolated
-minima.
+products of parameters destroy convexity.
+
+Concretely, permuting the $h$ hidden units (with the matching rows of $W_2$) leaves the
+function unchanged, so every minimum comes in at least $h!$ symmetric copies — and a
+convex function cannot have multiple isolated minima.
 
 - **No global guarantee.** Gradient descent finds a stationary point, not provably the
   best one; the convexity-based guarantees of
@@ -355,8 +375,8 @@ minima.
   already low; most obstacles are saddles with escape directions (Dauphin et al., 2014).
 - **SGD's noise is a feature.** Mini-batch gradients are unbiased but noisy. The noise
   perturbs the iterate off saddles and out of sharp minima, biasing SGD toward flat
-  basins — which correlate empirically with better generalization. Full-batch descent
-  is, ironically, *more* prone to stalling at saddles.
+  basins — which correlate empirically with better generalization.
+- Full-batch descent is, ironically, *more* prone to stalling at saddles.
 
 The standard recipe — small random init (§6), mini-batch SGD, modest learning rate — is
 not incidental: each ingredient targets a specific pathology of this surface.

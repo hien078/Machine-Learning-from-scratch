@@ -251,6 +251,9 @@ Z_1 = \text{LayerNorm}\!\big(X + \text{MultiHead}(X, X, X)\big), \qquad (5.1)
 Z_2 = \text{LayerNorm}\!\big(Z_1 + \text{FFN}(Z_1)\big). \qquad (5.2)
 ```
 
+Each sub-layer is wrapped in a residual connection followed by a LayerNorm, so the block
+adds an increment to its input instead of replacing it.
+
 ### 5.2 Feed-forward network (FFN)
 
 A two-layer MLP applied independently to each position:
@@ -322,6 +325,10 @@ Z_2 = \text{LayerNorm}\!\big(Z_1 + \text{MultiHead}(Z_1, E, E)\big),
 Z_3 = \text{LayerNorm}\!\big(Z_2 + \text{FFN}(Z_2)\big).
 ```
 
+The three sub-layers run in sequence, each wrapped in a residual connection and a
+LayerNorm: masked self-attention, then cross-attention into the encoder output $E$, then
+the position-wise FFN.
+
 ---
 
 ## 7. The Full Transformer
@@ -345,32 +352,37 @@ Training uses **teacher forcing**: the decoder receives the ground-truth target 
 
 1. **Quadratic memory in sequence length.** The attention matrix $A \in \mathbb{R}^{n \times n}$
    requires $O(n^2)$ memory and compute. For $n = 10{,}000$, a single attention head
-   stores a $10{,}000 \times 10{,}000$ matrix. This limits standard Transformers to
-   sequences of a few thousand tokens without specialised techniques (FlashAttention,
-   sparse attention, linear attention).
+   stores a $10{,}000 \times 10{,}000$ matrix.
 
-2. **No inherent notion of order.** Without positional encoding, the Transformer is
+2. **Practical limit.** This limits standard Transformers to sequences of a few thousand
+   tokens without specialised techniques (FlashAttention, sparse attention, linear
+   attention).
+
+3. **No inherent notion of order.** Without positional encoding, the Transformer is
    permutation equivariant — it treats the input as a set. If the positional encoding
    fails to convey order (e.g., extrapolating beyond training lengths), the model loses
    sequence structure.
 
-3. **Positional encoding extrapolation.** Sinusoidal encodings are defined for any
+4. **Positional encoding extrapolation.** Sinusoidal encodings are defined for any
    position, but the model has never seen positions beyond its training range. Learned
    embeddings fail entirely beyond the maximum trained length. This is a key motivation
    for RoPE and ALiBi.
 
-4. **Missing or wrong masks.** Forgetting the causal mask in the decoder leaks future
+5. **Missing or wrong masks.** Forgetting the causal mask in the decoder leaks future
    information during training, producing a model that appears to learn well but fails
-   at inference (where future tokens are unavailable). Forgetting padding masks causes
-   attention to leak into padding tokens.
+   at inference (where future tokens are unavailable).
 
-5. **Attention is not explanation.** Attention weights are data-dependent mixing
-   coefficients, not faithfully attributing importance. High attention weight on token
-   $j$ does not mean the model "understands" token $j$ is important — it means the
-   *current* query happened to align with that key. Attention patterns can be misleading
-   for interpretability.
+6. **Padding masks.** Forgetting padding masks causes attention to leak into padding
+   tokens.
 
-6. **Large parameter count.** A single encoder block with $d = 512$ has $\sim 2.4\text{M}$
+7. **Attention is not explanation.** Attention weights are data-dependent mixing
+   coefficients, not faithfully attributing importance.
+
+8. **Reading the weights.** High attention weight on token $j$ does not mean the model
+   "understands" token $j$ is important — it means the *current* query happened to align
+   with that key. Attention patterns can be misleading for interpretability.
+
+9. **Large parameter count.** A single encoder block with $d = 512$ has $\sim 2.4\text{M}$
    parameters. Stacking $N = 6$ gives $\sim 14\text{M}$ for the encoder alone. Transformers are
    parameter-hungry and require large datasets to generalise.
 

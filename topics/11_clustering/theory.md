@@ -103,7 +103,9 @@ This minimises $J$ with respect to $c$ because each term depends only on its own
 
 > **Theorem.** Lloyd's algorithm converges in a finite number of steps.
 
-**Proof sketch.** Each step (assign or update) does not increase $J$. Since $J \ge 0$ and there are finitely many possible assignment vectors $c \in \lbrace1, \dots, K\rbrace^n$, the algorithm must terminate. $\blacksquare$
+**Proof sketch.** Each step (assign or update) does not increase $J$.
+
+Since $J \ge 0$ and there are finitely many possible assignment vectors $c \in \lbrace1, \dots, K\rbrace^n$, the algorithm must terminate. $\blacksquare$
 
 **Caveat:** Convergence is to a **local** minimum, not necessarily the global one. The final result depends on initialisation.
 
@@ -145,13 +147,12 @@ DBSCAN (Density-Based Spatial Clustering of Applications with Noise) defines clu
 
 ### 3.2 Algorithm
 
-1. For each unvisited point $x_i$:
-   a. Compute $N_\varepsilon(x_i)$.
-   b. If $|N_\varepsilon(x_i)| < \text{minPts}$, label $x_i$ as noise (may be re-labelled later as border).
-   c. Otherwise, $x_i$ is a core point — start a new cluster and **expand**:
-      - Add all points in $N_\varepsilon(x_i)$ to the cluster.
-      - For each new core point found, recursively add its $\varepsilon$-neighbours.
-2. Continue until all points are visited.
+1. For each unvisited point $x_i$, compute $N_\varepsilon(x_i)$.
+2. If $|N_\varepsilon(x_i)| < \text{minPts}$, label $x_i$ as noise (may be re-labelled later as border).
+3. Otherwise, $x_i$ is a core point — start a new cluster and **expand**:
+   - Add all points in $N_\varepsilon(x_i)$ to the cluster.
+   - For each new core point found, recursively add its $\varepsilon$-neighbours.
+4. Continue until all points are visited.
 
 ### 3.3 Key properties
 
@@ -214,11 +215,15 @@ r_{ik} = \frac{\pi_k \, \mathcal{N}(x_i; \mu_k, \Sigma_k)}{\sum_{j=1}^K \pi_j \,
 \mu_k = \frac{\sum_{i=1}^n r_{ik} \, x_i}{N_k}, \qquad \Sigma_k = \frac{\sum_{i=1}^n r_{ik} (x_i - \mu_k)(x_i - \mu_k)^\top}{N_k}, \qquad \pi_k = \frac{N_k}{n}
 ```
 
+Each component is refitted with the responsibilities as weights: $\mu_k$ and $\Sigma_k$ are the weighted mean and covariance of the data, and $\pi_k$ is the fraction of the effective mass that component $k$ holds.
+
 ### 4.4 Convergence
 
 > **Theorem.** The EM algorithm monotonically increases the log-likelihood: $\mathcal{L}(\theta^{(t+1)}) \ge \mathcal{L}(\theta^{(t)})$.
 
-**Proof sketch.** EM maximises a lower bound (the ELBO) on $\mathcal{L}$. The E-step tightens the bound; the M-step increases it. Since the bound touches $\mathcal{L}$ at the current parameters, neither step can decrease $\mathcal{L}$. $\blacksquare$
+**Proof sketch.** EM maximises a lower bound (the ELBO) on $\mathcal{L}$. The E-step tightens the bound; the M-step increases it.
+
+Since the bound touches $\mathcal{L}$ at the current parameters, neither step can decrease $\mathcal{L}$. $\blacksquare$
 
 **Caveat:** Like K-Means, EM converges to a local maximum — multiple restarts are recommended.
 
