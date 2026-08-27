@@ -4,16 +4,20 @@
 
 ## Overview
 
-Variance maximization, eigendecomposition, SVD, dimensionality reduction,
-reconstruction error, explained variance ratio, standardization effects.
+Finding the directions of maximal variance in data. The topic poses PCA as a constrained variance-maximization problem, solves it with eigendecomposition of the covariance matrix, proves the equivalence with minimal reconstruction error, connects both to the SVD, and studies when PCA misleads — unstandardized features, nonlinear structure, and identifiability of signs.
+
+## Scope
+
+- **In scope:** the variance-maximization derivation, the reconstruction-error view and their equivalence, the SVD connection, choosing $k$ via explained variance, whitening, standardization effects, and failure cases — all in pure NumPy.
+- **Out of scope:** probabilistic PCA, kernel PCA, and nonlinear methods (t-SNE, UMAP) — those are [Topic 12](../12_dimensionality_reduction/README.md).
 
 ## Contents
 
 | # | File | Type | Description |
 |--:|---|---|---|
-| 1 | `theory.md` | Theory | WHY, covariance, variance maximization, reconstruction, SVD connection, failure cases |
-| 2 | `first_principles.ipynb` | Computation | WHY→WHAT→HOW→BUILD→VERIFY — PCA from scratch via SVD, scree plot, sklearn comparison |
-| 3 | `exercises.ipynb` | Practice | Hand eigendecomposition, reconstruction error, standardization comparison, failure analysis, SVD connection |
+| 1 | [theory.md](theory.md) | Theory | WHY, covariance, variance maximization, reconstruction, SVD connection, failure cases |
+| 2 | [first_principles.ipynb](first_principles.ipynb) | Computation | WHY→WHAT→HOW→BUILD→VERIFY — PCA from scratch via SVD, scree plot, sklearn comparison |
+| 3 | [exercises.ipynb](exercises.ipynb) | Practice | Hand eigendecomposition, reconstruction error, standardization comparison, failure analysis, SVD connection |
 
 ## Connections
 
